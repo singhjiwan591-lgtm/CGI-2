@@ -26,19 +26,19 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 export default function Home() {
   const features = [
     {
-      icon: <Trophy className="h-10 w-10 text-accent" />,
+      icon: <Trophy className="h-10 w-10 text-chart-1" />,
       title: 'Experienced Faculty',
       description:
         'Our educators are passionate, experienced, and dedicated to student success.',
     },
     {
-      icon: <Lightbulb className="h-10 w-10 text-accent" />,
+      icon: <Lightbulb className="h-10 w-10 text-chart-2" />,
       title: 'Innovative Curriculum',
       description:
         'We offer a dynamic and engaging curriculum that fosters critical thinking and creativity.',
     },
     {
-      icon: <Users className="h-10 w-10 text-accent" />,
+      icon: <Users className="h-10 w-10 text-chart-3" />,
       title: 'Vibrant Community',
       description:
         'We cultivate a supportive and inclusive community for students, parents, and staff.',
@@ -134,7 +134,7 @@ export default function Home() {
             {features.map((feature, index) => (
               <Card key={index} className="text-center">
                 <CardHeader>
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
+                  <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-chart-${(index % 5) + 1}/10`}>
                     {feature.icon}
                   </div>
                   <CardTitle className="mt-4 font-headline text-xl md:text-2xl">

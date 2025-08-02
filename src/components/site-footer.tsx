@@ -8,7 +8,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-3 md:text-left">
           <div className="flex flex-col items-center md:items-start">
             <Link href="/" className="flex items-center space-x-2">
-              <BookOpen className="h-8 w-8 text-accent" />
+              <BookOpen className="h-8 w-8 text-primary" />
               <span className="text-2xl font-bold font-headline">Oakridge School</span>
             </Link>
             <p className="mt-4 text-foreground/70">
@@ -19,22 +19,22 @@ export function SiteFooter() {
             <h3 className="font-headline text-lg font-semibold">Quick Links</h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <Link href="/about" className="hover:text-accent transition-colors">
+                <Link href="/about" className="hover:text-primary transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/academics" className="hover:text-accent transition-colors">
+                <Link href="/academics" className="hover:text-primary transition-colors">
                   Academics
                 </Link>
               </li>
               <li>
-                <Link href="/admissions" className="hover:text-accent transition-colors">
+                <Link href="/admissions" className="hover:text-primary transition-colors">
                   Admissions
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-accent transition-colors">
+                <Link href="/contact" className="hover:text-primary transition-colors">
                   Contact
                 </Link>
               </li>
@@ -44,13 +44,13 @@ export function SiteFooter() {
             <h3 className="font-headline text-lg font-semibold">Follow Us</h3>
             <div className="mt-4 flex space-x-4 justify-center md:justify-end">
               <Link href="#" aria-label="Facebook">
-                <Facebook className="h-6 w-6 text-foreground/70 hover:text-accent transition-colors" />
+                <Facebook className="h-6 w-6 text-foreground/70 hover:text-primary transition-colors" />
               </Link>
               <Link href="#" aria-label="Instagram">
-                <Instagram className="h-6 w-6 text-foreground/70 hover:text-accent transition-colors" />
+                <Instagram className="h-6 w-6 text-foreground/70 hover:text-primary transition-colors" />
               </Link>
               <Link href="#" aria-label="LinkedIn">
-                <Linkedin className="h-6 w-6 text-foreground/70 hover:text-accent transition-colors" />
+                <Linkedin className="h-6 w-6 text-foreground/70 hover:text-primary transition-colors" />
               </Link>
             </div>
           </div>

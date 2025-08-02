@@ -4,9 +4,9 @@ import { ContactForm } from '@/components/contact-form';
 
 export default function ContactPage() {
   const contactDetails = [
-    { icon: <MapPin className="h-6 w-6 text-accent" />, text: '123 Education Avenue, Knowledge City, 54321' },
-    { icon: <Mail className="h-6 w-6 text-accent" />, text: 'contact@oakridge.edu' },
-    { icon: <Phone className="h-6 w-6 text-accent" />, text: '(123) 555-2024' },
+    { icon: <MapPin className="h-6 w-6 text-chart-1" />, text: '123 Education Avenue, Knowledge City, 54321' },
+    { icon: <Mail className="h-6 w-6 text-chart-2" />, text: 'contact@oakridge.edu' },
+    { icon: <Phone className="h-6 w-6 text-chart-3" />, text: '(123) 555-2024' },
   ];
 
   return (
@@ -39,9 +39,9 @@ export default function ContactPage() {
               <div className="mt-6 md:mt-8">
                 <h3 className="font-headline text-lg font-semibold md:text-xl">Follow Us</h3>
                 <div className="mt-4 flex space-x-4">
-                  <a href="#" aria-label="Facebook"><Facebook className="h-6 w-6 text-foreground/70 hover:text-accent transition-colors" /></a>
-                  <a href="#" aria-label="Instagram"><Instagram className="h-6 w-6 text-foreground/70 hover:text-accent transition-colors" /></a>
-                  <a href="#" aria-label="LinkedIn"><Linkedin className="h-6 w-6 text-foreground/70 hover:text-accent transition-colors" /></a>
+                  <a href="#" aria-label="Facebook"><Facebook className="h-6 w-6 text-foreground/70 hover:text-primary transition-colors" /></a>
+                  <a href="#" aria-label="Instagram"><Instagram className="h-6 w-6 text-foreground/70 hover:text-primary transition-colors" /></a>
+                  <a href="#" aria-label="LinkedIn"><Linkedin className="h-6 w-6 text-foreground/70 hover:text-primary transition-colors" /></a>
                 </div>
               </div>
             </div>

@@ -6,17 +6,17 @@ import { GraduationCap, BookOpen, BrainCircuit, ArrowRight } from 'lucide-react'
 export default function AcademicsPage() {
   const academicPrograms = [
     {
-      icon: <GraduationCap className="h-10 w-10 text-accent" />,
+      icon: <GraduationCap className="h-10 w-10 text-chart-1" />,
       name: 'Primary School (Grades 1-5)',
       description: 'Building a strong foundation with a focus on curiosity, creativity, and core academic skills.',
     },
     {
-      icon: <BookOpen className="h-10 w-10 text-accent" />,
+      icon: <BookOpen className="h-10 w-10 text-chart-2" />,
       name: 'Middle School (Grades 6-8)',
       description: 'Fostering critical thinking and collaboration as students transition to more advanced subjects.',
     },
     {
-      icon: <BrainCircuit className="h-10 w-10 text-accent" />,
+      icon: <BrainCircuit className="h-10 w-10 text-chart-3" />,
       name: 'High School (Grades 9-12)',
       description: 'Preparing students for college and future careers with a rigorous and comprehensive curriculum.',
     },
@@ -46,10 +46,10 @@ export default function AcademicsPage() {
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl mb-10">Our Programs</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
-            {academicPrograms.map((program) => (
+            {academicPrograms.map((program, index) => (
               <Card key={program.name} className="text-center">
                 <CardHeader>
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
+                  <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-chart-${(index % 5) + 1}/10`}>
                     {program.icon}
                   </div>
                   <CardTitle className="mt-4 font-headline text-xl md:text-2xl">{program.name}</CardTitle>
@@ -72,9 +72,9 @@ export default function AcademicsPage() {
             </p>
           </div>
           <div className="mx-auto mt-10 max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-            {curriculumHighlights.map((highlight) => (
+            {curriculumHighlights.map((highlight, index) => (
               <div key={highlight} className="flex items-start">
-                <GraduationCap className="h-6 w-6 text-accent mr-3 mt-1 flex-shrink-0" />
+                <GraduationCap className={`h-6 w-6 text-chart-${(index % 5) + 1} mr-3 mt-1 flex-shrink-0`} />
                 <p className="text-base md:text-lg">{highlight}</p>
               </div>
             ))}

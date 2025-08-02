@@ -90,12 +90,12 @@ export default function AboutPage() {
             {timeline.map((item, index) => (
               <div key={index} className="relative mb-8 flex w-full items-center md:justify-between md:odd:flex-row-reverse">
                 <div className="hidden md:block md:w-5/12"></div>
-                <div className="z-10 flex h-8 w-8 items-center justify-center rounded-full bg-accent text-accent-foreground absolute left-0 md:left-1/2 md:-translate-x-1/2">
+                <div className={`z-10 flex h-8 w-8 items-center justify-center rounded-full bg-chart-${(index % 5) + 1} text-white absolute left-0 md:left-1/2 md:-translate-x-1/2`}>
                   <CheckCircle2 className="h-5 w-5" />
                 </div>
                 <div className="w-full pl-12 md:w-5/12 md:pl-0">
                   <Card className="p-4 md:p-6">
-                    <p className="font-bold text-accent text-sm md:text-base">{item.year}</p>
+                    <p className={`font-bold text-chart-${(index % 5) + 1} text-sm md:text-base`}>{item.year}</p>
                     <h3 className="font-headline text-lg font-bold mt-1 md:text-xl">{item.event}</h3>
                     <p className="mt-2 text-foreground/70 text-sm md:text-base">{item.description}</p>
                   </Card>
@@ -110,7 +110,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Meet Our Leadership</h2>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
-            {teamMembers.map((member) => (
+            {teamMembers.map((member, index) => (
               <Card key={member.name} className="text-center">
                 <CardContent className="p-4 md:p-6">
                   <Avatar className="w-24 h-24 md:w-32 md:h-32 mx-auto">
@@ -118,11 +118,11 @@ export default function AboutPage() {
                     <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <h3 className="mt-4 font-headline text-xl font-bold md:text-2xl">{member.name}</h3>
-                  <p className="text-accent">{member.position}</p>
+                  <p className={`text-chart-${(index % 5) + 1}`}>{member.position}</p>
                   <div className="mt-4 flex justify-center space-x-4">
-                    <Link href="#"><Twitter className="h-5 w-5 text-foreground/60 hover:text-accent" /></Link>
-                    <Link href="#"><Linkedin className="h-5 w-5 text-foreground/60 hover:text-accent" /></Link>
-                    <Link href="#"><Facebook className="h-5 w-5 text-foreground/60 hover:text-accent" /></Link>
+                    <Link href="#"><Twitter className="h-5 w-5 text-foreground/60 hover:text-primary" /></Link>
+                    <Link href="#"><Linkedin className="h-5 w-5 text-foreground/60 hover:text-primary" /></Link>
+                    <Link href="#"><Facebook className="h-5 w-5 text-foreground/60 hover:text-primary" /></Link>
                   </div>
                 </CardContent>
               </Card>
@@ -136,9 +136,9 @@ export default function AboutPage() {
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Why Choose Oakridge?</h2>
           <div className="mx-auto mt-10 max-w-4xl">
             <div className="grid grid-cols-1 gap-x-6 gap-y-3 md:grid-cols-2 md:gap-x-8 md:gap-y-4">
-              {benefits.map((benefit) => (
+              {benefits.map((benefit, index) => (
                 <div key={benefit} className="flex items-start">
-                  <CheckCircle2 className="h-5 w-5 md:h-6 md:w-6 text-accent mr-3 mt-1 flex-shrink-0" />
+                  <CheckCircle2 className={`h-5 w-5 md:h-6 md:w-6 text-chart-${(index % 5) + 1} mr-3 mt-1 flex-shrink-0`} />
                   <p className="text-base md:text-lg">{benefit}</p>
                 </div>
               ))}

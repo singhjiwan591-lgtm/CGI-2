@@ -61,7 +61,7 @@ export default function AdmissionsPage() {
             <div className="space-y-10">
               {admissionSteps.map((item, index) => (
                 <div key={index} className="relative flex flex-col md:flex-row items-center gap-6">
-                  <div className="z-10 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground font-bold text-xl">
+                  <div className={`z-10 flex h-12 w-12 items-center justify-center rounded-full bg-chart-${(index % 5) + 1} text-white font-bold text-xl`}>
                     {item.step}
                   </div>
                   <div className="w-full md:w-1/2 md:pr-8 text-center md:text-left">
@@ -86,9 +86,9 @@ export default function AdmissionsPage() {
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Key Dates & Deadlines</h2>
           <div className="mx-auto mt-10 max-w-2xl">
             <ul className="space-y-4">
-              {keyDates.map((item) => (
+              {keyDates.map((item, index) => (
                 <li key={item.event} className="flex items-center rounded-lg bg-background p-4 shadow">
-                  <CheckCircle2 className="h-6 w-6 text-accent mr-4" />
+                  <CheckCircle2 className={`h-6 w-6 text-chart-${(index % 5) + 1} mr-4`} />
                   <div>
                     <p className="font-semibold">{item.date}</p>
                     <p className="text-foreground/80">{item.event}</p>
