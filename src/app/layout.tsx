@@ -5,8 +5,8 @@ import { SiteFooter } from '@/components/site-footer';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Webfolio',
-  description: 'A modern, responsive portfolio website.',
+  title: 'Oakridge International School',
+  description: 'A leading institution for quality education.',
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

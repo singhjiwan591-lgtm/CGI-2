@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Mountain, Facebook, Instagram, Linkedin } from 'lucide-react';
+import { BookOpen, Facebook, Instagram, Linkedin } from 'lucide-react';
 
 export function SiteFooter() {
   return (
@@ -8,11 +8,11 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-3 md:text-left">
           <div className="flex flex-col items-center md:items-start">
             <Link href="/" className="flex items-center space-x-2">
-              <Mountain className="h-8 w-8 text-accent" />
-              <span className="text-2xl font-bold font-headline">Webfolio</span>
+              <BookOpen className="h-8 w-8 text-accent" />
+              <span className="text-2xl font-bold font-headline">Oakridge School</span>
             </Link>
             <p className="mt-4 text-foreground/70">
-              Crafting digital experiences for the modern web.
+              Nurturing minds for a brighter future.
             </p>
           </div>
           <div className="md:mx-auto">
@@ -24,8 +24,13 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/services" className="hover:text-accent transition-colors">
-                  Services
+                <Link href="/academics" className="hover:text-accent transition-colors">
+                  Academics
+                </Link>
+              </li>
+              <li>
+                <Link href="/admissions" className="hover:text-accent transition-colors">
+                  Admissions
                 </Link>
               </li>
               <li>
@@ -51,7 +56,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-foreground/60">
-          <p>&copy; {new Date().getFullYear()} Webfolio. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Oakridge International School. All rights reserved.</p>
         </div>
       </div>
     </footer>

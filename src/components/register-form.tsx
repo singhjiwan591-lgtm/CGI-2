@@ -45,14 +45,14 @@ export function RegisterForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    // Handle registration logic here
+    // Handle registration logic for admissions application
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-headline text-2xl">Create an account</CardTitle>
-        <CardDescription>Enter your details below to get started.</CardDescription>
+        <CardTitle className="font-headline text-2xl">Start Your Application</CardTitle>
+        <CardDescription>Create an account to begin the admissions process.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -62,7 +62,7 @@ export function RegisterForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Parent/Guardian Full Name</FormLabel>
                   <FormControl>
                     <Input placeholder="Your Name" {...field} />
                   </FormControl>
@@ -75,7 +75,7 @@ export function RegisterForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Email Address</FormLabel>
                   <FormControl>
                     <Input type="email" placeholder="your.email@example.com" {...field} />
                   </FormControl>
@@ -88,7 +88,7 @@ export function RegisterForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Create a Password</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="••••••••" {...field} />
                   </FormControl>
@@ -122,7 +122,7 @@ export function RegisterForm() {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>
-                      I agree to the{' '}
+                      I agree to the admissions{' '}
                       <Link href="#" className="underline hover:text-accent">
                         Terms & Conditions
                       </Link>
@@ -132,7 +132,7 @@ export function RegisterForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">Register</Button>
+            <Button type="submit" className="w-full">Create Account & Continue</Button>
           </form>
         </Form>
       </CardContent>

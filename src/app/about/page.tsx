@@ -12,48 +12,49 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function AboutPage() {
   const timeline = [
-    { year: 2015, event: 'Company Founded', description: 'Webfolio was born with a mission to revolutionize web design.' },
-    { year: 2018, event: '100th Project Completed', description: 'We celebrated a major milestone, delivering our 100th successful project.' },
-    { year: 2021, event: 'Expanded to Global Clients', description: 'Our services went international, serving clients from over 20 countries.' },
-    { year: 2024, event: '1000+ Clients Served', description: 'Proudly serving over a thousand clients and continuing to grow.' },
+    { year: 1995, event: 'School Founded', description: 'Oakridge opened its doors with a vision for quality education.' },
+    { year: 2005, event: 'First Graduating Class', description: 'We celebrated our first batch of graduates, ready to take on the world.' },
+    { year: 2015, event: 'Campus Expansion', description: 'Opened our new state-of-the-art science and arts wing.' },
+    { year: 2024, event: '2000+ Students Strong', description: 'Proudly serving a diverse community of over 2000 students.' },
   ];
 
   const teamMembers = [
     {
-      name: 'Alice Johnson',
-      position: 'Founder & CEO',
+      name: 'Dr. Evelyn Reed',
+      position: 'Principal',
       image: 'https://placehold.co/300x300.png',
       dataAiHint: 'woman professional',
     },
     {
-      name: 'Bob Williams',
-      position: 'Lead Developer',
+      name: 'Mr. David Chen',
+      position: 'Head of Academics',
       image: 'https://placehold.co/300x300.png',
-      dataAiHint: 'man developer',
+      dataAiHint: 'man teacher',
     },
     {
-      name: 'Charlie Brown',
-      position: 'Creative Director',
+      name: 'Mrs. Sarah Adams',
+      position: 'Admissions Director',
       image: 'https://placehold.co/300x300.png',
-      dataAiHint: 'man creative',
+      dataAiHint: 'woman administrator',
     },
   ];
 
   const benefits = [
-    'User-Centric Design Philosophy',
-    'Agile & Collaborative Workflow',
-    'Transparent Pricing & Communication',
-    'Dedicated Long-Term Support',
-    'Proven Track Record of Success',
+    'Holistic Student Development',
+    'Low Student-to-Teacher Ratio',
+    'Safe & Inclusive Campus',
+    'Strong Parent-Teacher Partnership',
+    'Focus on Critical Thinking',
+    'Diverse Extracurricular Activities',
   ];
 
   return (
     <div>
       <section className="bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-headline text-3xl font-bold md:text-5xl">About Webfolio</h1>
+          <h1 className="font-headline text-3xl font-bold md:text-5xl">About Oakridge School</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base md:text-lg text-foreground/80">
-            We are more than just a web agency. We are your partners in digital innovation, committed to crafting exceptional online experiences that drive results and inspire your audience.
+            We are a community of learners, dedicated to academic excellence and personal growth in a supportive, international environment.
           </p>
         </div>
       </section>
@@ -64,14 +65,14 @@ export default function AboutPage() {
             <div className="order-2 md:order-1">
               <h2 className="font-headline text-2xl font-bold md:text-3xl">Our Mission</h2>
               <p className="mt-4 text-foreground/80">
-                Our mission is to empower businesses with transformative digital solutions. We believe in the power of great design and technology to create meaningful connections between brands and their customers. By blending creativity with strategic thinking, we build websites and applications that are not only visually stunning but also intuitive, accessible, and performance-driven. We strive for excellence in every project, ensuring our clients achieve their goals and stand out in a crowded digital landscape.
+                Our mission is to inspire and empower every student to reach their full potential. We foster a love for learning, a commitment to character, and the skills necessary to thrive in a global society. By providing a rich and varied curriculum, we encourage students to explore their passions, think critically, and become compassionate, responsible citizens of the world.
               </p>
             </div>
             <div className="order-1 md:order-2">
               <Image
                 src="https://placehold.co/600x400.png"
-                data-ai-hint="office building"
-                alt="Company mission"
+                data-ai-hint="school campus"
+                alt="School campus"
                 width={600}
                 height={400}
                 className="rounded-lg shadow-lg"
@@ -83,7 +84,7 @@ export default function AboutPage() {
 
       <section className="bg-secondary py-12 md:py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Our Journey</h2>
+          <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Our History</h2>
           <div className="relative mt-10">
             <div className="absolute left-1/2 top-0 h-full w-0.5 -translate-x-1/2 bg-border hidden md:block"></div>
             {timeline.map((item, index) => (
@@ -107,7 +108,7 @@ export default function AboutPage() {
 
       <section className="py-12 md:py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Meet Our Team</h2>
+          <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Meet Our Leadership</h2>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {teamMembers.map((member) => (
               <Card key={member.name} className="text-center">
@@ -132,7 +133,7 @@ export default function AboutPage() {
 
       <section className="bg-secondary py-12 md:py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Why Choose Us?</h2>
+          <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Why Choose Oakridge?</h2>
           <div className="mx-auto mt-10 max-w-4xl">
             <div className="grid grid-cols-1 gap-x-6 gap-y-3 md:grid-cols-2 md:gap-x-8 md:gap-y-4">
               {benefits.map((benefit) => (

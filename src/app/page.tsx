@@ -2,8 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   ArrowRight,
-  Rocket,
-  Shield,
+  Lightbulb,
+  Trophy,
   Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,49 +26,49 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 export default function Home() {
   const features = [
     {
-      icon: <Rocket className="h-10 w-10 text-accent" />,
-      title: 'Innovative Solutions',
+      icon: <Trophy className="h-10 w-10 text-accent" />,
+      title: 'Experienced Faculty',
       description:
-        'We provide cutting-edge solutions tailored to your needs, pushing the boundaries of technology.',
+        'Our educators are passionate, experienced, and dedicated to student success.',
     },
     {
-      icon: <Shield className="h-10 w-10 text-accent" />,
-      title: 'Secure & Reliable',
+      icon: <Lightbulb className="h-10 w-10 text-accent" />,
+      title: 'Innovative Curriculum',
       description:
-        'Our commitment to security and reliability ensures your data and services are always safe.',
+        'We offer a dynamic and engaging curriculum that fosters critical thinking and creativity.',
     },
     {
       icon: <Users className="h-10 w-10 text-accent" />,
-      title: 'Customer Centric',
+      title: 'Vibrant Community',
       description:
-        'We prioritize our customers, offering dedicated support and building long-lasting relationships.',
+        'We cultivate a supportive and inclusive community for students, parents, and staff.',
     },
   ];
 
   const testimonials = [
     {
-      name: 'Sarah Jennings',
-      title: 'CEO, Tech Innovators',
+      name: 'Jane Doe',
+      title: 'Parent of a 5th Grader',
       avatar: 'https://placehold.co/100x100.png',
       dataAiHint: 'woman portrait',
       quote:
-        'Webfolio transformed our online presence. Their team is professional, creative, and incredibly efficient. The results speak for themselves!',
+        'Oakridge has been a transformative experience for our child. The teachers are caring and the community is wonderful. We couldn\'t be happier!',
     },
     {
-      name: 'Mike Anderson',
-      title: 'Marketing Director, Future Co.',
+      name: 'John Smith',
+      title: 'Alumnus, Class of 2020',
       avatar: 'https://placehold.co/100x100.png',
       dataAiHint: 'man portrait',
       quote:
-        'An absolute pleasure to work with. They understood our vision perfectly and delivered a product that exceeded all our expectations. Highly recommended.',
+        'The foundation I received at Oakridge prepared me for college and beyond. I am grateful for the lifelong friendships and mentorship.',
     },
     {
-      name: 'Jessica Chen',
-      title: 'Founder, Startup Hub',
+      name: 'Emily White',
+      title: 'Parent of two students',
       avatar: 'https://placehold.co/100x100.png',
       dataAiHint: 'woman smiling',
       quote:
-        'The best in the business. Their attention to detail and commitment to quality is unparalleled. We couldn\'t be happier with our new website.',
+        'A fantastic school with a strong academic program and a focus on character development. Highly recommended to any parent.',
     },
   ];
 
@@ -77,20 +77,19 @@ export default function Home() {
       <section className="relative flex h-[70dvh] min-h-[500px] w-full items-center justify-center bg-secondary md:h-[80dvh] md:min-h-[600px]">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            Build Your Digital Future
+            Welcome to Oakridge School
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/80 md:text-xl">
-            We craft stunning, high-performance websites and applications that
-            drive growth and inspire users.
+            Inspiring the next generation of leaders, thinkers, and innovators.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button asChild size="lg" className="w-full sm:w-auto">
-              <Link href="/contact">
-                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+              <Link href="/admissions">
+                Apply Now <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-              <Link href="/services">Learn More</Link>
+              <Link href="/about">Learn More</Link>
             </Button>
           </div>
         </div>
@@ -101,23 +100,17 @@ export default function Home() {
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
             <div className="order-2 md:order-1">
               <h2 className="font-headline text-2xl font-bold md:text-4xl">
-                Welcome to Webfolio
+                A Tradition of Excellence
               </h2>
               <p className="mt-4 text-base text-foreground/80 md:text-lg">
-                We are a passionate team of designers, developers, and
-                strategists dedicated to helping businesses succeed in the
-                digital world. From startups to established enterprises, we
-                partner with you to create web experiences that captivate and
-                convert. Our approach combines creative design with robust
-                technology to deliver solutions that are not only beautiful but
-                also effective.
+                At Oakridge International School, we are committed to providing a nurturing and challenging environment where students can achieve their full potential. Our holistic approach to education focuses on academic rigor, character development, and a passion for lifelong learning. Join us to be part of a community that values curiosity, integrity, and excellence.
               </p>
             </div>
             <div className="order-1 md:order-2">
               <Image
                 src="https://placehold.co/600x400.png"
-                data-ai-hint="team collaboration"
-                alt="Team working together"
+                data-ai-hint="happy students"
+                alt="Students in a classroom"
                 width={600}
                 height={400}
                 className="rounded-lg shadow-lg"
@@ -131,11 +124,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
-              Our Core Strengths
+              Why Oakridge School?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/80 md:text-lg">
-              Discover why clients trust us to bring their digital visions to
-              life.
+              Discover the pillars of our educational philosophy.
             </p>
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
@@ -162,11 +154,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
-              What Our Clients Say
+              From Our Community
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/80 md:text-lg">
-              We've helped hundreds of businesses grow. Here's what they think
-              about our work.
+              Hear what parents and students have to say about their experience at Oakridge.
             </p>
           </div>
           <Carousel

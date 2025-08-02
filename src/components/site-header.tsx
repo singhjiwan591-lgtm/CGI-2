@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Menu, Mountain } from 'lucide-react';
+import { Menu, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -16,7 +16,8 @@ export function SiteHeader() {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
-    { href: '/services', label: 'Services' },
+    { href: '/academics', label: 'Academics' },
+    { href: '/admissions', label: 'Admissions' },
     { href: '/contact', label: 'Contact' },
   ];
 
@@ -24,8 +25,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <Mountain className="h-6 w-6" />
-          <span className="font-bold font-headline">Webfolio</span>
+          <BookOpen className="h-6 w-6 text-accent" />
+          <span className="font-bold font-headline">Oakridge School</span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm md:flex">
           {navLinks.map((link) => (
@@ -45,10 +46,10 @@ export function SiteHeader() {
         </nav>
         <div className="flex flex-1 items-center justify-end gap-2">
           <Button variant="ghost" asChild>
-            <Link href="/login">Login</Link>
+            <Link href="/login">Portal Login</Link>
           </Button>
           <Button asChild>
-            <Link href="/register">Register</Link>
+            <Link href="/admissions">Apply Now</Link>
           </Button>
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
@@ -61,8 +62,8 @@ export function SiteHeader() {
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between border-b pb-4">
                   <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Mountain className="h-6 w-6" />
-                    <span className="font-bold font-headline">Webfolio</span>
+                    <BookOpen className="h-6 w-6 text-accent" />
+                    <span className="font-bold font-headline">Oakridge School</span>
                   </Link>
                 </div>
                 <nav className="flex flex-col gap-4 py-4">
@@ -84,10 +85,10 @@ export function SiteHeader() {
                 </nav>
                  <div className="mt-auto flex flex-col gap-2 border-t pt-4">
                     <Button variant="ghost" asChild onClick={() => setIsMobileMenuOpen(false)}>
-                      <Link href="/login">Login</Link>
+                      <Link href="/login">Portal Login</Link>
                     </Button>
                     <Button asChild onClick={() => setIsMobileMenuOpen(false)}>
-                      <Link href="/register">Register</Link>
+                      <Link href="/admissions">Apply Now</Link>
                     </Button>
                   </div>
               </div>
