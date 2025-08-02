@@ -28,29 +28,31 @@ export function SiteHeader() {
           <BookOpen className="h-6 w-6 text-primary" />
           <span className="font-bold font-headline">Oakridge School</span>
         </Link>
-        <nav className="hidden items-center gap-6 text-sm md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                'transition-colors hover:text-foreground/80',
-                pathname === link.href
-                  ? 'text-foreground font-semibold'
-                  : 'text-foreground/60'
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
         <div className="flex flex-1 items-center justify-end gap-2">
-          <Button variant="ghost" asChild>
-            <Link href="/login">Portal Login</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/admissions">Apply Now</Link>
-          </Button>
+          <nav className="hidden items-center gap-6 text-sm md:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  'transition-colors hover:text-foreground/80',
+                  pathname === link.href
+                    ? 'text-foreground font-semibold'
+                    : 'text-foreground/60'
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="hidden md:flex items-center gap-2">
+            <Button variant="ghost" asChild>
+              <Link href="/login">Portal Login</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/admissions">Apply Now</Link>
+            </Button>
+          </div>
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
