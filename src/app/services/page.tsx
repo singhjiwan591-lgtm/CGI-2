@@ -69,7 +69,7 @@ export default function ServicesPage() {
             {services.map((service) => (
               <Card key={service.name} className="text-center">
                 <CardHeader>
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
                     {service.icon}
                   </div>
                   <CardTitle className="mt-4 font-headline text-xl md:text-2xl">{service.name}</CardTitle>
