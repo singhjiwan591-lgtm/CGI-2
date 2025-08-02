@@ -5,8 +5,8 @@ export function SiteFooter() {
   return (
     <footer className="bg-secondary">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <div className="flex flex-col items-start">
+        <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-3 md:text-left">
+          <div className="flex flex-col items-center md:items-start">
             <Link href="/" className="flex items-center space-x-2">
               <Mountain className="h-8 w-8 text-accent" />
               <span className="text-2xl font-bold font-headline">Webfolio</span>
@@ -15,7 +15,7 @@ export function SiteFooter() {
               Crafting digital experiences for the modern web.
             </p>
           </div>
-          <div>
+          <div className="md:mx-auto">
             <h3 className="font-headline text-lg font-semibold">Quick Links</h3>
             <ul className="mt-4 space-y-2">
               <li>
@@ -35,9 +35,9 @@ export function SiteFooter() {
               </li>
             </ul>
           </div>
-          <div>
+          <div className="md:ml-auto md:text-right">
             <h3 className="font-headline text-lg font-semibold">Follow Us</h3>
-            <div className="mt-4 flex space-x-4">
+            <div className="mt-4 flex space-x-4 justify-center md:justify-end">
               <Link href="#" aria-label="Facebook">
                 <Facebook className="h-6 w-6 text-foreground/70 hover:text-accent transition-colors" />
               </Link>

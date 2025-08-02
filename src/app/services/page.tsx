@@ -54,25 +54,25 @@ export default function ServicesPage() {
 
   return (
     <div>
-      <section className="bg-secondary py-20 md:py-32">
+      <section className="bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-headline text-4xl font-bold md:text-5xl">Our Services</h1>
-          <p className="mx-auto mt-4 max-w-3xl text-lg text-foreground/80">
+          <h1 className="font-headline text-3xl font-bold md:text-5xl">Our Services</h1>
+          <p className="mx-auto mt-4 max-w-3xl text-base md:text-lg text-foreground/80">
             We offer a comprehensive suite of digital services designed to elevate your brand and accelerate your growth.
           </p>
         </div>
       </section>
 
-      <section className="py-16 md:py-24">
+      <section className="py-12 md:py-20">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {services.map((service) => (
               <Card key={service.name} className="text-center">
                 <CardHeader>
                   <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                     {service.icon}
                   </div>
-                  <CardTitle className="mt-4 font-headline text-2xl">{service.name}</CardTitle>
+                  <CardTitle className="mt-4 font-headline text-xl md:text-2xl">{service.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-foreground/80">{service.description}</p>
@@ -83,27 +83,27 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section className="bg-secondary py-16 md:py-24">
+      <section className="bg-secondary py-12 md:py-20">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <h2 className="font-headline text-3xl font-bold md:text-4xl">Pricing Plans</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-foreground/80">
+            <h2 className="font-headline text-2xl font-bold md:text-4xl">Pricing Plans</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg text-foreground/80">
               Choose a plan that fits your needs. All plans are flexible and can be tailored to your specific requirements.
             </p>
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {pricingPlans.map((plan) => (
-              <Card key={plan.name} className={plan.variant === 'default' ? 'border-accent' : ''}>
-                <CardHeader className="text-center">
-                  <CardTitle className="font-headline text-2xl">{plan.name}</CardTitle>
+              <Card key={plan.name} className={plan.variant === 'default' ? 'border-accent shadow-lg' : ''}>
+                <CardHeader className="text-center p-4 md:p-6">
+                  <CardTitle className="font-headline text-xl md:text-2xl">{plan.name}</CardTitle>
                   <CardDescription>{plan.description}</CardDescription>
                   <div className="flex items-baseline justify-center">
-                    <span className="text-4xl font-bold">{plan.price}</span>
+                    <span className="text-3xl font-bold md:text-4xl">{plan.price}</span>
                     <span className="text-foreground/70">{plan.period}</span>
                   </div>
                 </CardHeader>
-                <CardContent className="flex flex-col">
-                  <ul className="space-y-4 flex-grow">
+                <CardContent className="flex flex-col p-4 md:p-6">
+                  <ul className="space-y-3 md:space-y-4 flex-grow">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-center">
                         <Check className="h-5 w-5 text-accent mr-3" />
@@ -111,7 +111,7 @@ export default function ServicesPage() {
                       </li>
                     ))}
                   </ul>
-                  <Button asChild className="mt-8 w-full" variant={plan.variant}>
+                  <Button asChild className="mt-6 md:mt-8 w-full" variant={plan.variant}>
                     <Link href="/contact">{plan.cta}</Link>
                   </Button>
                 </CardContent>

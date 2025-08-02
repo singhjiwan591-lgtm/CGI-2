@@ -74,36 +74,36 @@ export default function Home() {
 
   return (
     <div className="flex flex-col">
-      <section className="relative flex h-[80dvh] min-h-[600px] w-full items-center justify-center bg-secondary">
+      <section className="relative flex h-[70dvh] min-h-[500px] w-full items-center justify-center bg-secondary md:h-[80dvh] md:min-h-[600px]">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-headline text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
+          <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             Build Your Digital Future
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-foreground/80 md:text-xl">
+          <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/80 md:text-xl">
             We craft stunning, high-performance websites and applications that
             drive growth and inspire users.
           </p>
-          <div className="mt-8 flex justify-center gap-4">
-            <Button asChild size="lg">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button asChild size="lg" className="w-full sm:w-auto">
               <Link href="/contact">
                 Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
+            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
               <Link href="/services">Learn More</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      <section id="introduction" className="py-16 md:py-24">
+      <section id="introduction" className="py-12 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
-            <div>
-              <h2 className="font-headline text-3xl font-bold md:text-4xl">
+          <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
+            <div className="order-2 md:order-1">
+              <h2 className="font-headline text-2xl font-bold md:text-4xl">
                 Welcome to Webfolio
               </h2>
-              <p className="mt-4 text-lg text-foreground/80">
+              <p className="mt-4 text-base text-foreground/80 md:text-lg">
                 We are a passionate team of designers, developers, and
                 strategists dedicated to helping businesses succeed in the
                 digital world. From startups to established enterprises, we
@@ -113,37 +113,39 @@ export default function Home() {
                 also effective.
               </p>
             </div>
-            <Image
-              src="https://placehold.co/600x400.png"
-              data-ai-hint="team collaboration"
-              alt="Team working together"
-              width={600}
-              height={400}
-              className="rounded-lg shadow-lg"
-            />
+            <div className="order-1 md:order-2">
+              <Image
+                src="https://placehold.co/600x400.png"
+                data-ai-hint="team collaboration"
+                alt="Team working together"
+                width={600}
+                height={400}
+                className="rounded-lg shadow-lg"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="features" className="bg-secondary py-16 md:py-24">
+      <section id="features" className="bg-secondary py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <h2 className="font-headline text-3xl font-bold md:text-4xl">
+            <h2 className="font-headline text-2xl font-bold md:text-4xl">
               Our Core Strengths
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-foreground/80">
+            <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/80 md:text-lg">
               Discover why clients trust us to bring their digital visions to
               life.
             </p>
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {features.map((feature, index) => (
               <Card key={index} className="text-center">
                 <CardHeader>
                   <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                     {feature.icon}
                   </div>
-                  <CardTitle className="mt-4 font-headline text-2xl">
+                  <CardTitle className="mt-4 font-headline text-xl md:text-2xl">
                     {feature.title}
                   </CardTitle>
                 </CardHeader>
@@ -156,20 +158,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="testimonials" className="py-16 md:py-24">
+      <section id="testimonials" className="py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <h2 className="font-headline text-3xl font-bold md:text-4xl">
+            <h2 className="font-headline text-2xl font-bold md:text-4xl">
               What Our Clients Say
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-foreground/80">
+            <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/80 md:text-lg">
               We've helped hundreds of businesses grow. Here's what they think
               about our work.
             </p>
           </div>
           <Carousel
             opts={{ align: 'start', loop: true }}
-            className="mx-auto mt-12 w-full max-w-4xl"
+            className="mx-auto mt-10 w-full max-w-xs sm:max-w-xl md:max-w-2xl lg:max-w-4xl"
           >
             <CarouselContent>
               {testimonials.map((testimonial, index) => (
@@ -177,7 +179,7 @@ export default function Home() {
                   <div className="p-1">
                     <Card>
                       <CardContent className="flex flex-col items-center justify-center p-6 text-center">
-                        <p className="text-lg italic text-foreground/90">
+                        <p className="text-base italic text-foreground/90 md:text-lg">
                           "{testimonial.quote}"
                         </p>
                         <div className="mt-6 flex items-center">
@@ -203,8 +205,8 @@ export default function Home() {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="hidden sm:flex" />
+            <CarouselNext className="hidden sm:flex" />
           </Carousel>
         </div>
       </section>

@@ -1,9 +1,10 @@
+
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Menu, Mountain, X } from 'lucide-react';
+import { Menu, Mountain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -34,7 +35,7 @@ export function SiteHeader() {
               className={cn(
                 'transition-colors hover:text-foreground/80',
                 pathname === link.href
-                  ? 'text-foreground'
+                  ? 'text-foreground font-semibold'
                   : 'text-foreground/60'
               )}
             >
@@ -73,7 +74,7 @@ export function SiteHeader() {
                       className={cn(
                         'text-lg transition-colors hover:text-foreground/80',
                         pathname === link.href
-                          ? 'text-foreground'
+                          ? 'text-foreground font-semibold'
                           : 'text-foreground/60'
                       )}
                     >
@@ -81,6 +82,14 @@ export function SiteHeader() {
                     </Link>
                   ))}
                 </nav>
+                 <div className="mt-auto flex flex-col gap-2 border-t pt-4">
+                    <Button variant="ghost" asChild onClick={() => setIsMobileMenuOpen(false)}>
+                      <Link href="/login">Login</Link>
+                    </Button>
+                    <Button asChild onClick={() => setIsMobileMenuOpen(false)}>
+                      <Link href="/register">Register</Link>
+                    </Button>
+                  </div>
               </div>
             </SheetContent>
           </Sheet>
