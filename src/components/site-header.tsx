@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Menu, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
 export function SiteHeader() {
@@ -59,13 +59,14 @@ export function SiteHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between border-b pb-4">
+                <SheetHeader className="border-b pb-4">
+                  <SheetTitle className="sr-only">Menu</SheetTitle>
                   <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
                     <BookOpen className="h-6 w-6 text-primary" />
                     <span className="font-bold font-headline">Oakridge School</span>
                   </Link>
-                </div>
+                </SheetHeader>
+              <div className="flex flex-col h-full">
                 <nav className="flex flex-col gap-4 py-4">
                   {navLinks.map((link) => (
                     <Link
