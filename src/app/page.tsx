@@ -8,6 +8,12 @@ import {
   Code,
   Briefcase,
   Users,
+  Codepen,
+  Database,
+  Layers,
+  Palette,
+  CloudCog,
+  ShieldCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,6 +21,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription
 } from '@/components/ui/card';
 import {
   Carousel,
@@ -24,7 +31,6 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Autoplay from "embla-carousel-autoplay";
 import React from 'react';
 
 export default function Home() {
@@ -75,96 +81,82 @@ export default function Home() {
         'A great learning environment with a focus on practical skills. The instructors are always ready to help and the community is very supportive.',
     },
   ];
-
-  const heroSlides = [
+  
+  const courseCards = [
     {
-      image: 'https://placehold.co/1920x1080.png',
-      dataAiHint: 'modern classroom students',
-      title: 'Launch Your Career in Technology',
-      description: 'Master the most in-demand tech skills with our expert-led courses.',
+      title: 'Web Development',
+      description: 'Master front-end and back-end technologies.',
+      icon: <Codepen className="h-8 w-8" />,
+      color: 'from-blue-500 to-blue-700',
     },
     {
-      image: 'https://placehold.co/1920x1080.png',
-      dataAiHint: 'coding on laptop',
-      title: 'Become a Full-Stack Developer',
-      description: 'From front-end design to back-end architecture, we cover it all.',
+      title: 'Data Science',
+      description: 'Unlock insights from data with Python & ML.',
+      icon: <Database className="h-8 w-8" />,
+      color: 'from-fuchsia-500 to-fuchsia-700',
     },
     {
-      image: 'https://placehold.co/1920x1080.png',
-      dataAiHint: 'data analytics dashboard',
-      title: 'Unlock the Power of Data Science',
-      description: 'Learn to analyze data, build AI models, and drive business decisions.',
+      title: 'UI/UX Design',
+      description: 'Create beautiful and user-friendly interfaces.',
+      icon: <Layers className="h-8 w-8" />,
+      color: 'from-orange-500 to-orange-700',
+    },
+    {
+      title: 'Graphic Design',
+      description: 'Bring your creative visions to life visually.',
+      icon: <Palette className="h-8 w-8" />,
+      color: 'from-green-500 to-green-700',
     },
      {
-      image: 'https://placehold.co/1920x1080.png',
-      dataAiHint: 'group of students collaborating',
-      title: 'Join a Community of Innovators',
-      description: 'Collaborate, learn, and grow with a network of passionate tech enthusiasts.',
+      title: 'Cloud Computing',
+      description: 'Learn AWS, Azure, and Google Cloud platforms.',
+      icon: <CloudCog className="h-8 w-8" />,
+      color: 'from-sky-500 to-sky-700',
     },
-  ]
-
-  const autoplayPlugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: true })
-  );
-
+    {
+      title: 'Cyber Security',
+      description: 'Protect systems from digital threats & attacks.',
+      icon: <ShieldCheck className="h-8 w-8" />,
+      color: 'from-red-500 to-red-700',
+    },
+  ];
 
   return (
     <div className="flex flex-col items-center">
-      <section className="w-full py-12 md:py-16">
-         <Carousel
-            className="w-full max-w-6xl mx-auto"
-            plugins={[autoplayPlugin.current]}
-            onMouseEnter={autoplayPlugin.current.stop}
-            onMouseLeave={autoplayPlugin.current.reset}
-            opts={{ loop: true }}
-         >
-          <CarouselContent>
-            {heroSlides.map((slide, index) => (
-              <CarouselItem key={index}>
-                <Card className="overflow-hidden">
-                    <CardContent className="p-0">
-                        <div className="flex flex-col">
-                            <div className="aspect-video">
-                                <Image
-                                    src={slide.image}
-                                    data-ai-hint={slide.dataAiHint}
-                                    alt={slide.title}
-                                    width={1280}
-                                    height={720}
-                                    className="w-full h-full object-cover"
-                                    priority={index === 0}
-                                />
-                            </div>
-                            <div className="p-6 md:p-10 text-center bg-secondary">
-                                <h1 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-                                {slide.title}
-                                </h1>
-                                <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-lg">
-                                {slide.description}
-                                </p>
-                                <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                                <Button asChild size="lg" className="w-full sm:w-auto">
-                                    <Link href="/admissions">
-                                    Enroll Now <ArrowRight className="ml-2 h-5 w-5" />
-                                    </Link>
-                                </Button>
-                                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-                                    <Link href="/academics">Explore Courses</Link>
-                                </Button>
-                                </div>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-              </CarouselItem>
+       <section className="w-full py-16 md:py-24">
+         <div className="container mx-auto px-4 text-center">
+            <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+              Launch Your Career in Technology
+            </h1>
+            <p className="mx-auto mt-6 max-w-3xl text-lg text-foreground/80 md:text-xl">
+              Master the most in-demand tech skills with our expert-led courses. Explore our programs and find the perfect path for you.
+            </p>
+          </div>
+
+        <div className="container mx-auto px-4 mt-12">
+           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+            {courseCards.map((card) => (
+              <Card 
+                key={card.title} 
+                className={`text-white bg-gradient-to-br ${card.color} transform transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-primary/50 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
+              >
+                <div className="mb-3">{card.icon}</div>
+                <CardTitle className="text-base md:text-lg font-bold">{card.title}</CardTitle>
+                <CardDescription className="text-white/80 text-xs hidden sm:block mt-1">{card.description}</CardDescription>
+              </Card>
             ))}
-          </CarouselContent>
-          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden sm:flex" />
-          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden sm:flex" />
-        </Carousel>
+           </div>
+        </div>
+        <div className="mt-12 text-center">
+            <Button asChild size="lg">
+                <Link href="/academics">
+                Explore All Courses <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+            </Button>
+        </div>
       </section>
 
-      <section id="introduction" className="w-full py-12 md:py-24">
+      <section id="introduction" className="w-full py-12 md:py-24 bg-secondary">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
             <div className="order-2 md:order-1">
@@ -189,7 +181,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="w-full bg-secondary py-12 md:py-24">
+      <section id="features" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -201,7 +193,7 @@ export default function Home() {
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {features.map((feature) => (
-              <Card key={feature.title} className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
+              <Card key={feature.title} className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl bg-secondary">
                 <CardHeader>
                   <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
                     {feature.icon}
@@ -219,7 +211,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="testimonials" className="w-full py-12 md:py-24">
+      <section id="testimonials" className="w-full bg-secondary py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -237,7 +229,7 @@ export default function Home() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index}>
                   <div className="p-1">
-                    <Card className="transform transition-transform duration-300 hover:scale-105">
+                    <Card className="transform transition-transform duration-300 hover:scale-105 bg-background">
                       <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                         <p className="text-base italic text-foreground/90 md:text-lg">
                           "{testimonial.quote}"
