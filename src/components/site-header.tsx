@@ -33,6 +33,7 @@ export function SiteHeader() {
     { href: '/about', label: 'About' },
     { href: '/academics', label: 'Courses' },
     { href: '/admissions', label: 'Admissions' },
+    { href: '/video-ad', label: 'Video Ad' },
     { href: '/contact', label: 'Contact' },
   ];
 
