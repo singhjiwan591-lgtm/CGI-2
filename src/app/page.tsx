@@ -74,7 +74,7 @@ export default function Home() {
     {
       name: 'Rohan Verma',
       title: 'Alumnus, Class of 2022',
-      avatar: 'https://placehold.co/100x100.png',
+      avatar: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
       dataAiHint: 'man programmer',
       quote:
         'The skills I gained here were directly applicable to my job from day one. The career support team was fantastic in helping me land my first role.',
@@ -82,7 +82,7 @@ export default function Home() {
     {
       name: 'Anjali Singh',
       title: 'UI/UX Designer',
-      avatar: 'https://placehold.co/100x100.png',
+      avatar: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
       dataAiHint: 'woman designer',
       quote:
         'A great learning environment with a focus on practical skills. The instructors are always ready to help and the community is very supportive.',
