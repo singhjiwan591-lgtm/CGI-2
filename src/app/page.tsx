@@ -101,6 +101,8 @@ export default function Home() {
       title: 'CCA',
       description: 'Certificate in Computer Applications',
       icon: <FileText className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/HfQqCY6P/IMG-20250803-WA0011.jpg',
+      dataAiHint: 'certificate computer',
       color: 'from-fuchsia-500 to-fuchsia-700',
     },
     {
