@@ -64,10 +64,10 @@ export default function Home() {
 
   const testimonials = [
     {
-      name: 'Priya Sharma',
+      name: 'Jeevan Singh',
       title: 'Software Developer, TechNova',
-      avatar: 'https://placehold.co/100x100.png',
-      dataAiHint: 'woman developer',
+      avatar: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
+      dataAiHint: 'man developer',
       quote:
         'Global Computer Institute provided the perfect launchpad for my career. The hands-on approach and expert faculty are unmatched. Highly recommended!',
     },
