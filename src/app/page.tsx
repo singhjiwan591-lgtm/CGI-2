@@ -74,7 +74,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center">
-      <section className="relative flex h-[70dvh] min-h-[500px] w-full items-center justify-center bg-secondary md:h-[80dvh] md:min-h-[600px]">
+      <section className="relative flex h-[70dvh] min-h-[500px] w-full items-center justify-center bg-background md:h-[80dvh] md:min-h-[600px]">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             Welcome to Oakridge School
