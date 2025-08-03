@@ -114,6 +114,8 @@ export default function Home() {
       title: 'DIFA',
       description: 'Diploma in Financial Accounting',
       icon: <Calculator className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/5hdDZj7D/IMG-20250803-WA0008.jpg',
+      dataAiHint: 'financial accounting',
       color: 'from-green-500 to-green-700',
     },
      {
