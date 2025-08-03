@@ -24,6 +24,10 @@ const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   photo: z.any().refine(files => files?.length == 1, 'Photo is required.'),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
+  phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
+  fatherName: z.string().min(2, { message: "Father's name must be at least 2 characters." }),
+  motherName: z.string().min(2, { message: "Mother's name must be at least 2 characters." }),
+  village: z.string().min(2, { message: 'Village must be at least 2 characters.' }),
   password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
   confirmPassword: z.string(),
   course: z.string().optional(),
@@ -41,6 +45,10 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     defaultValues: {
       fullName: '',
       email: '',
+      phoneNumber: '',
+      fatherName: '',
+      motherName: '',
+      village: '',
       password: '',
       confirmPassword: '',
       course: selectedCourse || '',
@@ -89,6 +97,58 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                   <FormLabel>Your Passport-size Photo</FormLabel>
                   <FormControl>
                     <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="fatherName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Father's Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Father's Full Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="motherName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mother's Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Mother's Full Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input type="tel" placeholder="Your Phone Number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="village"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Village</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Your Village" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
