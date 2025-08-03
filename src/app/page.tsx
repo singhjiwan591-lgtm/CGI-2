@@ -118,6 +118,8 @@ export default function Home() {
       title: 'Basic',
       description: 'Fundamentals of computer operations.',
       icon: <Book className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/LXr94CzW/Copilot-20250803-194950.png',
+      dataAiHint: 'computer basics',
       color: 'from-sky-500 to-sky-700',
     },
     {
