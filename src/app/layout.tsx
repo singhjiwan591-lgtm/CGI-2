@@ -9,6 +9,7 @@ import { DiscountPopup } from '@/components/discount-popup';
 export const metadata: Metadata = {
   title: 'Global Computer Institute',
   description: 'A leading institution for technology education.',
+  viewport: 'width=device-width, initial-scale=1',
 };
 
 export default function RootLayout({
@@ -30,8 +31,8 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-body bg-background text-foreground antialiased">
-        <div className="relative flex min-h-dvh flex-col items-center">
+      <body className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
+        <div className="relative flex flex-col items-center flex-1 w-full">
           <SiteHeader />
           <main className="flex-1 w-full">{children}</main>
           <SiteFooter />
