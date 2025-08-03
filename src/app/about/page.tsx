@@ -27,6 +27,12 @@ export default function AboutPage() {
       dataAiHint: 'institute owner',
     },
     {
+      name: 'Mr. Balvinder Singh',
+      position: 'Co-Founder & Director',
+      image: 'https://i.ibb.co/cK1V41kk/Compress-JPEG-Online-img-250x400.jpg',
+      dataAiHint: 'institute owner',
+    },
+    {
       name: 'Ms. Sunita Patel',
       position: 'Head of Academics',
       image: 'https://placehold.co/300x300.png',
@@ -110,7 +116,7 @@ export default function AboutPage() {
       <section className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Meet Our Leadership</h2>
-          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 md:gap-8">
             {teamMembers.map((member) => (
               <Card key={member.name} className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
                 <CardContent className="p-4 md:p-6">
@@ -150,3 +156,5 @@ export default function AboutPage() {
     </div>
   );
 }
+
+    
