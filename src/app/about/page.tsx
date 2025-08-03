@@ -23,7 +23,7 @@ export default function AboutPage() {
     {
       name: 'Mr. Rajesh Kumar',
       position: 'Founder & Director',
-      image: 'https://i.ibb.co/MDVW5J4/js.jpg',
+      image: 'https://i.ibb.co/MDVW5J4Z/js.jpg',
       dataAiHint: 'institute owner',
     },
     {
