@@ -150,6 +150,8 @@ export default function Home() {
       title: 'Internet',
       description: 'Explore the world of the internet.',
       icon: <Globe className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/LXfSf8xs/IMG-20250803-WA0006.jpg',
+      dataAiHint: 'internet globe',
       color: 'from-pink-500 to-pink-700',
     },
     {
