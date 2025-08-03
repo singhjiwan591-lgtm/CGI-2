@@ -307,6 +307,23 @@ export default function Home() {
           </Carousel>
         </div>
       </section>
+
+      <section id="logo-card" className="w-full py-12 md:py-24">
+        <div className="container mx-auto px-4 flex flex-col items-center">
+          <h2 className="font-headline text-2xl font-bold md:text-4xl text-center mb-8">
+            Our Identity
+          </h2>
+          <Card className="w-full max-w-sm p-8 bg-card transform transition-transform duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-primary/30 flex justify-center items-center">
+            <Image
+              src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png"
+              alt="Global Computer Institute Logo"
+              width={200}
+              height={200}
+              className="object-contain"
+            />
+          </Card>
+        </div>
+      </section>
     </div>
   );
 }
