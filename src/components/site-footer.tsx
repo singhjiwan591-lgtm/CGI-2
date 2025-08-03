@@ -6,8 +6,8 @@ export function SiteFooter() {
   return (
     <footer className="w-full bg-secondary">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-3 md:text-left">
-          <div className="flex flex-col items-center md:items-start">
+        <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-4 md:text-left">
+          <div className="flex flex-col items-center md:items-start md:col-span-2">
             <Link href="/" className="flex items-center space-x-2">
               <BookOpen className="h-8 w-8 text-primary" />
               <span className="text-2xl font-bold font-headline">Oakridge School</span>
@@ -37,6 +37,11 @@ export function SiteFooter() {
               <li>
                 <Link href="/contact" className="hover:text-primary transition-colors">
                   Contact
+                </Link>
+              </li>
+               <li>
+                <Link href="/verify-certificate" className="hover:text-primary transition-colors">
+                  Verify Certificate
                 </Link>
               </li>
             </ul>

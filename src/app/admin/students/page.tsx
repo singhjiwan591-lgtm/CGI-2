@@ -70,12 +70,12 @@ type Student = {
 };
 
 const initialStudents: Student[] = [
-  { id: 'S001', name: 'Olivia Martin', grade: 10, status: 'Enrolled', email: 'olivia.martin@example.com', program: 'Science', avatarHint: 'student portrait' },
-  { id: 'S002', name: 'Jackson Lee', grade: 9, status: 'Enrolled', email: 'jackson.lee@example.com', program: 'Arts', avatarHint: 'boy student' },
-  { id: 'S003', name: 'Sofia Nguyen', grade: 11, status: 'Enrolled', email: 'sofia.nguyen@example.com', program: 'Technology', avatarHint: 'girl smiling' },
-  { id: 'S004', name: 'Isabella Patel', grade: 12, status: 'Graduated', email: 'isabella.patel@example.com', program: 'Math', avatarHint: 'boy glasses' },
-  { id: 'S005', name: 'William Kim', grade: 9, status: 'Enrolled', email: 'william.kim@example.com', program: 'Arts', avatarHint: 'student smiling' },
-  { id: 'S006', name: 'Ava Brown', grade: 10, status: 'Withdrawn', email: 'ava.brown@example.com', program: 'Science', avatarHint: 'girl portrait' },
+  { id: '24001', name: 'Olivia Martin', grade: 10, status: 'Enrolled', email: 'olivia.martin@example.com', program: 'Science', avatarHint: 'student portrait' },
+  { id: '24002', name: 'Jackson Lee', grade: 9, status: 'Enrolled', email: 'jackson.lee@example.com', program: 'Arts', avatarHint: 'boy student' },
+  { id: '24003', name: 'Sofia Nguyen', grade: 11, status: 'Enrolled', email: 'sofia.nguyen@example.com', program: 'Technology', avatarHint: 'girl smiling' },
+  { id: '24004', name: 'Isabella Patel', grade: 12, status: 'Graduated', email: 'isabella.patel@example.com', program: 'Math', avatarHint: 'boy glasses' },
+  { id: '24005', name: 'William Kim', grade: 9, status: 'Enrolled', email: 'william.kim@example.com', program: 'Arts', avatarHint: 'student smiling' },
+  { id: '24006', name: 'Ava Brown', grade: 10, status: 'Withdrawn', email: 'ava.brown@example.com', program: 'Science', avatarHint: 'girl portrait' },
 ];
 
 export default function StudentsPage() {
@@ -101,7 +101,7 @@ export default function StudentsPage() {
   
   const handleSave = (formData: FormData) => {
     const newStudentData = {
-        id: editingStudent ? editingStudent.id : `S${String(Date.now()).slice(-3)}`,
+        id: editingStudent ? editingStudent.id : `${new Date().getFullYear().toString().slice(2)}${Math.floor(1000 + Math.random() * 9000)}`,
         name: formData.get('name') as string,
         email: formData.get('email') as string,
         grade: Number(formData.get('grade')),
