@@ -72,7 +72,7 @@ export default function Home() {
         'Global Computer Institute provided the perfect launchpad for my career. The hands-on approach and expert faculty are unmatched. Highly recommended!',
     },
     {
-      name: 'Rohan Verma',
+      name: 'Jeevan Singh',
       title: 'Alumnus, Class of 2022',
       avatar: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
       dataAiHint: 'man programmer',
