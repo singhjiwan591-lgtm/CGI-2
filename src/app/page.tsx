@@ -195,12 +195,12 @@ export default function Home() {
                 <Card 
                   className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/50 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
                 >
-                  {card.imageUrl && (
+                  {card.imageUrl ? (
                     <>
                       <Image src={card.imageUrl} alt={card.title} layout="fill" objectFit="cover" className="z-0 transition-transform duration-300 group-hover:scale-110" data-ai-hint={card.dataAiHint} />
                       <div className="absolute inset-0 bg-black/50 z-10"></div>
                     </>
-                  )}
+                  ) : null}
                   <div className="z-20 flex flex-col items-center justify-center">
                     <div className="mb-3">{card.icon}</div>
                     <CardTitle className="text-base md:text-lg font-bold">{card.title}</CardTitle>
