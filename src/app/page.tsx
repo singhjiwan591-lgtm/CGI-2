@@ -188,14 +188,15 @@ export default function Home() {
           </div>
            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {courseCards.map((card) => (
-              <Card 
-                key={card.title} 
-                className={`text-white bg-gradient-to-br ${card.color} transform transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-primary/50 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
-              >
-                <div className="mb-3">{card.icon}</div>
-                <CardTitle className="text-base md:text-lg font-bold">{card.title}</CardTitle>
-                <CardDescription className="text-white/80 text-xs hidden sm:block mt-1">{card.description}</CardDescription>
-              </Card>
+              <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block">
+                <Card 
+                  className={`text-white bg-gradient-to-br ${card.color} transform transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-primary/50 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
+                >
+                  <div className="mb-3">{card.icon}</div>
+                  <CardTitle className="text-base md:text-lg font-bold">{card.title}</CardTitle>
+                  <CardDescription className="text-white/80 text-xs hidden sm:block mt-1">{card.description}</CardDescription>
+                </Card>
+              </Link>
             ))}
            </div>
         </div>

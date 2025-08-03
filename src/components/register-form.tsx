@@ -18,6 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { useEffect } from 'react';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -25,6 +26,7 @@ const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
   confirmPassword: z.string(),
+  course: z.string().optional(),
   terms: z.boolean().default(false).refine(val => val === true, {
     message: 'You must accept the terms and conditions.',
   }),
@@ -33,7 +35,7 @@ const formSchema = z.object({
   path: ['confirmPassword'],
 });
 
-export function RegisterForm() {
+export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,9 +43,16 @@ export function RegisterForm() {
       email: '',
       password: '',
       confirmPassword: '',
+      course: selectedCourse || '',
       terms: false,
     },
   });
+
+  useEffect(() => {
+    if (selectedCourse) {
+      form.setValue('course', selectedCourse);
+    }
+  }, [selectedCourse, form]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Handle registration logic for admissions application
@@ -85,6 +94,21 @@ export function RegisterForm() {
                 </FormItem>
               )}
             />
+            {selectedCourse && (
+               <FormField
+                control={form.control}
+                name="course"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Selected Course</FormLabel>
+                    <FormControl>
+                      <Input readOnly disabled {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="email"
