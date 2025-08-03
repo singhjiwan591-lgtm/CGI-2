@@ -140,6 +140,8 @@ export default function Home() {
       title: 'HTML',
       description: 'Learn the language of the web.',
       icon: <Codepen className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/rJp1PDZ/IMG-20250803-WA0004.jpg',
+      dataAiHint: 'html code',
       color: 'from-indigo-500 to-indigo-700',
     },
       {
