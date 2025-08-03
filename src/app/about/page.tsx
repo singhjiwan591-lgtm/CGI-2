@@ -24,7 +24,7 @@ export default function AboutPage() {
       name: 'Mr. Rajesh Kumar',
       position: 'Founder & Director',
       image: 'https://placehold.co/300x300.png',
-      dataAiHint: 'man professional',
+      dataAiHint: 'institute owner',
     },
     {
       name: 'Ms. Sunita Patel',
