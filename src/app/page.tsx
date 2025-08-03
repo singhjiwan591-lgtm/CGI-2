@@ -128,25 +128,28 @@ export default function Home() {
                     alt={slide.title}
                     fill
                     className="object-cover"
+                    priority={index === 0}
                   />
-                  <div className="absolute inset-0 bg-black/50" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
                   <div className="relative z-10 flex h-full items-center justify-center">
                     <div className="container mx-auto px-4 text-center text-white">
-                      <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-                        {slide.title}
-                      </h1>
-                      <p className="mx-auto mt-4 max-w-3xl text-base text-white/80 md:text-xl">
-                        {slide.description}
-                      </p>
-                      <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Button asChild size="lg" className="w-full sm:w-auto">
-                          <Link href="/admissions">
-                            Enroll Now <ArrowRight className="ml-2 h-5 w-5" />
-                          </Link>
-                        </Button>
-                        <Button asChild variant="outline" size="lg" className="w-full sm:w-auto bg-transparent border-white text-white hover:bg-white hover:text-primary">
-                          <Link href="/academics">Explore Courses</Link>
-                        </Button>
+                      <div className="bg-black/30 backdrop-blur-sm p-6 md:p-10 rounded-lg max-w-4xl mx-auto">
+                        <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+                          {slide.title}
+                        </h1>
+                        <p className="mx-auto mt-4 max-w-3xl text-base text-white/90 md:text-xl">
+                          {slide.description}
+                        </p>
+                        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                          <Button asChild size="lg" className="w-full sm:w-auto">
+                            <Link href="/admissions">
+                              Enroll Now <ArrowRight className="ml-2 h-5 w-5" />
+                            </Link>
+                          </Button>
+                          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto bg-transparent border-white text-white hover:bg-white hover:text-primary">
+                            <Link href="/academics">Explore Courses</Link>
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
