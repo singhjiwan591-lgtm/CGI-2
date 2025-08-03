@@ -45,7 +45,7 @@ export default function DashboardLayout({
 
   const navLinks = [
     { href: '/admin/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/admin/students', label: 'Students', icon: Users, badge: '6' },
+    { href: '/admin/students', label: 'Students', icon: Users },
     { href: '/admin/attendance', label: 'Attendance', icon: Fingerprint },
     { href: '/admin/analytics', label: 'Analytics', icon: LineChart },
   ];
