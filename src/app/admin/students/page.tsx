@@ -198,7 +198,7 @@ export default function StudentsPage() {
                   </TableCell>
                   <TableCell className="hidden md:table-cell">{student.program}</TableCell>
                   <TableCell className="hidden md:table-cell">{student.grade}th Grade</TableCell>
-                  <TableCell className="hidden md:table-cell text-right">${student.totalFees.toLocaleString()}</TableCell>
+                  <TableCell className="hidden md:table-cell text-right">₹{student.totalFees.toLocaleString()}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -288,7 +288,7 @@ export default function StudentsPage() {
               </div>
                <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="totalFees" className="text-right">
-                  Total Fees ($)
+                  Total Fees (₹)
                 </Label>
                 <Input id="totalFees" name="totalFees" type="number" defaultValue={editingStudent?.totalFees || ''} className="col-span-3" />
               </div>
@@ -336,15 +336,15 @@ export default function StudentsPage() {
                         <CardContent className="grid grid-cols-3 gap-2 text-center">
                              <div>
                                 <p className="text-xs text-muted-foreground">Total Fees</p>
-                                <p className="font-bold text-lg">${viewingStudent.totalFees.toLocaleString()}</p>
+                                <p className="font-bold text-lg">₹{viewingStudent.totalFees.toLocaleString()}</p>
                              </div>
                              <div>
                                 <p className="text-xs text-muted-foreground">Fees Paid</p>
-                                <p className="font-bold text-lg text-green-600">${viewingStudent.feesPaid.toLocaleString()}</p>
+                                <p className="font-bold text-lg text-green-600">₹{viewingStudent.feesPaid.toLocaleString()}</p>
                              </div>
                              <div>
                                 <p className="text-xs text-muted-foreground">Remaining</p>
-                                <p className="font-bold text-lg text-red-600">${(viewingStudent.totalFees - viewingStudent.feesPaid).toLocaleString()}</p>
+                                <p className="font-bold text-lg text-red-600">₹{(viewingStudent.totalFees - viewingStudent.feesPaid).toLocaleString()}</p>
                              </div>
                         </CardContent>
                     </Card>
@@ -387,5 +387,3 @@ export default function StudentsPage() {
     </>
   );
 }
-
-    

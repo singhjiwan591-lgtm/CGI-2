@@ -145,7 +145,7 @@ export default function AnalyticsPage() {
                         </TableCell>
                         <TableCell>Female</TableCell>
                         <TableCell>Science</TableCell>
-                        <TableCell>$350.00</TableCell>
+                        <TableCell>₹350.00</TableCell>
                         <TableCell>
                            <div className="flex gap-2">
                                 <Button variant="outline" size="icon" className="h-8 w-8"><Pencil className="h-4 w-4" /></Button>
@@ -165,7 +165,7 @@ export default function AnalyticsPage() {
                         </TableCell>
                         <TableCell>Male</TableCell>
                         <TableCell>Arts</TableCell>
-                        <TableCell>$350.00</TableCell>
+                        <TableCell>₹350.00</TableCell>
                         <TableCell>
                            <div className="flex gap-2">
                                 <Button variant="outline" size="icon" className="h-8 w-8"><Pencil className="h-4 w-4" /></Button>
@@ -185,7 +185,7 @@ export default function AnalyticsPage() {
                         </TableCell>
                         <TableCell>Female</TableCell>
                         <TableCell>Technology</TableCell>
-                        <TableCell>$350.00</TableCell>
+                        <TableCell>₹350.00</TableCell>
                         <TableCell>
                            <div className="flex gap-2">
                                 <Button variant="outline" size="icon" className="h-8 w-8"><Pencil className="h-4 w-4" /></Button>

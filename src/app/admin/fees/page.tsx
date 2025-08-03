@@ -90,7 +90,7 @@ export default function FeesPage() {
 
     const remainingFees = selectedStudent.totalFees - selectedStudent.feesPaid;
     if (amount > remainingFees) {
-      toast({ variant: 'destructive', title: 'Overpayment Error', description: `Payment cannot exceed the remaining balance of $${remainingFees}.` });
+      toast({ variant: 'destructive', title: 'Overpayment Error', description: `Payment cannot exceed the remaining balance of ₹${remainingFees}.` });
       return;
     }
 
@@ -100,7 +100,7 @@ export default function FeesPage() {
         : s
     ));
     
-    toast({ title: 'Payment Successful', description: `$${amount} collected from ${selectedStudent.name}.` });
+    toast({ title: 'Payment Successful', description: `₹${amount} collected from ${selectedStudent.name}.` });
     setIsCollectFeeDialogOpen(false);
     setSelectedStudent(null);
   };
@@ -128,7 +128,7 @@ export default function FeesPage() {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">${totalCollected.toLocaleString()}</div>
+                <div className="text-2xl font-bold">₹{totalCollected.toLocaleString()}</div>
                 <p className="text-xs text-muted-foreground">from {students.length} students</p>
             </CardContent>
         </Card>
@@ -138,7 +138,7 @@ export default function FeesPage() {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">${totalRemaining.toLocaleString()}</div>
+                <div className="text-2xl font-bold">₹{totalRemaining.toLocaleString()}</div>
                 <p className="text-xs text-muted-foreground">outstanding from all students</p>
             </CardContent>
         </Card>
@@ -189,10 +189,10 @@ export default function FeesPage() {
                             </div>
                         </div>
                     </TableCell>
-                    <TableCell className="text-right">${student.totalFees.toLocaleString()}</TableCell>
-                    <TableCell className="text-right">${student.feesPaid.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">₹{student.totalFees.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">₹{student.feesPaid.toLocaleString()}</TableCell>
                     <TableCell className={`text-right font-medium ${remaining > 0 ? 'text-destructive' : 'text-green-600'}`}>
-                        ${remaining.toLocaleString()}
+                        ₹{remaining.toLocaleString()}
                     </TableCell>
                     <TableCell className="text-center">
                         <div className="flex flex-col items-center gap-1">
@@ -225,13 +225,13 @@ export default function FeesPage() {
             <DialogHeader>
               <DialogTitle>Collect Fee from {selectedStudent?.name}</DialogTitle>
               <DialogDescription>
-                Enter the amount to be paid. The remaining balance is ${(selectedStudent?.totalFees ?? 0) - (selectedStudent?.feesPaid ?? 0)}.
+                Enter the amount to be paid. The remaining balance is ₹{((selectedStudent?.totalFees ?? 0) - (selectedStudent?.feesPaid ?? 0)).toLocaleString()}.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="amount" className="text-right">
-                  Amount (USD)
+                  Amount (INR)
                 </Label>
                 <Input 
                     id="amount" 
