@@ -94,6 +94,8 @@ export default function Home() {
       title: 'ADCA',
       description: 'Advanced Diploma in Computer Applications',
       icon: <FileText className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/67kgqFp4/IMG-20250803-WA0009-1.jpg',
+      dataAiHint: 'advanced diploma computer',
       color: 'from-blue-500 to-blue-700',
     },
     {
@@ -334,7 +336,7 @@ export default function Home() {
 
       <section id="logo-card" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4 flex flex-col items-center">
-          <h2 className="font-headline text-2xl font-bold md:text-4xl text-center mb-8">
+          <h2 className="font-headline text-2xl font-bold md-text-4xl text-center mb-8">
             Our Identity
           </h2>
           <Card className="w-full max-w-sm p-8 bg-card transform transition-transform duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-primary/30 flex justify-center items-center">
