@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,7 +34,6 @@ export function LoginForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     // Handle login logic here
   }
   

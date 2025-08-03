@@ -18,7 +18,6 @@ export function SiteHeader() {
     setIsMounted(true);
   }, []);
 
-
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
@@ -94,7 +93,7 @@ export function SiteHeader() {
             </SheetTrigger>
             <SheetContent side="left">
                 <SheetHeader className="border-b pb-4">
-                  <SheetTitle className="sr-only">Menu</SheetTitle>
+                  <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                   <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
                     <BookOpen className="h-6 w-6 text-primary" />
                     <span className="font-bold font-headline">Oakridge School</span>

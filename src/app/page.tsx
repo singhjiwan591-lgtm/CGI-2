@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -10,7 +11,6 @@ import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -26,19 +26,19 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 export default function Home() {
   const features = [
     {
-      icon: <Trophy className="h-10 w-10 text-chart-1" />,
+      icon: <Trophy className="h-10 w-10 text-primary" />,
       title: 'Experienced Faculty',
       description:
         'Our educators are passionate, experienced, and dedicated to student success.',
     },
     {
-      icon: <Lightbulb className="h-10 w-10 text-chart-2" />,
+      icon: <Lightbulb className="h-10 w-10 text-primary" />,
       title: 'Innovative Curriculum',
       description:
         'We offer a dynamic and engaging curriculum that fosters critical thinking and creativity.',
     },
     {
-      icon: <Users className="h-10 w-10 text-chart-3" />,
+      icon: <Users className="h-10 w-10 text-primary" />,
       title: 'Vibrant Community',
       description:
         'We cultivate a supportive and inclusive community for students, parents, and staff.',
@@ -73,7 +73,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col items-center">
       <section className="relative flex h-[70dvh] min-h-[500px] w-full items-center justify-center bg-secondary md:h-[80dvh] md:min-h-[600px]">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
@@ -95,7 +95,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="introduction" className="py-12 md:py-24">
+      <section id="introduction" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
             <div className="order-2 md:order-1">
@@ -120,7 +120,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="bg-secondary py-12 md:py-24">
+      <section id="features" className="w-full bg-secondary py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -131,10 +131,10 @@ export default function Home() {
             </p>
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="text-center">
+            {features.map((feature) => (
+              <Card key={feature.title} className="text-center">
                 <CardHeader>
-                  <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-chart-${(index % 5) + 1}/10`}>
+                  <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
                     {feature.icon}
                   </div>
                   <CardTitle className="mt-4 font-headline text-xl md:text-2xl">
@@ -150,7 +150,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="testimonials" className="py-12 md:py-24">
+      <section id="testimonials" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">

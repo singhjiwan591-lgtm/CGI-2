@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,7 +39,6 @@ export function ContactForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     toast({
       title: 'Message Sent!',
       description: 'Thank you for contacting us. We will get back to you shortly.',

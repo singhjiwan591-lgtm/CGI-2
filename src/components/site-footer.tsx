@@ -1,9 +1,10 @@
+
 import Link from 'next/link';
 import { BookOpen, Facebook, Instagram, Linkedin } from 'lucide-react';
 
 export function SiteFooter() {
   return (
-    <footer className="bg-secondary">
+    <footer className="w-full bg-secondary">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-3 md:text-left">
           <div className="flex flex-col items-center md:items-start">

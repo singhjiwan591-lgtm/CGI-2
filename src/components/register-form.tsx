@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -44,7 +45,6 @@ export function RegisterForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     // Handle registration logic for admissions application
   }
 
@@ -123,7 +123,7 @@ export function RegisterForm() {
                   <div className="space-y-1 leading-none">
                     <FormLabel>
                       I agree to the admissions{' '}
-                      <Link href="#" className="underline hover:text-accent">
+                      <Link href="#" className="underline hover:text-primary">
                         Terms & Conditions
                       </Link>
                     </FormLabel>

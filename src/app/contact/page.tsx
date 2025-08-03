@@ -1,17 +1,18 @@
+
 import Image from 'next/image';
 import { Mail, MapPin, Phone, Facebook, Instagram, Linkedin } from 'lucide-react';
 import { ContactForm } from '@/components/contact-form';
 
 export default function ContactPage() {
   const contactDetails = [
-    { icon: <MapPin className="h-6 w-6 text-chart-1" />, text: '123 Education Avenue, Knowledge City, 54321' },
-    { icon: <Mail className="h-6 w-6 text-chart-2" />, text: 'contact@oakridge.edu' },
-    { icon: <Phone className="h-6 w-6 text-chart-3" />, text: '(123) 555-2024' },
+    { icon: <MapPin className="h-6 w-6 text-primary" />, text: '123 Education Avenue, Knowledge City, 54321' },
+    { icon: <Mail className="h-6 w-6 text-primary" />, text: 'contact@oakridge.edu' },
+    { icon: <Phone className="h-6 w-6 text-primary" />, text: '(123) 555-2024' },
   ];
 
   return (
-    <div>
-      <section className="bg-secondary py-16 md:py-24">
+    <div className="flex flex-col items-center">
+      <section className="w-full bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">Get in Touch</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base md:text-lg text-foreground/80">
@@ -20,7 +21,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="py-12 md:py-20">
+      <section className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-12">
             <div>
@@ -52,7 +53,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section>
+      <section className="w-full">
         <div className="container mx-auto px-4 pb-12 md:pb-24">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl mb-6 md:mb-8">Our Campus Location</h2>
           <div className="aspect-video w-full">

@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,8 +41,8 @@ export default function AdmissionsPage() {
   ];
 
   return (
-    <div>
-      <section className="bg-secondary py-16 md:py-24">
+    <div className="flex flex-col items-center">
+      <section className="w-full bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">Admissions</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base md:text-lg text-foreground/80">
@@ -50,7 +51,7 @@ export default function AdmissionsPage() {
         </div>
       </section>
 
-      <section className="py-12 md:py-20">
+      <section className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">How to Apply</h2>
           <p className="text-center mx-auto mt-4 max-w-2xl text-foreground/80">
@@ -60,12 +61,12 @@ export default function AdmissionsPage() {
             <div className="absolute left-1/2 top-4 hidden h-[calc(100%-2rem)] w-0.5 -translate-x-1/2 bg-border md:block"></div>
             <div className="space-y-10">
               {admissionSteps.map((item, index) => (
-                <div key={index} className="relative flex flex-col md:flex-row items-center gap-6">
-                  <div className={`z-10 flex h-12 w-12 items-center justify-center rounded-full bg-chart-${(index % 5) + 1} text-white font-bold text-xl`}>
+                <div key={index} className="relative flex flex-col items-center gap-6 md:flex-row md:items-stretch md:justify-center">
+                  <div className={`z-10 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xl flex-shrink-0`}>
                     {item.step}
                   </div>
-                  <div className="w-full md:w-1/2 md:pr-8 text-center md:text-left">
-                     <Card className={index % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto'}>
+                  <div className={`w-full md:w-5/12 ${index % 2 === 0 ? 'md:pl-8' : 'md:pr-8 md:text-right'} `}>
+                     <Card className="h-full">
                       <CardHeader>
                         <CardTitle className="font-headline text-xl">{item.title}</CardTitle>
                       </CardHeader>
@@ -81,14 +82,14 @@ export default function AdmissionsPage() {
         </div>
       </section>
 
-      <section className="bg-secondary py-12 md:py-20">
+      <section className="w-full bg-secondary py-12 md:py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Key Dates & Deadlines</h2>
           <div className="mx-auto mt-10 max-w-2xl">
             <ul className="space-y-4">
-              {keyDates.map((item, index) => (
+              {keyDates.map((item) => (
                 <li key={item.event} className="flex items-center rounded-lg bg-background p-4 shadow">
-                  <CheckCircle2 className={`h-6 w-6 text-chart-${(index % 5) + 1} mr-4`} />
+                  <CheckCircle2 className={`h-6 w-6 text-primary mr-4`} />
                   <div>
                     <p className="font-semibold">{item.date}</p>
                     <p className="text-foreground/80">{item.event}</p>
@@ -100,7 +101,7 @@ export default function AdmissionsPage() {
         </div>
       </section>
 
-      <section className="py-12 md:py-20">
+      <section className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4 text-center">
             <h2 className="font-headline text-2xl font-bold md:text-3xl">Begin Your Application</h2>
             <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg text-foreground/80">
