@@ -5,9 +5,10 @@ import Link from 'next/link';
 import {
   Bell,
   BookOpen,
+  Fingerprint,
   Home,
+  LineChart,
   Users,
-  LineChart
 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -45,6 +46,7 @@ export default function DashboardLayout({
   const navLinks = [
     { href: '/admin/dashboard', label: 'Dashboard', icon: Home },
     { href: '/admin/students', label: 'Students', icon: Users, badge: '6' },
+    { href: '/admin/attendance', label: 'Attendance', icon: Fingerprint },
     { href: '/admin/analytics', label: 'Analytics', icon: LineChart },
   ];
   
