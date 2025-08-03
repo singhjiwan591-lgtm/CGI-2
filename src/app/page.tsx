@@ -160,6 +160,8 @@ export default function Home() {
       title: 'Hardware & Software',
       description: 'Understand computer components.',
       icon: <HardDrive className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/5hdDZj7D/IMG-20250803-WA0008.jpg',
+      dataAiHint: 'computer hardware',
       color: 'from-teal-500 to-teal-700',
     },
   ];
