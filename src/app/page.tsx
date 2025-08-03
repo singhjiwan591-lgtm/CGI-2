@@ -130,6 +130,8 @@ export default function Home() {
       title: 'Typing (Eng/Pbi)',
       description: 'Master English & Punjabi typing skills.',
       icon: <Keyboard className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/3Yr8MjcT/touch-typing-keyboard.webp',
+      dataAiHint: 'typing keyboard',
       color: 'from-yellow-500 to-yellow-700',
     },
      {
@@ -187,13 +189,21 @@ export default function Home() {
           </div>
            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {courseCards.map((card) => (
-              <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block">
+              <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block group">
                 <Card 
-                  className={`text-white bg-gradient-to-br ${card.color} transform transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-primary/50 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
+                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/50 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
                 >
-                  <div className="mb-3">{card.icon}</div>
-                  <CardTitle className="text-base md:text-lg font-bold">{card.title}</CardTitle>
-                  <CardDescription className="text-white/80 text-xs hidden sm:block mt-1">{card.description}</CardDescription>
+                  {card.imageUrl && (
+                    <>
+                      <Image src={card.imageUrl} alt={card.title} layout="fill" objectFit="cover" className="z-0 transition-transform duration-300 group-hover:scale-110" data-ai-hint={card.dataAiHint} />
+                      <div className="absolute inset-0 bg-black/50 z-10"></div>
+                    </>
+                  )}
+                  <div className="z-20 flex flex-col items-center justify-center">
+                    <div className="mb-3">{card.icon}</div>
+                    <CardTitle className="text-base md:text-lg font-bold">{card.title}</CardTitle>
+                    <CardDescription className="text-white/80 text-xs hidden sm:block mt-1">{card.description}</CardDescription>
+                  </div>
                 </Card>
               </Link>
             ))}
