@@ -5,7 +5,7 @@ import { ContactForm } from '@/components/contact-form';
 
 export default function ContactPage() {
   const contactDetails = [
-    { icon: <MapPin className="h-6 w-6 text-primary" />, text: '123 Tech Park, Silicon Vihar, 54321' },
+    { icon: <MapPin className="h-6 w-6 text-primary" />, text: 'Main Road, Near Bus Stand, Jalalabad (West), Punjab' },
     { icon: <Mail className="h-6 w-6 text-primary" />, text: 'admissions@globalcomputer.edu' },
     { icon: <Phone className="h-6 w-6 text-primary" />, text: '(123) 555-2024' },
   ];
@@ -59,8 +59,8 @@ export default function ContactPage() {
           <div className="aspect-video w-full">
             <Image 
               src="https://placehold.co/1200x600.png"
-              data-ai-hint="street map city"
-              alt="Map showing institute location"
+              data-ai-hint="map Jalalabad"
+              alt="Map showing institute location in Jalalabad"
               width={1200}
               height={600}
               className="w-full h-full object-cover rounded-lg shadow-md"
