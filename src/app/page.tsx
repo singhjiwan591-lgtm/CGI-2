@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -94,7 +93,7 @@ export default function Home() {
       title: 'ADCA',
       description: 'Advanced Diploma in Computer Applications',
       icon: <FileText className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/67kgqFp4/IMG-20250803-WA0009-1.jpg',
+      imageUrl: 'https://i.ibb.co/0VXPWLDb/IMG-20250803-WA0010.jpg',
       dataAiHint: 'advanced diploma computer',
       color: 'from-blue-500 to-blue-700',
     },
