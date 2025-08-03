@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -56,58 +57,58 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:gap-4 sm:py-4">
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-            <Card>
+            <Card className="bg-blue-500 text-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Total Students
                 </CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
+                <Users className="h-4 w-4 text-white/80" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">2,150</div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-white/80">
                   +5.2% from last year
                 </p>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="bg-orange-500 text-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Faculty Members
                 </CardTitle>
-                <BookUser className="h-4 w-4 text-muted-foreground" />
+                <BookUser className="h-4 w-4 text-white/80" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">125</div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-white/80">
                   +3 new hires this semester
                 </p>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="bg-fuchsia-500 text-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Graduation Rate
                 </CardTitle>
-                <GraduationCap className="h-4 w-4 text-muted-foreground" />
+                <GraduationCap className="h-4 w-4 text-white/80" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">98.5%</div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-white/80">
                   Class of 2023
                 </p>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="bg-green-500 text-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Recent Activity
                 </CardTitle>
-                <Activity className="h-4 w-4 text-muted-foreground" />
+                <Activity className="h-4 w-4 text-white/80" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">+54</div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-white/80">
                   New applications this week
                 </p>
               </CardContent>
