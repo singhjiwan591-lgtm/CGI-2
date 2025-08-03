@@ -106,6 +106,8 @@ export default function Home() {
       title: 'DCA',
       description: 'Diploma in Computer Applications',
       icon: <FileText className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/tPXj64KV/IMG-20250803-WA0007.jpg',
+      dataAiHint: 'computer diploma',
       color: 'from-orange-500 to-orange-700',
     },
     {
