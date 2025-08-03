@@ -38,6 +38,7 @@ import {
 } from '@/components/ui/carousel';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import React from 'react';
+import { ScrollingText } from '@/components/scrolling-text';
 
 export default function Home() {
   const features = [
@@ -155,9 +156,7 @@ export default function Home() {
     <div className="flex flex-col items-center">
        <section className="w-full py-20 md:py-32">
          <div className="container mx-auto px-4 text-center">
-            <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-              Launch Your Career in Technology
-            </h1>
+            <ScrollingText />
             <p className="mx-auto mt-6 max-w-3xl text-lg text-foreground/80 md:text-xl">
               Master the most in-demand tech skills with our expert-led courses. Explore our programs and find the perfect path for you.
             </p>
