@@ -14,6 +14,12 @@ import {
   Palette,
   CloudCog,
   ShieldCheck,
+  FileText,
+  Book,
+  Keyboard,
+  Globe,
+  HardDrive,
+  Calculator,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -84,40 +90,64 @@ export default function Home() {
   
   const courseCards = [
     {
-      title: 'Web Development',
-      description: 'Master front-end and back-end technologies.',
-      icon: <Codepen className="h-8 w-8" />,
+      title: 'ADCA',
+      description: 'Advanced Diploma in Computer Applications',
+      icon: <FileText className="h-8 w-8" />,
       color: 'from-blue-500 to-blue-700',
     },
     {
-      title: 'Data Science',
-      description: 'Unlock insights from data with Python & ML.',
-      icon: <Database className="h-8 w-8" />,
+      title: 'CCA',
+      description: 'Certificate in Computer Applications',
+      icon: <FileText className="h-8 w-8" />,
       color: 'from-fuchsia-500 to-fuchsia-700',
     },
     {
-      title: 'UI/UX Design',
-      description: 'Create beautiful and user-friendly interfaces.',
-      icon: <Layers className="h-8 w-8" />,
+      title: 'DCA',
+      description: 'Diploma in Computer Applications',
+      icon: <FileText className="h-8 w-8" />,
       color: 'from-orange-500 to-orange-700',
     },
     {
-      title: 'Graphic Design',
-      description: 'Bring your creative visions to life visually.',
-      icon: <Palette className="h-8 w-8" />,
+      title: 'DIFA',
+      description: 'Diploma in Financial Accounting',
+      icon: <Calculator className="h-8 w-8" />,
       color: 'from-green-500 to-green-700',
     },
      {
-      title: 'Cloud Computing',
-      description: 'Learn AWS, Azure, and Google Cloud platforms.',
-      icon: <CloudCog className="h-8 w-8" />,
+      title: 'Basic',
+      description: 'Fundamentals of computer operations.',
+      icon: <Book className="h-8 w-8" />,
       color: 'from-sky-500 to-sky-700',
     },
     {
-      title: 'Cyber Security',
-      description: 'Protect systems from digital threats & attacks.',
-      icon: <ShieldCheck className="h-8 w-8" />,
+      title: 'Accounts',
+      description: 'Learn financial accounting software.',
+      icon: <Calculator className="h-8 w-8" />,
       color: 'from-red-500 to-red-700',
+    },
+     {
+      title: 'Typing (Eng/Pbi)',
+      description: 'Master English & Punjabi typing skills.',
+      icon: <Keyboard className="h-8 w-8" />,
+      color: 'from-yellow-500 to-yellow-700',
+    },
+     {
+      title: 'HTML',
+      description: 'Learn the language of the web.',
+      icon: <Codepen className="h-8 w-8" />,
+      color: 'from-indigo-500 to-indigo-700',
+    },
+      {
+      title: 'Internet',
+      description: 'Explore the world of the internet.',
+      icon: <Globe className="h-8 w-8" />,
+      color: 'from-pink-500 to-pink-700',
+    },
+    {
+      title: 'Hardware & Software',
+      description: 'Understand computer components.',
+      icon: <HardDrive className="h-8 w-8" />,
+      color: 'from-teal-500 to-teal-700',
     },
   ];
 
@@ -156,7 +186,7 @@ export default function Home() {
               Choose from a wide range of courses designed to get you job-ready.
             </p>
           </div>
-           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {courseCards.map((card) => (
               <Card 
                 key={card.title} 
