@@ -20,7 +20,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 
 const formSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+  parentName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+  studentName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+  photo: z.any().refine(files => files?.length == 1, 'Photo is required.'),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
   confirmPassword: z.string(),
@@ -36,7 +38,8 @@ export function RegisterForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
+      parentName: '',
+      studentName: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -46,6 +49,7 @@ export function RegisterForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Handle registration logic for admissions application
+    console.log(values);
   }
 
   return (
@@ -59,12 +63,38 @@ export function RegisterForm() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="parentName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Parent/Guardian Full Name</FormLabel>
                   <FormControl>
                     <Input placeholder="Your Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="studentName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Student's Full Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Student's Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="photo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Student's Passport Photo</FormLabel>
+                  <FormControl>
+                    <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
