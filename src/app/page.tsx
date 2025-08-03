@@ -1,4 +1,6 @@
 
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -22,6 +24,8 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Autoplay from "embla-carousel-autoplay";
+import React from 'react';
 
 export default function Home() {
   const features = [
@@ -72,27 +76,87 @@ export default function Home() {
     },
   ];
 
+  const heroSlides = [
+    {
+      image: 'https://placehold.co/1920x1080.png',
+      dataAiHint: 'modern classroom students',
+      title: 'Launch Your Career in Technology',
+      description: 'Master the most in-demand tech skills with our expert-led courses.',
+    },
+    {
+      image: 'https://placehold.co/1920x1080.png',
+      dataAiHint: 'coding on laptop',
+      title: 'Become a Full-Stack Developer',
+      description: 'From front-end design to back-end architecture, we cover it all.',
+    },
+    {
+      image: 'https://placehold.co/1920x1080.png',
+      dataAiHint: 'data analytics dashboard',
+      title: 'Unlock the Power of Data Science',
+      description: 'Learn to analyze data, build AI models, and drive business decisions.',
+    },
+     {
+      image: 'https://placehold.co/1920x1080.png',
+      dataAiHint: 'group of students collaborating',
+      title: 'Join a Community of Innovators',
+      description: 'Collaborate, learn, and grow with a network of passionate tech enthusiasts.',
+    },
+  ]
+
+  const autoplayPlugin = React.useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: true })
+  );
+
+
   return (
     <div className="flex flex-col items-center">
-      <section className="relative flex h-[70dvh] min-h-[500px] w-full items-center justify-center bg-background md:h-[80dvh] md:min-h-[600px]">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            Global Computer Institute
-          </h1>
-          <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-xl">
-            Unlock your potential. Master the most in-demand tech skills for a successful career.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button asChild size="lg" className="w-full sm:w-auto">
-              <Link href="/admissions">
-                Enroll Now <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-              <Link href="/about">Explore Courses</Link>
-            </Button>
-          </div>
-        </div>
+      <section className="w-full">
+         <Carousel 
+            className="w-full"
+            plugins={[autoplayPlugin.current]}
+            onMouseEnter={autoplayPlugin.current.stop}
+            onMouseLeave={autoplayPlugin.current.reset}
+            opts={{ loop: true }}
+         >
+          <CarouselContent>
+            {heroSlides.map((slide, index) => (
+              <CarouselItem key={index}>
+                <div className="relative h-[70dvh] min-h-[500px] w-full md:h-[80vh] md:min-h-[600px]">
+                  <Image
+                    src={slide.image}
+                    data-ai-hint={slide.dataAiHint}
+                    alt={slide.title}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/50" />
+                  <div className="relative z-10 flex h-full items-center justify-center">
+                    <div className="container mx-auto px-4 text-center text-white">
+                      <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+                        {slide.title}
+                      </h1>
+                      <p className="mx-auto mt-4 max-w-3xl text-base text-white/80 md:text-xl">
+                        {slide.description}
+                      </p>
+                      <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <Button asChild size="lg" className="w-full sm:w-auto">
+                          <Link href="/admissions">
+                            Enroll Now <ArrowRight className="ml-2 h-5 w-5" />
+                          </Link>
+                        </Button>
+                        <Button asChild variant="outline" size="lg" className="w-full sm:w-auto bg-transparent border-white text-white hover:bg-white hover:text-primary">
+                          <Link href="/academics">Explore Courses</Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden sm:flex" />
+          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden sm:flex" />
+        </Carousel>
       </section>
 
       <section id="introduction" className="w-full py-12 md:py-24">
