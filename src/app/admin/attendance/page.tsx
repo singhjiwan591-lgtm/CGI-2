@@ -31,6 +31,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 const initialStudents = [
   { id: 'S001', name: 'Olivia Martin', grade: 10, status: 'Present', clockedIn: '08:30 AM', clockedOut: null, avatarHint: 'student portrait' },
