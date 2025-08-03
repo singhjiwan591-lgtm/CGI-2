@@ -63,7 +63,7 @@ export function SiteHeader() {
         <div className="container flex h-16 items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Global Computer Institute Logo" width={32} height={32} />
-            <span className="font-bold font-headline">Global Computer Institute</span>
+            
           </Link>
           <div className="flex flex-1 items-center justify-end">
              {/* Render a placeholder or nothing on the server for the dynamic parts */}
@@ -78,7 +78,7 @@ export function SiteHeader() {
       <div className="container flex h-16 items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Global Computer Institute Logo" width={32} height={32} />
-          <span className="font-bold font-headline">Global Computer Institute</span>
+          
         </Link>
         <div className="flex flex-1 items-center justify-end gap-2">
             {/* Desktop Navigation */}
@@ -120,7 +120,7 @@ export function SiteHeader() {
                   <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                   <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
                     <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Global Computer Institute Logo" width={32} height={32} />
-                    <span className="font-bold font-headline">Global Computer Institute</span>
+                    
                   </Link>
                 </SheetHeader>
               <div className="flex flex-col h-full">
