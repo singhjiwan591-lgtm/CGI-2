@@ -4,6 +4,7 @@ import './globals.css';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { Toaster } from '@/components/ui/toaster';
+import { DiscountPopup } from '@/components/discount-popup';
 
 export const metadata: Metadata = {
   title: 'Global Computer Institute',
@@ -36,6 +37,7 @@ export default function RootLayout({
           <SiteFooter />
         </div>
         <Toaster />
+        <DiscountPopup />
       </body>
     </html>
   );
