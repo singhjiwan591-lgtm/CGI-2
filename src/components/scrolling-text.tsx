@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const texts = [
-  'Launch Your Career in Technology',
+  'Global Computer Institute',
   'Learn In-Demand Skills',
   'Get Certified By Experts',
   'Start Your Tech Journey Today',
@@ -28,7 +28,7 @@ export function ScrollingText() {
         <h1
           key={index}
           className={cn(
-            'font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl absolute w-full transition-transform duration-1000 ease-in-out',
+            'font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl absolute w-full transition-transform duration-1000 ease-in-out text-center',
             {
               'transform -translate-y-full opacity-0': index < currentIndex,
               'transform translate-y-0 opacity-100': index === currentIndex,
