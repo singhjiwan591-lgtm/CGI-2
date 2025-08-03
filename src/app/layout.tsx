@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { SiteHeader } from '@/components/site-header';
@@ -5,8 +6,8 @@ import { SiteFooter } from '@/components/site-footer';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Oakridge International School',
-  description: 'A leading institution for quality education.',
+  title: 'Global Computer Institute',
+  description: 'A leading institution for technology education.',
 };
 
 export default function RootLayout({

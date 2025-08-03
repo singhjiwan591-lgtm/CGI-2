@@ -5,8 +5,8 @@ import { ContactForm } from '@/components/contact-form';
 
 export default function ContactPage() {
   const contactDetails = [
-    { icon: <MapPin className="h-6 w-6 text-primary" />, text: '123 Education Avenue, Knowledge City, 54321' },
-    { icon: <Mail className="h-6 w-6 text-primary" />, text: 'contact@oakridge.edu' },
+    { icon: <MapPin className="h-6 w-6 text-primary" />, text: '123 Tech Park, Silicon Vihar, 54321' },
+    { icon: <Mail className="h-6 w-6 text-primary" />, text: 'admissions@globalcomputer.edu' },
     { icon: <Phone className="h-6 w-6 text-primary" />, text: '(123) 555-2024' },
   ];
 
@@ -16,7 +16,7 @@ export default function ContactPage() {
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">Get in Touch</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base md:text-lg text-foreground/80">
-            We are here to answer your questions. Please feel free to reach out to us.
+            We are here to answer your questions about courses, admissions, and career opportunities.
           </p>
         </div>
       </section>
@@ -27,7 +27,7 @@ export default function ContactPage() {
             <div>
               <h2 className="font-headline text-2xl font-bold md:text-3xl">Contact Information</h2>
               <p className="mt-4 text-foreground/80">
-                For general inquiries, admissions, or to schedule a campus tour, please contact us using the information below.
+                For course counseling, enrollment, or any other inquiries, please contact us using the information below.
               </p>
               <ul className="mt-6 space-y-4 md:mt-8 md:space-y-6">
                 {contactDetails.map((detail, index) => (
@@ -55,12 +55,12 @@ export default function ContactPage() {
 
       <section className="w-full">
         <div className="container mx-auto px-4 pb-12 md:pb-24">
-          <h2 className="text-center font-headline text-2xl font-bold md:text-4xl mb-6 md:mb-8">Our Campus Location</h2>
+          <h2 className="text-center font-headline text-2xl font-bold md:text-4xl mb-6 md:mb-8">Our Location</h2>
           <div className="aspect-video w-full">
             <Image 
               src="https://placehold.co/1200x600.png"
               data-ai-hint="street map city"
-              alt="Map showing school location"
+              alt="Map showing institute location"
               width={1200}
               height={600}
               className="w-full h-full object-cover rounded-lg shadow-md"

@@ -49,8 +49,8 @@ export function LoginForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-headline text-2xl">Parent & Student Portal</CardTitle>
-        <CardDescription>Welcome! Please enter your details to log in.</CardDescription>
+        <CardTitle className="font-headline text-2xl">Student Portal</CardTitle>
+        <CardDescription>Welcome back! Please enter your details to log in.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -99,9 +99,9 @@ export function LoginForm() {
       </CardContent>
       <CardFooter className="justify-center">
         <p className="text-sm text-foreground/80">
-          Need an account for the portal?{' '}
+          Ready to start your tech journey?{' '}
           <Button variant="link" asChild className="p-0 h-auto">
-            <Link href="/register">Register</Link>
+            <Link href="/register">Enroll Now</Link>
           </Button>
         </p>
       </CardFooter>

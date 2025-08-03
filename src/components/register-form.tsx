@@ -20,8 +20,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 
 const formSchema = z.object({
-  parentName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
-  studentName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+  fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   photo: z.any().refine(files => files?.length == 1, 'Photo is required.'),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
@@ -38,8 +37,7 @@ export function RegisterForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      parentName: '',
-      studentName: '',
+      fullName: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -55,33 +53,20 @@ export function RegisterForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-headline text-2xl">Start Your Application</CardTitle>
-        <CardDescription>Create an account to begin the admissions process.</CardDescription>
+        <CardTitle className="font-headline text-2xl">Enroll Now</CardTitle>
+        <CardDescription>Create an account to begin your application.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="parentName"
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Parent/Guardian Full Name</FormLabel>
+                  <FormLabel>Full Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-             <FormField
-              control={form.control}
-              name="studentName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Student's Full Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Student's Name" {...field} />
+                    <Input placeholder="Your Full Name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -92,7 +77,7 @@ export function RegisterForm() {
               name="photo"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Student's Passport Photo</FormLabel>
+                  <FormLabel>Your Passport-size Photo</FormLabel>
                   <FormControl>
                     <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
                   </FormControl>

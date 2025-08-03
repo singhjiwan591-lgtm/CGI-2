@@ -1,6 +1,6 @@
 
 import Link from 'next/link';
-import { BookOpen, Facebook, Instagram, Linkedin } from 'lucide-react';
+import { Cpu, Facebook, Instagram, Linkedin } from 'lucide-react';
 
 export function SiteFooter() {
   return (
@@ -9,11 +9,11 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-4 md:text-left">
           <div className="flex flex-col items-center md:items-start md:col-span-2">
             <Link href="/" className="flex items-center space-x-2">
-              <BookOpen className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold font-headline">Oakridge School</span>
+              <Cpu className="h-8 w-8 text-primary" />
+              <span className="text-2xl font-bold font-headline">Global Computer Institute</span>
             </Link>
             <p className="mt-4 text-foreground/70">
-              Nurturing minds for a brighter future.
+              Building the future of technology, one student at a time.
             </p>
           </div>
           <div className="md:mx-auto">
@@ -26,7 +26,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link href="/academics" className="hover:text-primary transition-colors">
-                  Academics
+                  Courses
                 </Link>
               </li>
               <li>
@@ -62,7 +62,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-foreground/60">
-          <p>&copy; {new Date().getFullYear()} Oakridge International School. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Global Computer Institute. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -3,8 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   ArrowRight,
-  Lightbulb,
-  Trophy,
+  Code,
+  Briefcase,
   Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,49 +26,49 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 export default function Home() {
   const features = [
     {
-      icon: <Trophy className="h-10 w-10 text-primary" />,
-      title: 'Experienced Faculty',
+      icon: <Code className="h-10 w-10 text-primary" />,
+      title: 'Expert Instructors',
       description:
-        'Our educators are passionate, experienced, and dedicated to student success.',
+        'Learn from industry professionals with years of real-world experience.',
     },
     {
-      icon: <Lightbulb className="h-10 w-10 text-primary" />,
-      title: 'Innovative Curriculum',
+      icon: <Briefcase className="h-10 w-10 text-primary" />,
+      title: 'Hands-On Projects',
       description:
-        'We offer a dynamic and engaging curriculum that fosters critical thinking and creativity.',
+        'Build a portfolio of practical projects that showcase your skills to employers.',
     },
     {
       icon: <Users className="h-10 w-10 text-primary" />,
-      title: 'Vibrant Community',
+      title: 'Career Support',
       description:
-        'We cultivate a supportive and inclusive community for students, parents, and staff.',
+        'Get placement assistance, resume workshops, and interview preparation.',
     },
   ];
 
   const testimonials = [
     {
-      name: 'Jane Doe',
-      title: 'Parent of a 5th Grader',
+      name: 'Priya Sharma',
+      title: 'Software Developer, TechNova',
       avatar: 'https://placehold.co/100x100.png',
-      dataAiHint: 'woman portrait',
+      dataAiHint: 'woman developer',
       quote:
-        'Oakridge has been a transformative experience for our child. The teachers are caring and the community is wonderful. We couldn\'t be happier!',
+        'Global Computer Institute provided the perfect launchpad for my career. The hands-on approach and expert faculty are unmatched. Highly recommended!',
     },
     {
-      name: 'John Smith',
-      title: 'Alumnus, Class of 2020',
+      name: 'Rohan Verma',
+      title: 'Alumnus, Class of 2022',
       avatar: 'https://placehold.co/100x100.png',
-      dataAiHint: 'man portrait',
+      dataAiHint: 'man programmer',
       quote:
-        'The foundation I received at Oakridge prepared me for college and beyond. I am grateful for the lifelong friendships and mentorship.',
+        'The skills I gained here were directly applicable to my job from day one. The career support team was fantastic in helping me land my first role.',
     },
     {
-      name: 'Emily White',
-      title: 'Parent of two students',
+      name: 'Anjali Singh',
+      title: 'UI/UX Designer',
       avatar: 'https://placehold.co/100x100.png',
-      dataAiHint: 'woman smiling',
+      dataAiHint: 'woman designer',
       quote:
-        'A fantastic school with a strong academic program and a focus on character development. Highly recommended to any parent.',
+        'A great learning environment with a focus on practical skills. The instructors are always ready to help and the community is very supportive.',
     },
   ];
 
@@ -77,19 +77,19 @@ export default function Home() {
       <section className="relative flex h-[70dvh] min-h-[500px] w-full items-center justify-center bg-background md:h-[80dvh] md:min-h-[600px]">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            Welcome to Oakridge School
+            Global Computer Institute
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/80 md:text-xl">
-            Inspiring the next generation of leaders, thinkers, and innovators.
+          <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-xl">
+            Unlock your potential. Master the most in-demand tech skills for a successful career.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button asChild size="lg" className="w-full sm:w-auto">
               <Link href="/admissions">
-                Apply Now <ArrowRight className="ml-2 h-5 w-5" />
+                Enroll Now <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-              <Link href="/about">Learn More</Link>
+              <Link href="/about">Explore Courses</Link>
             </Button>
           </div>
         </div>
@@ -100,17 +100,17 @@ export default function Home() {
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
             <div className="order-2 md:order-1">
               <h2 className="font-headline text-2xl font-bold md:text-4xl">
-                A Tradition of Excellence
+                Shape Your Future in Tech
               </h2>
               <p className="mt-4 text-base text-foreground/80 md:text-lg">
-                At Oakridge International School, we are committed to providing a nurturing and challenging environment where students can achieve their full potential. Our holistic approach to education focuses on academic rigor, character development, and a passion for lifelong learning. Join us to be part of a community that values curiosity, integrity, and excellence.
+                At Global Computer Institute, we are dedicated to providing top-tier education in the latest technologies. Our curriculum is designed by industry experts to equip you with the practical skills and theoretical knowledge needed to excel in the fast-paced world of technology. Join us to turn your passion for computing into a rewarding career.
               </p>
             </div>
             <div className="order-1 md:order-2">
               <Image
                 src="https://placehold.co/600x400.png"
-                data-ai-hint="happy students"
-                alt="Students in a classroom"
+                data-ai-hint="students coding"
+                alt="Students learning to code"
                 width={600}
                 height={400}
                 className="rounded-lg shadow-lg"
@@ -124,15 +124,15 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
-              Why Oakridge School?
+              Why Choose Us?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/80 md:text-lg">
-              Discover the pillars of our educational philosophy.
+              We provide the tools and support you need to succeed in the tech industry.
             </p>
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {features.map((feature) => (
-              <Card key={feature.title} className="text-center">
+              <Card key={feature.title} className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
                 <CardHeader>
                   <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
                     {feature.icon}
@@ -154,10 +154,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
-              From Our Community
+              Success Stories from Our Alumni
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/80 md:text-lg">
-              Hear what parents and students have to say about their experience at Oakridge.
+              Hear what our graduates have to say about their journey with us.
             </p>
           </div>
           <Carousel
@@ -168,7 +168,7 @@ export default function Home() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index}>
                   <div className="p-1">
-                    <Card>
+                    <Card className="transform transition-transform duration-300 hover:scale-105">
                       <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                         <p className="text-base italic text-foreground/90 md:text-lg">
                           "{testimonial.quote}"

@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Menu, BookOpen, User } from 'lucide-react';
+import { Menu, Cpu, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -31,7 +31,7 @@ export function SiteHeader() {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
-    { href: '/academics', label: 'Academics' },
+    { href: '/academics', label: 'Courses' },
     { href: '/admissions', label: 'Admissions' },
     { href: '/contact', label: 'Contact' },
   ];
@@ -61,8 +61,8 @@ export function SiteHeader() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <BookOpen className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline">Oakridge School</span>
+            <Cpu className="h-6 w-6 text-primary" />
+            <span className="font-bold font-headline">Global Computer Institute</span>
           </Link>
           <div className="flex flex-1 items-center justify-end">
              {/* Render a placeholder or nothing on the server for the dynamic parts */}
@@ -76,8 +76,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <BookOpen className="h-6 w-6 text-primary" />
-          <span className="font-bold font-headline">Oakridge School</span>
+          <Cpu className="h-6 w-6 text-primary" />
+          <span className="font-bold font-headline">Global Computer Institute</span>
         </Link>
         <div className="flex flex-1 items-center justify-end gap-2">
             {/* Desktop Navigation */}
@@ -118,8 +118,8 @@ export function SiteHeader() {
                 <SheetHeader className="border-b pb-4">
                   <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                   <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
-                    <BookOpen className="h-6 w-6 text-primary" />
-                    <span className="font-bold font-headline">Oakridge School</span>
+                    <Cpu className="h-6 w-6 text-primary" />
+                    <span className="font-bold font-headline">Global Computer Institute</span>
                   </Link>
                 </SheetHeader>
               <div className="flex flex-col h-full">
@@ -131,7 +131,7 @@ export function SiteHeader() {
                       <Link href="/login">Portal Login</Link>
                     </Button>
                     <Button asChild onClick={() => setIsMobileMenuOpen(false)}>
-                      <Link href="/register">Apply Now</Link>
+                      <Link href="/register">Enroll Now</Link>
                     </Button>
                     <Button variant="outline" asChild onClick={() => setIsMobileMenuOpen(false)}>
                       <Link href="/admin/dashboard">Admin Dashboard</Link>
