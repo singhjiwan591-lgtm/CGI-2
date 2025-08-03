@@ -80,7 +80,7 @@ export default function Home() {
         'The skills I gained here were directly applicable to my job from day one. The career support team was fantastic in helping me land my first role.',
     },
     {
-      name: 'Anjali Singh',
+      name: 'Jeevan Singh',
       title: 'UI/UX Designer',
       avatar: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
       dataAiHint: 'woman designer',
