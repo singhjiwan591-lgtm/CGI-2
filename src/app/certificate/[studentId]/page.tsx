@@ -86,7 +86,7 @@ export default function CertificatePage({ params }: { params: { studentId: strin
                             <p className="text-muted-foreground">Principal</p>
                         </div>
                         <div className="border-t border-foreground pt-2">
-                             <p className="font-bold font-headline">Mr. David Chen</</p>
+                             <p className="font-bold font-headline">Mr. David Chen</p>
                             <p className="text-muted-foreground">Head of Academics</p>
                         </div>
                     </div>
