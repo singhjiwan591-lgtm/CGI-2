@@ -110,9 +110,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center">
-      <section className="w-full">
-         <Carousel 
-            className="w-full"
+      <section className="w-full py-12 md:py-16">
+         <Carousel
+            className="w-full max-w-6xl mx-auto"
             plugins={[autoplayPlugin.current]}
             onMouseEnter={autoplayPlugin.current.stop}
             onMouseLeave={autoplayPlugin.current.reset}
@@ -121,39 +121,41 @@ export default function Home() {
           <CarouselContent>
             {heroSlides.map((slide, index) => (
               <CarouselItem key={index}>
-                <div className="relative h-[70dvh] min-h-[500px] w-full md:h-[80vh] md:min-h-[600px]">
-                  <Image
-                    src={slide.image}
-                    data-ai-hint={slide.dataAiHint}
-                    alt={slide.title}
-                    fill
-                    className="object-cover"
-                    priority={index === 0}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
-                  <div className="relative z-10 flex h-full items-center justify-center">
-                    <div className="container mx-auto px-4 text-center text-white">
-                      <div className="bg-black/30 backdrop-blur-sm p-6 md:p-10 rounded-lg max-w-4xl mx-auto">
-                        <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-                          {slide.title}
-                        </h1>
-                        <p className="mx-auto mt-4 max-w-3xl text-base text-white/90 md:text-xl">
-                          {slide.description}
-                        </p>
-                        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                          <Button asChild size="lg" className="w-full sm:w-auto">
-                            <Link href="/admissions">
-                              Enroll Now <ArrowRight className="ml-2 h-5 w-5" />
-                            </Link>
-                          </Button>
-                          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto bg-transparent border-white text-white hover:bg-white hover:text-primary">
-                            <Link href="/academics">Explore Courses</Link>
-                          </Button>
+                <Card className="overflow-hidden">
+                    <CardContent className="p-0">
+                        <div className="flex flex-col">
+                            <div className="aspect-video">
+                                <Image
+                                    src={slide.image}
+                                    data-ai-hint={slide.dataAiHint}
+                                    alt={slide.title}
+                                    width={1280}
+                                    height={720}
+                                    className="w-full h-full object-cover"
+                                    priority={index === 0}
+                                />
+                            </div>
+                            <div className="p-6 md:p-10 text-center bg-secondary">
+                                <h1 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+                                {slide.title}
+                                </h1>
+                                <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-lg">
+                                {slide.description}
+                                </p>
+                                <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                                <Button asChild size="lg" className="w-full sm:w-auto">
+                                    <Link href="/admissions">
+                                    Enroll Now <ArrowRight className="ml-2 h-5 w-5" />
+                                    </Link>
+                                </Button>
+                                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                                    <Link href="/academics">Explore Courses</Link>
+                                </Button>
+                                </div>
+                            </div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                    </CardContent>
+                </Card>
               </CarouselItem>
             ))}
           </CarouselContent>
