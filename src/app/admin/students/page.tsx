@@ -12,6 +12,7 @@ import {
   CalendarX,
   Clock,
   User,
+  Award,
 } from 'lucide-react';
 import {
   Card,
@@ -63,6 +64,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
+import Link from 'next/link';
 
 type Student = {
   id: string;
@@ -190,7 +192,7 @@ export default function StudentsPage() {
                     <div className="text-sm text-muted-foreground md:hidden">{student.grade}th Grade</div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={student.status === 'Enrolled' ? 'default' : 'secondary'}>
+                    <Badge variant={student.status === 'Enrolled' ? 'default' : student.status === 'Graduated' ? 'secondary' : 'outline'}>
                       {student.status}
                     </Badge>
                   </TableCell>
@@ -369,6 +371,14 @@ export default function StudentsPage() {
                              </div>
                         </CardContent>
                     </Card>
+                    {viewingStudent.status === 'Graduated' && (
+                        <Button asChild className="w-full">
+                            <Link href={`/certificate/${viewingStudent.id}`}>
+                                <Award className="mr-2 h-4 w-4" />
+                                View Certificate
+                            </Link>
+                        </Button>
+                    )}
                 </div>
              </>
            )}
@@ -377,3 +387,5 @@ export default function StudentsPage() {
     </>
   );
 }
+
+    
