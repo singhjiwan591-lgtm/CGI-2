@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   FilePlus,
   MoreHorizontal,
@@ -13,6 +13,7 @@ import {
   Clock,
   User,
   Award,
+  Loader2,
 } from 'lucide-react';
 import {
   Card,
@@ -63,8 +64,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
+import { db } from '@/lib/firebase';
+import { collection, getDocs, doc, setDoc, addDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 
 type Student = {
   id: string;
@@ -83,22 +85,24 @@ type Student = {
   }
 };
 
-const initialStudents: Student[] = [
-  { id: '24001', name: 'Olivia Martin', grade: 10, status: 'Enrolled', email: 'olivia.martin@example.com', program: 'Science', avatarHint: 'student portrait', totalFees: 5000, feesPaid: 2500, attendance: { present: 15, absent: 1, late: 2 } },
-  { id: '24002', name: 'Jackson Lee', grade: 9, status: 'Enrolled', email: 'jackson.lee@example.com', program: 'Arts', avatarHint: 'boy student', totalFees: 5000, feesPaid: 5000, attendance: { present: 18, absent: 0, late: 0 } },
-  { id: '24003', name: 'Sofia Nguyen', grade: 11, status: 'Enrolled', email: 'sofia.nguyen@example.com', program: 'Technology', avatarHint: 'girl smiling', totalFees: 5500, feesPaid: 1000, attendance: { present: 17, absent: 1, late: 0 } },
-  { id: '24004', name: 'Isabella Patel', grade: 12, status: 'Graduated', email: 'isabella.patel@example.com', program: 'Math', avatarHint: 'boy glasses', totalFees: 6000, feesPaid: 6000, attendance: { present: 190, absent: 5, late: 3 } },
-  { id: '24005', name: 'William Kim', grade: 9, status: 'Enrolled', email: 'william.kim@example.com', program: 'Arts', avatarHint: 'student smiling', totalFees: 5000, feesPaid: 3000, attendance: { present: 16, absent: 0, late: 2 } },
-  { id: '24006', name: 'Ava Brown', grade: 10, status: 'Withdrawn', email: 'ava.brown@example.com', program: 'Science', avatarHint: 'girl portrait', totalFees: 5000, feesPaid: 0, attendance: { present: 8, absent: 5, late: 1 } },
-];
-
 export default function StudentsPage() {
-  const [students, setStudents] = useState(initialStudents);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [viewingStudent, setViewingStudent] = useState<Student | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "students"), (snapshot) => {
+        const studentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Student));
+        setStudents(studentsData);
+        setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleAddNew = () => {
     setEditingStudent(null);
@@ -115,12 +119,19 @@ export default function StudentsPage() {
     setIsHistoryDialogOpen(true);
   }
 
-  const handleDelete = (studentId: string) => {
-    setStudents(students.filter(s => s.id !== studentId));
-    toast({ title: 'Success', description: 'Student has been deleted.' });
+  const handleDelete = async (studentId: string) => {
+    try {
+        await deleteDoc(doc(db, "students", studentId));
+        toast({ title: 'Success', description: 'Student has been deleted.' });
+    } catch (error) {
+        console.error("Error deleting document: ", error);
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not delete student.' });
+    }
   };
   
-  const handleSave = (formData: FormData) => {
+  const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
     const newStudentData = {
         name: formData.get('name') as string,
         email: formData.get('email') as string,
@@ -129,23 +140,36 @@ export default function StudentsPage() {
         totalFees: Number(formData.get('totalFees')),
     };
 
-    if (editingStudent) {
-        setStudents(students.map(s => s.id === editingStudent.id ? { ...s, ...newStudentData } : s));
-        toast({ title: 'Success', description: 'Student information has been updated.' });
-    } else {
-        const newStudent: Student = {
-          id: `${new Date().getFullYear().toString().slice(2)}${Math.floor(1000 + Math.random() * 9000)}`,
-          status: 'Enrolled',
-          avatarHint: 'student portrait',
-          feesPaid: 0,
-          attendance: { present: 0, absent: 0, late: 0 },
-          ...newStudentData,
+    try {
+        if (editingStudent) {
+            const studentRef = doc(db, "students", editingStudent.id);
+            await setDoc(studentRef, { ...editingStudent, ...newStudentData }, { merge: true });
+            toast({ title: 'Success', description: 'Student information has been updated.' });
+        } else {
+            const newStudent: Omit<Student, 'id'> = {
+              status: 'Enrolled',
+              avatarHint: 'student portrait',
+              feesPaid: 0,
+              attendance: { present: 0, absent: 0, late: 0 },
+              ...newStudentData,
+            }
+            await addDoc(collection(db, "students"), newStudent);
+            toast({ title: 'Success', description: 'New student has been added.' });
         }
-        setStudents([newStudent, ...students]);
-        toast({ title: 'Success', description: 'New student has been added.' });
+        setIsFormDialogOpen(false);
+    } catch (error) {
+        console.error("Error saving document: ", error);
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not save student data.' });
     }
-    setIsFormDialogOpen(false);
   };
+
+  if (loading) {
+    return (
+        <div className="flex items-center justify-center h-full">
+            <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+    )
+  }
 
   return (
     <>
@@ -254,7 +278,7 @@ export default function StudentsPage() {
       
       <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
-          <form action={handleSave}>
+          <form onSubmit={handleSave}>
             <DialogHeader>
               <DialogTitle>{editingStudent ? 'Edit Student' : 'Add New Student'}</DialogTitle>
               <DialogDescription>
@@ -266,31 +290,31 @@ export default function StudentsPage() {
                 <Label htmlFor="name" className="text-right">
                   Name
                 </Label>
-                <Input id="name" name="name" defaultValue={editingStudent?.name || ''} className="col-span-3" />
+                <Input id="name" name="name" defaultValue={editingStudent?.name || ''} className="col-span-3" required />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="email" className="text-right">
                   Email
                 </Label>
-                <Input id="email" name="email" type="email" defaultValue={editingStudent?.email || ''} className="col-span-3" />
+                <Input id="email" name="email" type="email" defaultValue={editingStudent?.email || ''} className="col-span-3" required />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="grade" className="text-right">
                   Grade
                 </Label>
-                <Input id="grade" name="grade" type="number" defaultValue={editingStudent?.grade || ''} className="col-span-3" />
+                <Input id="grade" name="grade" type="number" defaultValue={editingStudent?.grade || ''} className="col-span-3" required />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="program" className="text-right">
                   Program
                 </Label>
-                <Input id="program" name="program" defaultValue={editingStudent?.program || ''} className="col-span-3" />
+                <Input id="program" name="program" defaultValue={editingStudent?.program || ''} className="col-span-3" required />
               </div>
                <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="totalFees" className="text-right">
                   Total Fees (₹)
                 </Label>
-                <Input id="totalFees" name="totalFees" type="number" defaultValue={editingStudent?.totalFees || ''} className="col-span-3" />
+                <Input id="totalFees" name="totalFees" type="number" defaultValue={editingStudent?.totalFees || ''} className="col-span-3" required />
               </div>
             </div>
             <DialogFooter>
