@@ -4,10 +4,20 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Menu, BookOpen } from 'lucide-react';
+import { Menu, BookOpen, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -75,12 +85,25 @@ export function SiteHeader() {
                 <NavLinksContent />
             </nav>
             <div className="hidden md:flex items-center gap-2">
-                <Button variant="ghost" asChild>
-                <Link href="/login">Portal Login</Link>
-                </Button>
-                <Button asChild>
-                <Link href="/admissions">Apply Now</Link>
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="secondary" size="icon" className="rounded-full">
+                       <Avatar>
+                        <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="user portrait" />
+                        <AvatarFallback><User className="h-5 w-5"/></AvatarFallback>
+                      </Avatar>
+                      <span className="sr-only">Toggle user menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild><Link href="/login">Portal Login</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link href="/register">Register</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link href="/admin/dashboard">Admin Dashboard</Link></DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
             </div>
 
             {/* Mobile Navigation */}
@@ -108,7 +131,10 @@ export function SiteHeader() {
                       <Link href="/login">Portal Login</Link>
                     </Button>
                     <Button asChild onClick={() => setIsMobileMenuOpen(false)}>
-                      <Link href="/admissions">Apply Now</Link>
+                      <Link href="/register">Apply Now</Link>
+                    </Button>
+                    <Button variant="outline" asChild onClick={() => setIsMobileMenuOpen(false)}>
+                      <Link href="/admin/dashboard">Admin Dashboard</Link>
                     </Button>
                   </div>
               </div>
