@@ -39,8 +39,7 @@ export function DiscountPopup() {
     const checkDiscountStatus = () => {
       const discountDataStr = getLocalStorageItem('discountData');
       const discounts = [30, 40, 50];
-      const initialDuration = 24 * 60 * 60 * 1000; // 24 hours
-
+      
       if (discountDataStr) {
         const discountData = JSON.parse(discountDataStr);
         const expiryTime = discountData.expiryTime;
@@ -57,8 +56,6 @@ export function DiscountPopup() {
             if (remaining <= 0) {
               clearInterval(interval);
               setIsOpen(false);
-              // Optional: remove item when expired
-              // localStorage.removeItem('discountData');
             } else {
               setTimeLeft({
                 hours: Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
@@ -70,19 +67,24 @@ export function DiscountPopup() {
 
           return () => clearInterval(interval);
         } else {
-           // If expired, don't show the popup
            setIsOpen(false);
         }
       } else {
-        // First visit
         const randomDiscount = discounts[Math.floor(Math.random() * discounts.length)];
         const now = new Date().getTime();
-        const expiryTime = now + initialDuration;
+        
+        let duration;
+        if (randomDiscount === 50) {
+          duration = 4 * 60 * 60 * 1000; // 4 hours for 50% discount
+        } else {
+          duration = 24 * 60 * 60 * 1000; // 24 hours for other discounts
+        }
+        const expiryTime = now + duration;
 
         setLocalStorageItem('discountData', JSON.stringify({ discount: randomDiscount, expiryTime }));
         setDiscount(randomDiscount);
         setIsOpen(true);
-        // Start the timer for the initial visit
+
          const interval = setInterval(() => {
             const now = new Date().getTime();
             const remaining = expiryTime - now;
@@ -101,7 +103,6 @@ export function DiscountPopup() {
       }
     };
     
-    // Delay check to allow page to render first
     const timer = setTimeout(checkDiscountStatus, 1500);
     return () => clearTimeout(timer);
 
