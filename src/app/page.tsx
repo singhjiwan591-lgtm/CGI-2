@@ -126,6 +126,8 @@ export default function Home() {
       title: 'Accounts',
       description: 'Learn financial accounting software.',
       icon: <Calculator className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/ymSwrtxx/IMG-20250803-WA0005.jpg',
+      dataAiHint: 'accounting calculator',
       color: 'from-red-500 to-red-700',
     },
      {
