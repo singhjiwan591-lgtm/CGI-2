@@ -21,7 +21,7 @@ export default function AboutPage() {
 
   const teamMembers = [
     {
-      name: 'Mr. Rajesh Kumar',
+      name: 'Mr. Jaswinder Singh',
       position: 'Founder & Director',
       image: 'https://i.ibb.co/MDVW5J4Z/js.jpg',
       dataAiHint: 'institute owner',
