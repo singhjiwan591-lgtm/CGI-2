@@ -10,6 +10,7 @@ import {
   Users,
   DollarSign,
   Menu,
+  MessageSquare,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -47,6 +48,7 @@ export default function DashboardLayout({
     { href: '/admin/students', label: 'Students', icon: Users },
     { href: '/admin/fees', label: 'Fees', icon: DollarSign },
     { href: '/admin/attendance', label: 'Attendance', icon: Fingerprint },
+    { href: '/admin/messages', label: 'Messages', icon: MessageSquare },
     { href: '/admin/analytics', label: 'Analytics', icon: LineChart },
   ];
   
