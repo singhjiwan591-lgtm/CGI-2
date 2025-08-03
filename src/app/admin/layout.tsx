@@ -4,7 +4,6 @@
 import Link from 'next/link';
 import {
   Bell,
-  BookOpen,
   Fingerprint,
   Home,
   LineChart,
@@ -13,7 +12,6 @@ import {
   Menu,
 } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -30,7 +28,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -59,7 +56,7 @@ export default function DashboardLayout({
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
-              <BookOpen className="h-6 w-6" />
+              <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Logo" width={24} height={24} />
               <span className="">Oakridge School</span>
             </Link>
             <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
@@ -121,7 +118,7 @@ export default function DashboardLayout({
                     href="/"
                     className="flex items-center gap-2 text-lg font-semibold"
                   >
-                    <BookOpen className="h-6 w-6" />
+                    <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Logo" width={24} height={24} />
                     <span>Oakridge School</span>
                   </Link>
               </SheetHeader>

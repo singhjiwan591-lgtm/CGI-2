@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Menu, Cpu, User } from 'lucide-react';
+import { Menu, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import Image from 'next/image';
 
 
 export function SiteHeader() {
@@ -61,7 +62,7 @@ export function SiteHeader() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Cpu className="h-6 w-6 text-primary" />
+            <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Global Computer Institute Logo" width={32} height={32} />
             <span className="font-bold font-headline">Global Computer Institute</span>
           </Link>
           <div className="flex flex-1 items-center justify-end">
@@ -76,7 +77,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <Cpu className="h-6 w-6 text-primary" />
+          <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Global Computer Institute Logo" width={32} height={32} />
           <span className="font-bold font-headline">Global Computer Institute</span>
         </Link>
         <div className="flex flex-1 items-center justify-end gap-2">
@@ -118,7 +119,7 @@ export function SiteHeader() {
                 <SheetHeader className="border-b pb-4">
                   <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                   <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Cpu className="h-6 w-6 text-primary" />
+                    <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Global Computer Institute Logo" width={32} height={32} />
                     <span className="font-bold font-headline">Global Computer Institute</span>
                   </Link>
                 </SheetHeader>
