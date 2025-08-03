@@ -123,7 +123,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center">
-       <section className="w-full py-16 md:py-24">
+       <section className="w-full py-20 md:py-32">
          <div className="container mx-auto px-4 text-center">
             <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
               Launch Your Career in Technology
@@ -131,9 +131,31 @@ export default function Home() {
             <p className="mx-auto mt-6 max-w-3xl text-lg text-foreground/80 md:text-xl">
               Master the most in-demand tech skills with our expert-led courses. Explore our programs and find the perfect path for you.
             </p>
+             <div className="mt-8 flex justify-center gap-4">
+               <Button asChild size="lg">
+                  <Link href="/academics">
+                    Explore Courses <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                 <Button asChild size="lg" variant="outline">
+                  <Link href="/contact">
+                    Contact Us
+                  </Link>
+                </Button>
+            </div>
           </div>
+      </section>
 
-        <div className="container mx-auto px-4 mt-12">
+      <section id="courses" className="w-full py-12 md:py-20 bg-secondary">
+        <div className="container mx-auto px-4">
+           <div className="text-center mb-12">
+            <h2 className="font-headline text-2xl font-bold md:text-4xl">
+              Our Popular Courses
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/80 md:text-lg">
+              Choose from a wide range of courses designed to get you job-ready.
+            </p>
+          </div>
            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
             {courseCards.map((card) => (
               <Card 
@@ -147,16 +169,9 @@ export default function Home() {
             ))}
            </div>
         </div>
-        <div className="mt-12 text-center">
-            <Button asChild size="lg">
-                <Link href="/academics">
-                Explore All Courses <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-            </Button>
-        </div>
       </section>
 
-      <section id="introduction" className="w-full py-12 md:py-24 bg-secondary">
+      <section id="introduction" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
             <div className="order-2 md:order-1">
@@ -181,7 +196,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="w-full py-12 md:py-24">
+      <section id="features" className="w-full py-12 md:py-24 bg-secondary">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -193,7 +208,7 @@ export default function Home() {
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {features.map((feature) => (
-              <Card key={feature.title} className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl bg-secondary">
+              <Card key={feature.title} className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl bg-card">
                 <CardHeader>
                   <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
                     {feature.icon}
@@ -211,7 +226,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="testimonials" className="w-full bg-secondary py-12 md:py-24">
+      <section id="testimonials" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -229,7 +244,7 @@ export default function Home() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index}>
                   <div className="p-1">
-                    <Card className="transform transition-transform duration-300 hover:scale-105 bg-background">
+                    <Card className="transform transition-transform duration-300 hover:scale-105 bg-secondary">
                       <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                         <p className="text-base italic text-foreground/90 md:text-lg">
                           "{testimonial.quote}"
