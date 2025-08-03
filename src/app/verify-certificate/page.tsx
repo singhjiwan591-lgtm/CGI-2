@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Search, Award, UserCheck, UserX, BadgeCheck, XCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 
 type Student = {
   id: string;
@@ -97,6 +98,13 @@ export default function VerifyCertificatePage() {
               </div>
             </CardHeader>
             <CardContent className="p-6 text-center">
+                <Image
+                  src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png"
+                  alt="Global Computer Institute Logo"
+                  width={64}
+                  height={64}
+                  className="mx-auto mb-4"
+                />
                 <Avatar className="mx-auto h-24 w-24 border-4 border-green-200">
                     <AvatarImage src={`https://placehold.co/100x100.png`} data-ai-hint={verifiedStudent.avatarHint} />
                     <AvatarFallback>{verifiedStudent.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
