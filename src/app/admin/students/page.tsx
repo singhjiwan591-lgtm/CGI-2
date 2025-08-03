@@ -8,6 +8,7 @@ import {
   Pencil,
   PlusCircle,
   Trash2,
+  DollarSign,
 } from 'lucide-react';
 import {
   Card,
@@ -67,15 +68,16 @@ type Student = {
   email: string;
   program: string;
   avatarHint: string;
+  totalFees: number;
 };
 
 const initialStudents: Student[] = [
-  { id: '24001', name: 'Olivia Martin', grade: 10, status: 'Enrolled', email: 'olivia.martin@example.com', program: 'Science', avatarHint: 'student portrait' },
-  { id: '24002', name: 'Jackson Lee', grade: 9, status: 'Enrolled', email: 'jackson.lee@example.com', program: 'Arts', avatarHint: 'boy student' },
-  { id: '24003', name: 'Sofia Nguyen', grade: 11, status: 'Enrolled', email: 'sofia.nguyen@example.com', program: 'Technology', avatarHint: 'girl smiling' },
-  { id: '24004', name: 'Isabella Patel', grade: 12, status: 'Graduated', email: 'isabella.patel@example.com', program: 'Math', avatarHint: 'boy glasses' },
-  { id: '24005', name: 'William Kim', grade: 9, status: 'Enrolled', email: 'william.kim@example.com', program: 'Arts', avatarHint: 'student smiling' },
-  { id: '24006', name: 'Ava Brown', grade: 10, status: 'Withdrawn', email: 'ava.brown@example.com', program: 'Science', avatarHint: 'girl portrait' },
+  { id: '24001', name: 'Olivia Martin', grade: 10, status: 'Enrolled', email: 'olivia.martin@example.com', program: 'Science', avatarHint: 'student portrait', totalFees: 5000 },
+  { id: '24002', name: 'Jackson Lee', grade: 9, status: 'Enrolled', email: 'jackson.lee@example.com', program: 'Arts', avatarHint: 'boy student', totalFees: 5000 },
+  { id: '24003', name: 'Sofia Nguyen', grade: 11, status: 'Enrolled', email: 'sofia.nguyen@example.com', program: 'Technology', avatarHint: 'girl smiling', totalFees: 5500 },
+  { id: '24004', name: 'Isabella Patel', grade: 12, status: 'Graduated', email: 'isabella.patel@example.com', program: 'Math', avatarHint: 'boy glasses', totalFees: 6000 },
+  { id: '24005', name: 'William Kim', grade: 9, status: 'Enrolled', email: 'william.kim@example.com', program: 'Arts', avatarHint: 'student smiling', totalFees: 5000 },
+  { id: '24006', name: 'Ava Brown', grade: 10, status: 'Withdrawn', email: 'ava.brown@example.com', program: 'Science', avatarHint: 'girl portrait', totalFees: 5000 },
 ];
 
 export default function StudentsPage() {
@@ -100,18 +102,19 @@ export default function StudentsPage() {
   };
   
   const handleSave = (formData: FormData) => {
-    const newStudentData = {
+    const newStudentData: Student = {
         id: editingStudent ? editingStudent.id : `${new Date().getFullYear().toString().slice(2)}${Math.floor(1000 + Math.random() * 9000)}`,
         name: formData.get('name') as string,
         email: formData.get('email') as string,
         grade: Number(formData.get('grade')),
         program: formData.get('program') as string,
+        totalFees: Number(formData.get('totalFees')),
         status: 'Enrolled',
         avatarHint: 'student portrait'
     };
 
     if (editingStudent) {
-        setStudents(students.map(s => s.id === editingStudent.id ? newStudentData : s));
+        setStudents(students.map(s => s.id === editingStudent.id ? { ...s, ...newStudentData } : s));
         toast({ title: 'Success', description: 'Student information has been updated.' });
     } else {
         setStudents([newStudentData, ...students]);
@@ -143,6 +146,7 @@ export default function StudentsPage() {
                 <TableHead>Status</TableHead>
                 <TableHead className="hidden md:table-cell">Program</TableHead>
                 <TableHead className="hidden md:table-cell">Grade</TableHead>
+                <TableHead className="hidden md:table-cell text-right">Total Fees</TableHead>
                 <TableHead>
                   <span className="sr-only">Actions</span>
                 </TableHead>
@@ -168,6 +172,7 @@ export default function StudentsPage() {
                   </TableCell>
                   <TableCell className="hidden md:table-cell">{student.program}</TableCell>
                   <TableCell className="hidden md:table-cell">{student.grade}th Grade</TableCell>
+                  <TableCell className="hidden md:table-cell text-right">${student.totalFees.toLocaleString()}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -251,6 +256,12 @@ export default function StudentsPage() {
                   Program
                 </Label>
                 <Input id="program" name="program" defaultValue={editingStudent?.program || ''} className="col-span-3" />
+              </div>
+               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="totalFees" className="text-right">
+                  Total Fees ($)
+                </Label>
+                <Input id="totalFees" name="totalFees" type="number" defaultValue={editingStudent?.totalFees || ''} className="col-span-3" />
               </div>
             </div>
             <DialogFooter>

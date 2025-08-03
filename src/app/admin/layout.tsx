@@ -9,6 +9,7 @@ import {
   Home,
   LineChart,
   Users,
+  DollarSign,
 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -46,6 +47,7 @@ export default function DashboardLayout({
   const navLinks = [
     { href: '/admin/dashboard', label: 'Dashboard', icon: Home },
     { href: '/admin/students', label: 'Students', icon: Users },
+    { href: '/admin/fees', label: 'Fees', icon: DollarSign },
     { href: '/admin/attendance', label: 'Attendance', icon: Fingerprint },
     { href: '/admin/analytics', label: 'Analytics', icon: LineChart },
   ];
@@ -77,9 +79,6 @@ export default function DashboardLayout({
                   >
                     <link.icon className="h-4 w-4" />
                     {link.label}
-                    {link.badge && <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                      {link.badge}
-                    </Badge>}
                   </Link>
               ))}
             </nav>
@@ -134,9 +133,6 @@ export default function DashboardLayout({
                   >
                     <link.icon className="h-5 w-5" />
                     {link.label}
-                    {link.badge && <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                      {link.badge}
-                    </Badge>}
                   </Link>
                 ))}
               </nav>
