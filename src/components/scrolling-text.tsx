@@ -23,7 +23,7 @@ export function ScrollingText() {
   }, []);
 
   return (
-    <div className="relative h-16 sm:h-20 md:h-24 overflow-hidden">
+    <div className="relative h-20 sm:h-24 md:h-28 overflow-hidden">
       {texts.map((text, index) => (
         <h1
           key={index}
@@ -35,7 +35,7 @@ export function ScrollingText() {
               'transform translate-y-full opacity-0': index > currentIndex,
             }
           )}
-          style={{ top: '50%', transform: `translateY(-50%)` }}
+          style={{ top: '50%', transform: 'translateY(-50%)' }}
         >
           {text}
         </h1>
