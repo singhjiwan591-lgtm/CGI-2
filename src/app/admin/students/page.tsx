@@ -76,6 +76,7 @@ type Student = {
   email: string;
   program: string;
   avatarHint: string;
+  photoURL?: string;
   totalFees: number;
   feesPaid: number;
   attendance: {
@@ -149,6 +150,7 @@ export default function StudentsPage() {
             const newStudent: Omit<Student, 'id'> = {
               status: 'Enrolled',
               avatarHint: 'student portrait',
+              photoURL: '',
               feesPaid: 0,
               attendance: { present: 0, absent: 0, late: 0 },
               ...newStudentData,
@@ -205,7 +207,7 @@ export default function StudentsPage() {
                 <TableRow key={student.id}>
                   <TableCell className="hidden sm:table-cell">
                     <Avatar className="h-10 w-10">
-                        <AvatarImage src={`https://placehold.co/100x100.png`} data-ai-hint={student.avatarHint} />
+                        <AvatarImage src={student.photoURL || `https://placehold.co/100x100.png`} data-ai-hint={student.avatarHint} />
                         <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                     </Avatar>
                   </TableCell>
@@ -343,7 +345,7 @@ export default function StudentsPage() {
                     <Card>
                         <CardContent className="pt-6 flex flex-col items-center text-center">
                             <Avatar className="h-20 w-20">
-                                <AvatarImage src={`https://placehold.co/100x100.png`} data-ai-hint={viewingStudent.avatarHint} />
+                                <AvatarImage src={viewingStudent.photoURL || `https://placehold.co/100x100.png`} data-ai-hint={viewingStudent.avatarHint} />
                                 <AvatarFallback>{viewingStudent.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                             </Avatar>
                             <h3 className="mt-4 text-xl font-bold">{viewingStudent.name}</h3>
@@ -411,5 +413,3 @@ export default function StudentsPage() {
     </>
   );
 }
-
-    

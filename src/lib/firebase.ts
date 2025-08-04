@@ -3,6 +3,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -11,7 +12,7 @@ import { getFirestore } from "firebase/firestore";
 const firebaseConfig = {
   "projectId": "webfolio-unb29",
   "appId": "1:120704760142:web:925456cffd2817de8a061f",
-  "storageBucket": "webfolio-unb29.firebasestorage.app",
+  "storageBucket": "webfolio-unb29.appspot.com",
   "apiKey": "AIzaSyBxFNo_sOOM2uGHqzA1eqKFEbVR48wG1CM",
   "authDomain": "webfolio-unb29.firebaseapp.com",
   "measurementId": "",
@@ -21,10 +22,11 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 let analytics;
 if (typeof window !== 'undefined') {
     analytics = getAnalytics(app);
 }
 
-export { app, db, analytics };
+export { app, db, storage, analytics };

@@ -6,8 +6,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { db } from '@/lib/firebase';
+import { db, storage } from '@/lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
@@ -27,7 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
-  photo: z.any(),
+  photo: z.any().optional(),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
   fatherName: z.string().min(2, { message: "Father's name must be at least 2 characters." }),
@@ -74,8 +75,14 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      // In a real app, you'd handle photo upload to a service like Firebase Storage
-      // For this prototype, we'll just save the rest of the data.
+      let photoURL = '';
+      if (values.photo && values.photo.length > 0) {
+        const photoFile = values.photo[0];
+        const storageRef = ref(storage, `student_photos/${Date.now()}_${photoFile.name}`);
+        const snapshot = await uploadBytes(storageRef, photoFile);
+        photoURL = await getDownloadURL(snapshot.ref);
+      }
+      
       await addDoc(collection(db, "students"), {
         name: values.fullName,
         email: values.email,
@@ -84,6 +91,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
         motherName: values.motherName,
         village: values.village,
         program: values.course,
+        photoURL: photoURL,
         grade: 1, // Defaulting grade, can be updated later
         status: 'Enrolled',
         avatarHint: 'student portrait',

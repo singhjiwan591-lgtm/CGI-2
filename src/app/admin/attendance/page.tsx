@@ -34,12 +34,12 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 const initialStudents = [
-  { id: 'S001', name: 'Olivia Martin', grade: 10, status: 'Present', clockedIn: '08:30 AM', clockedOut: null, avatarHint: 'student portrait' },
-  { id: 'S002', name: 'Jackson Lee', grade: 9, status: 'Present', clockedIn: '08:25 AM', clockedOut: null, avatarHint: 'boy student' },
-  { id: 'S003', name: 'Sofia Nguyen', grade: 11, status: 'Absent', clockedIn: null, clockedOut: null, avatarHint: 'girl smiling' },
-  { id: 'S004', name: 'Isabella Patel', grade: 12, status: 'Present', clockedIn: '08:32 AM', clockedOut: null, avatarHint: 'boy glasses' },
-  { id: 'S005', name: 'William Kim', grade: 9, status: 'Late', clockedIn: '09:05 AM', clockedOut: null, avatarHint: 'student smiling' },
-  { id: 'S006', name: 'Ava Brown', grade: 10, status: 'Absent', clockedIn: null, clockedOut: null, avatarHint: 'girl portrait' },
+  { id: 'S001', name: 'Olivia Martin', grade: 10, status: 'Present', clockedIn: '08:30 AM', clockedOut: null, avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png' },
+  { id: 'S002', name: 'Jackson Lee', grade: 9, status: 'Present', clockedIn: '08:25 AM', clockedOut: null, avatarHint: 'boy student', photoURL: 'https://placehold.co/100x100.png' },
+  { id: 'S003', name: 'Sofia Nguyen', grade: 11, status: 'Absent', clockedIn: null, clockedOut: null, avatarHint: 'girl smiling', photoURL: 'https://placehold.co/100x100.png' },
+  { id: 'S004', name: 'Isabella Patel', grade: 12, status: 'Present', clockedIn: '08:32 AM', clockedOut: null, avatarHint: 'boy glasses', photoURL: 'https://placehold.co/100x100.png' },
+  { id: 'S005', name: 'William Kim', grade: 9, status: 'Late', clockedIn: '09:05 AM', clockedOut: null, avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png' },
+  { id: 'S006', name: 'Ava Brown', grade: 10, status: 'Absent', clockedIn: null, clockedOut: null, avatarHint: 'girl portrait', photoURL: 'https://placehold.co/100x100.png' },
 ];
 
 
@@ -114,7 +114,7 @@ export default function AttendancePage() {
                     <TableCell>
                       <div className="flex items-center gap-3">
                          <Avatar className="h-10 w-10">
-                            <AvatarImage src={`https://placehold.co/100x100.png`} data-ai-hint={student.avatarHint} />
+                            <AvatarImage src={student.photoURL} data-ai-hint={student.avatarHint} />
                             <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                         </Avatar>
                         <div>

@@ -53,17 +53,18 @@ type StudentFee = {
   name: string;
   grade: number;
   avatarHint: string;
+  photoURL?: string;
   totalFees: number;
   feesPaid: number;
 };
 
 const initialStudents: StudentFee[] = [
-  { id: '24001', name: 'Olivia Martin', grade: 10, avatarHint: 'student portrait', totalFees: 5000, feesPaid: 2500 },
-  { id: '24002', name: 'Jackson Lee', grade: 9, avatarHint: 'boy student', totalFees: 5000, feesPaid: 5000 },
-  { id: '24003', name: 'Sofia Nguyen', grade: 11, avatarHint: 'girl smiling', totalFees: 5500, feesPaid: 1000 },
-  { id: '24004', name: 'Isabella Patel', grade: 12, avatarHint: 'boy glasses', totalFees: 6000, feesPaid: 6000 },
-  { id: '24005', name: 'William Kim', grade: 9, avatarHint: 'student smiling', totalFees: 5000, feesPaid: 3000 },
-  { id: '24006', name: 'Ava Brown', grade: 10, avatarHint: 'girl portrait', totalFees: 5000, feesPaid: 0 },
+  { id: '24001', name: 'Olivia Martin', grade: 10, avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png', totalFees: 5000, feesPaid: 2500 },
+  { id: '24002', name: 'Jackson Lee', grade: 9, avatarHint: 'boy student', photoURL: 'https://placehold.co/100x100.png', totalFees: 5000, feesPaid: 5000 },
+  { id: '24003', name: 'Sofia Nguyen', grade: 11, avatarHint: 'girl smiling', photoURL: 'https://placehold.co/100x100.png', totalFees: 5500, feesPaid: 1000 },
+  { id: '24004', name: 'Isabella Patel', grade: 12, avatarHint: 'boy glasses', photoURL: 'https://placehold.co/100x100.png', totalFees: 6000, feesPaid: 6000 },
+  { id: '24005', name: 'William Kim', grade: 9, avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png', totalFees: 5000, feesPaid: 3000 },
+  { id: '24006', name: 'Ava Brown', grade: 10, avatarHint: 'girl portrait', photoURL: 'https://placehold.co/100x100.png', totalFees: 5000, feesPaid: 0 },
 ];
 
 export default function FeesPage() {
@@ -180,7 +181,7 @@ export default function FeesPage() {
                     <TableCell className="font-medium">
                         <div className="flex items-center gap-3">
                             <Avatar className="h-10 w-10">
-                                <AvatarImage src={`https://placehold.co/100x100.png`} data-ai-hint={student.avatarHint} />
+                                <AvatarImage src={student.photoURL} data-ai-hint={student.avatarHint} />
                                 <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                             </Avatar>
                             <div>

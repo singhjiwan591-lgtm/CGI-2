@@ -92,6 +92,33 @@ const notices = [
         tag: 'Facilities',
         tagColor: 'bg-fuchsia-100 text-fuchsia-800'
     }
+];
+
+const dataStudents = [
+    {
+        name: 'Olivia Martin',
+        photoURL: 'https://placehold.co/100x100.png',
+        avatarHint: 'student portrait',
+        gender: 'Female',
+        course: 'Science',
+        fees: '₹350.00'
+    },
+    {
+        name: 'Jackson Lee',
+        photoURL: 'https://placehold.co/100x100.png',
+        avatarHint: 'boy student',
+        gender: 'Male',
+        course: 'Arts',
+        fees: '₹350.00'
+    },
+    {
+        name: 'Sofia Nguyen',
+        photoURL: 'https://placehold.co/100x100.png',
+        avatarHint: 'girl smiling',
+        gender: 'Female',
+        course: 'Technology',
+        fees: '₹350.00'
+    }
 ]
 
 export default function AnalyticsPage() {
@@ -133,19 +160,20 @@ export default function AnalyticsPage() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow>
+                    {dataStudents.map((student, index) => (
+                    <TableRow key={index}>
                         <TableCell>
                             <div className="flex items-center gap-2">
                                 <Avatar className="h-8 w-8">
-                                    <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="student portrait" />
-                                    <AvatarFallback>OM</AvatarFallback>
+                                    <AvatarImage src={student.photoURL} data-ai-hint={student.avatarHint} />
+                                    <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                                 </Avatar>
-                                <span className="font-medium">Olivia Martin</span>
+                                <span className="font-medium">{student.name}</span>
                             </div>
                         </TableCell>
-                        <TableCell>Female</TableCell>
-                        <TableCell>Science</TableCell>
-                        <TableCell>₹350.00</TableCell>
+                        <TableCell>{student.gender}</TableCell>
+                        <TableCell>{student.course}</TableCell>
+                        <TableCell>{student.fees}</TableCell>
                         <TableCell>
                            <div className="flex gap-2">
                                 <Button variant="outline" size="icon" className="h-8 w-8"><Pencil className="h-4 w-4" /></Button>
@@ -153,46 +181,7 @@ export default function AnalyticsPage() {
                             </div>
                         </TableCell>
                     </TableRow>
-                    <TableRow>
-                        <TableCell>
-                            <div className="flex items-center gap-2">
-                                <Avatar className="h-8 w-8">
-                                    <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="boy student" />
-                                    <AvatarFallback>JL</AvatarFallback>
-                                </Avatar>
-                                <span className="font-medium">Jackson Lee</span>
-                            </div>
-                        </TableCell>
-                        <TableCell>Male</TableCell>
-                        <TableCell>Arts</TableCell>
-                        <TableCell>₹350.00</TableCell>
-                        <TableCell>
-                           <div className="flex gap-2">
-                                <Button variant="outline" size="icon" className="h-8 w-8"><Pencil className="h-4 w-4" /></Button>
-                                <Button variant="destructive" size="icon" className="h-8 w-8"><Trash2 className="h-4 w-4" /></Button>
-                            </div>
-                        </TableCell>
-                    </TableRow>
-                     <TableRow>
-                        <TableCell>
-                            <div className="flex items-center gap-2">
-                                <Avatar className="h-8 w-8">
-                                    <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="girl smiling" />
-                                    <AvatarFallback>SN</AvatarFallback>
-                                </Avatar>
-                                <span className="font-medium">Sofia Nguyen</span>
-                            </div>
-                        </TableCell>
-                        <TableCell>Female</TableCell>
-                        <TableCell>Technology</TableCell>
-                        <TableCell>₹350.00</TableCell>
-                        <TableCell>
-                           <div className="flex gap-2">
-                                <Button variant="outline" size="icon" className="h-8 w-8"><Pencil className="h-4 w-4" /></Button>
-                                <Button variant="destructive" size="icon" className="h-8 w-8"><Trash2 className="h-4 w-4" /></Button>
-                            </div>
-                        </TableCell>
-                    </TableRow>
+                    ))}
                 </TableBody>
              </Table>
           </CardContent>

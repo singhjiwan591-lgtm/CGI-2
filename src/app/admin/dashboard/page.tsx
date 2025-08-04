@@ -51,6 +51,54 @@ const chartConfig = {
   },
 };
 
+const recentAdmissions = [
+    {
+        name: "Olivia Martin",
+        photoURL: "https://placehold.co/100x100.png",
+        avatarHint: "student portrait",
+        grade: "10th",
+        status: "Enrolled",
+        date: "2023-08-15",
+        program: "Science"
+    },
+    {
+        name: "Jackson Lee",
+        photoURL: "https://placehold.co/100x100.png",
+        avatarHint: "boy student",
+        grade: "9th",
+        status: "Enrolled",
+        date: "2023-08-14",
+        program: "Arts"
+    },
+    {
+        name: "Sofia Nguyen",
+        photoURL: "https://placehold.co/100x100.png",
+        avatarHint: "girl smiling",
+        grade: "11th",
+        status: "Enrolled",
+        date: "2023-08-12",
+        program: "Technology"
+    },
+    {
+        name: "Isabella Patel",
+        photoURL: "https://placehold.co/100x100.png",
+        avatarHint: "boy glasses",
+        grade: "12th",
+        status: "Enrolled",
+        date: "2023-08-10",
+        program: "Math"
+    },
+    {
+        name: "William Kim",
+        photoURL: "https://placehold.co/100x100.png",
+        avatarHint: "student smiling",
+        grade: "9th",
+        status: "Enrolled",
+        date: "2023-08-09",
+        program: "Arts"
+    }
+]
+
 export default function DashboardPage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -148,121 +196,31 @@ export default function DashboardPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="hidden h-9 w-9 sm:flex">
-                            <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="student portrait" alt="Avatar" />
-                            <AvatarFallback>OM</AvatarFallback>
-                          </Avatar>
-                          <div className="font-medium">Olivia Martin</div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        10th
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        <Badge className="text-xs" variant="outline">
-                          Enrolled
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-08-15
-                      </TableCell>
-                      <TableCell className="text-right">Science</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="hidden h-9 w-9 sm:flex">
-                            <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="boy student" alt="Avatar" />
-                            <AvatarFallback>JL</AvatarFallback>
-                          </Avatar>
-                          <div className="font-medium">Jackson Lee</div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        9th
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        <Badge className="text-xs" variant="outline">
-                          Enrolled
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-08-14
-                      </TableCell>
-                      <TableCell className="text-right">Arts</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="hidden h-9 w-9 sm:flex">
-                            <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="girl smiling" alt="Avatar" />
-                            <AvatarFallback>SN</AvatarFallback>
-                          </Avatar>
-                          <div className="font-medium">Sofia Nguyen</div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        11th
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        <Badge className="text-xs" variant="outline">
-                          Enrolled
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-08-12
-                      </TableCell>
-                      <TableCell className="text-right">Technology</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Avatar className="hidden h-9 w-9 sm:flex">
-                            <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="boy glasses" alt="Avatar" />
-                            <AvatarFallback>IP</AvatarFallback>
-                          </Avatar>
-                          <div className="font-medium">Isabella Patel</div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        12th
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        <Badge className="text-xs" variant="outline">
-                          Enrolled
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-08-10
-                      </TableCell>
-                      <TableCell className="text-right">Math</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                           <Avatar className="hidden h-9 w-9 sm:flex">
-                            <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="student smiling" alt="Avatar" />
-                            <AvatarFallback>WK</AvatarFallback>
-                          </Avatar>
-                          <div className="font-medium">William Kim</div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        9th
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        <Badge className="text-xs" variant="outline">
-                          Enrolled
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-08-09
-                      </TableCell>
-                      <TableCell className="text-right">Arts</TableCell>
-                    </TableRow>
+                    {recentAdmissions.map((student, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Avatar className="hidden h-9 w-9 sm:flex">
+                              <AvatarImage src={student.photoURL} data-ai-hint={student.avatarHint} alt="Avatar" />
+                              <AvatarFallback>{student.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+                            </Avatar>
+                            <div className="font-medium">{student.name}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden xl:table-column">
+                          {student.grade}
+                        </TableCell>
+                        <TableCell className="hidden xl:table-column">
+                          <Badge className="text-xs" variant="outline">
+                            {student.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          {student.date}
+                        </TableCell>
+                        <TableCell className="text-right">{student.program}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </CardContent>
