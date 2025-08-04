@@ -90,7 +90,7 @@ export function SiteHeader() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="secondary" size="icon" className="rounded-full">
                        <Avatar>
-                        <AvatarImage src="https://placehold.co/100x100.png" data-ai-hint="user portrait" />
+                        <AvatarImage src="https://i.ibb.co/TDhF0sY8/IMG-20250804-WA0006.jpg" data-ai-hint="user portrait" />
                         <AvatarFallback><User className="h-5 w-5"/></AvatarFallback>
                       </Avatar>
                       <span className="sr-only">Toggle user menu</span>
