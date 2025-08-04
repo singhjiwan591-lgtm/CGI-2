@@ -4,58 +4,58 @@
 
 @layer base {
   :root {
-    --background: 258 50% 12%;
-    --foreground: 210 20% 98%;
-    --card: 258 45% 18%;
-    --card-foreground: 210 20% 98%;
-    --popover: 258 50% 12%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 48 96% 61%;
-    --primary-foreground: 258 50% 12%;
-    --secondary: 258 45% 24%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 258 45% 24%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 258 45% 24%;
-    --accent-foreground: 210 20% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 258 45% 24%;
-    --input: 258 45% 24%;
-    --ring: 48 96% 61%;
+    --background: 28 56% 80%; /* softPeach */
+    --foreground: 221 83% 10%; /* royalBlue (darkened for text) */
+    --card: 28 56% 85%; /* softPeach (lighter) */
+    --card-foreground: 221 83% 10%;
+    --popover: 28 56% 85%;
+    --popover-foreground: 221 83% 10%;
+    --primary: 26 100% 50%; /* sunsetOrange */
+    --primary-foreground: 221 83% 10%;
+    --secondary: 221 83% 38%; /* royalBlue */
+    --secondary-foreground: 54 100% 95%; /* goldenGlow (lighter) */
+    --muted: 221 83% 68%; /* royalBlue (lighter) */
+    --muted-foreground: 221 83% 30%;
+    --accent: 54 100% 50%; /* goldenGlow */
+    --accent-foreground: 221 83% 10%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 221 83% 58%; /* royalBlue (lighter) */
+    --input: 221 83% 58%;
+    --ring: 54 100% 50%; /* goldenGlow */
     --radius: 0.5rem;
-    --chart-1: 198 93% 60%;
-    --chart-2: 48 96% 61%;
-    --chart-3: 28 100% 65%;
-    --chart-4: 158 79% 44%;
-    --chart-5: 336 78% 57%;
+    --chart-1: 221 83% 38%; /* royalBlue */
+    --chart-2: 26 100% 50%; /* sunsetOrange */
+    --chart-3: 54 100% 50%; /* goldenGlow */
+    --chart-4: 210 40% 96.1%;
+    --chart-5: 142.1 76.2% 36.3%;
   }
 
   .dark {
-    --background: 258 50% 12%;
-    --foreground: 210 20% 98%;
-    --card: 258 45% 18%;
-    --card-foreground: 210 20% 98%;
-    --popover: 258 50% 12%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 48 96% 61%;
-    --primary-foreground: 258 50% 12%;
-    --secondary: 258 45% 24%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 258 45% 24%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 258 45% 24%;
-    --accent-foreground: 210 20% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 258 45% 24%;
-    --input: 258 45% 24%;
-    --ring: 48 96% 61%;
-    --chart-1: 198 93% 60%;
-    --chart-2: 48 96% 61%;
-    --chart-3: 28 100% 65%;
-    --chart-4: 158 79% 44%;
-    --chart-5: 336 78% 57%;
+    --background: 221 83% 10%; /* royalBlue */
+    --foreground: 28 56% 80%; /* softPeach */
+    --card: 221 83% 15%; /* royalBlue (darker) */
+    --card-foreground: 28 56% 80%;
+    --popover: 221 83% 10%;
+    --popover-foreground: 28 56% 80%;
+    --primary: 26 100% 50%; /* sunsetOrange */
+    --primary-foreground: 221 83% 10%;
+    --secondary: 54 100% 50%; /* goldenGlow */
+    --secondary-foreground: 221 83% 10%;
+    --muted: 221 83% 15%;
+    --muted-foreground: 28 56% 70%;
+    --accent: 54 100% 50%;
+    --accent-foreground: 221 83% 10%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 221 83% 20%;
+    --input: 221 83% 20%;
+    --ring: 26 100% 50%; /* sunsetOrange */
+    --chart-1: 26 100% 50%; /* sunsetOrange */
+    --chart-2: 54 100% 50%; /* goldenGlow */
+    --chart-3: 28 56% 80%; /* softPeach */
+    --chart-4: 210 40% 96.1%;
+    --chart-5: 142.1 76.2% 36.3%;
   }
 }
 
