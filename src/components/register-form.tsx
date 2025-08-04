@@ -27,7 +27,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
-  photo: z.any().refine(files => files?.length == 1, 'Photo is required.'),
+  photo: z.any(),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
   fatherName: z.string().min(2, { message: "Father's name must be at least 2 characters." }),
