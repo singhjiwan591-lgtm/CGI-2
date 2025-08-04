@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Fingerprint, LogIn, LogOut, Search } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Fingerprint, LogIn, LogOut, Search, History } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -32,71 +32,189 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { db } from '@/lib/firebase';
+import { collection, onSnapshot, query, where, addDoc, serverTimestamp, getDocs, orderBy } from 'firebase/firestore';
+import type { DocumentData, Timestamp } from 'firebase/firestore';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import { format } from 'date-fns';
 
-const initialStudents = [
-  { id: 'S001', name: 'Olivia Martin', grade: 10, status: 'Present', clockedIn: '08:30 AM', clockedOut: null, avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png' },
-  { id: 'S002', name: 'Jackson Lee', grade: 9, status: 'Present', clockedIn: '08:25 AM', clockedOut: null, avatarHint: 'boy student', photoURL: 'https://placehold.co/100x100.png' },
-  { id: 'S003', name: 'Sofia Nguyen', grade: 11, status: 'Absent', clockedIn: null, clockedOut: null, avatarHint: 'girl smiling', photoURL: 'https://placehold.co/100x100.png' },
-  { id: 'S004', name: 'Isabella Patel', grade: 12, status: 'Present', clockedIn: '08:32 AM', clockedOut: null, avatarHint: 'boy glasses', photoURL: 'https://placehold.co/100x100.png' },
-  { id: 'S005', name: 'William Kim', grade: 9, status: 'Late', clockedIn: '09:05 AM', clockedOut: null, avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png' },
-  { id: 'S006', name: 'Ava Brown', grade: 10, status: 'Absent', clockedIn: null, clockedOut: null, avatarHint: 'girl portrait', photoURL: 'https://placehold.co/100x100.png' },
-];
+type Student = {
+  id: string;
+  name: string;
+  grade: number;
+  photoURL?: string;
+  avatarHint: string;
+};
 
+type AttendanceLog = {
+    id: string;
+    studentId: string;
+    studentName: string;
+    timestamp: Timestamp;
+    type: 'clock-in' | 'clock-out';
+};
+
+type DailyStatus = {
+  status: 'Present' | 'Absent' | 'Late';
+  clockedIn: string | null;
+  clockedOut: string | null;
+};
 
 export default function AttendancePage() {
-    const [students, setStudents] = useState(initialStudents);
+    const [students, setStudents] = useState<Student[]>([]);
+    const [dailyAttendance, setDailyAttendance] = useState<Record<string, DailyStatus>>({});
     const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+    const [historyStudent, setHistoryStudent] = useState<Student | null>(null);
+    const [studentHistory, setStudentHistory] = useState<AttendanceLog[]>([]);
     const { toast } = useToast();
 
-    const handleClockIn = () => {
+    useEffect(() => {
+        const unsubscribeStudents = onSnapshot(collection(db, "students"), (snapshot) => {
+            const studentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Student));
+            setStudents(studentsData);
+        });
+
+        return () => unsubscribeStudents();
+    }, []);
+
+    useEffect(() => {
+        const startOfDay = new Date(selectedDate);
+        startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date(selectedDate);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const q = query(
+            collection(db, "attendance_logs"),
+            where("timestamp", ">=", startOfDay),
+            where("timestamp", "<=", endOfDay)
+        );
+
+        const unsubscribeLogs = onSnapshot(q, (snapshot) => {
+            const logs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as AttendanceLog));
+            
+            const newDailyAttendance: Record<string, DailyStatus> = {};
+            
+            students.forEach(student => {
+                const studentLogs = logs.filter(log => log.studentId === student.id).sort((a,b) => a.timestamp.toMillis() - b.timestamp.toMillis());
+                const clockInLog = studentLogs.find(l => l.type === 'clock-in');
+                const clockOutLog = studentLogs.find(l => l.type === 'clock-out');
+
+                let status: 'Present' | 'Absent' | 'Late' = 'Absent';
+                let clockedIn: string | null = null;
+
+                if (clockInLog) {
+                    const clockInTime = clockInLog.timestamp.toDate();
+                    clockedIn = format(clockInTime, 'p');
+                    status = clockInTime.getHours() >= 9 && clockInTime.getMinutes() > 0 ? 'Late' : 'Present';
+                }
+
+                newDailyAttendance[student.id] = {
+                    status,
+                    clockedIn: clockedIn,
+                    clockedOut: clockOutLog ? format(clockOutLog.timestamp.toDate(), 'p') : null,
+                };
+            });
+            setDailyAttendance(newDailyAttendance);
+        });
+
+        return () => unsubscribeLogs();
+    }, [selectedDate, students]);
+
+    const handleClockIn = async () => {
         if (!selectedStudent) {
             toast({ variant: 'destructive', title: 'Error', description: 'Please select a student first.' });
             return;
         }
         
         const now = new Date();
-        const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const isLate = now.getHours() >= 9;
-
-        setStudents(students.map(s => 
-            s.id === selectedStudent && !s.clockedIn
-                ? { ...s, clockedIn: time, status: isLate ? 'Late' : 'Present' }
-                : s
-        ));
-        
         const student = students.find(s => s.id === selectedStudent);
-        toast({ title: 'Clocked In', description: `${student?.name} has been clocked in at ${time}.` });
+        if (!student || dailyAttendance[selectedStudent]?.clockedIn) return;
+
+        await addDoc(collection(db, "attendance_logs"), {
+            studentId: selectedStudent,
+            studentName: student.name,
+            timestamp: serverTimestamp(),
+            type: 'clock-in'
+        });
+
+        toast({ title: 'Clocked In', description: `${student.name} has been clocked in.` });
         setSelectedStudent(null);
     };
 
-    const handleClockOut = () => {
+    const handleClockOut = async () => {
         if (!selectedStudent) {
             toast({ variant: 'destructive', title: 'Error', description: 'Please select a student first.' });
             return;
         }
 
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        setStudents(students.map(s => 
-            s.id === selectedStudent && s.clockedIn && !s.clockedOut
-                ? { ...s, clockedOut: time }
-                : s
-        ));
-        
         const student = students.find(s => s.id === selectedStudent);
-        toast({ title: 'Clocked Out', description: `${student?.name} has been clocked out at ${time}.` });
+        if (!student || !dailyAttendance[selectedStudent]?.clockedIn || dailyAttendance[selectedStudent]?.clockedOut) return;
+        
+        await addDoc(collection(db, "attendance_logs"), {
+            studentId: selectedStudent,
+            studentName: student.name,
+            timestamp: serverTimestamp(),
+            type: 'clock-out'
+        });
+
+        toast({ title: 'Clocked Out', description: `${student.name} has been clocked out.` });
         setSelectedStudent(null);
     };
 
+    const handleViewHistory = async (student: Student) => {
+        setHistoryStudent(student);
+        const q = query(
+            collection(db, "attendance_logs"),
+            where("studentId", "==", student.id),
+            orderBy("timestamp", "desc")
+        );
+        const querySnapshot = await getDocs(q);
+        const historyData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as AttendanceLog));
+        setStudentHistory(historyData);
+        setIsHistoryOpen(true);
+    };
+
+    const filteredStudents = students.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
   return (
+    <>
     <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
         <Card>
           <CardHeader>
-            <CardTitle>Daily Attendance</CardTitle>
-            <CardDescription>
-              A log of student clock-ins and clock-outs for today, {new Date().toLocaleDateString()}.
-            </CardDescription>
+            <div className="flex items-center justify-between">
+                <div>
+                    <CardTitle>Daily Attendance</CardTitle>
+                    <CardDescription>
+                      Attendance log for {format(selectedDate, 'PPP')}.
+                    </CardDescription>
+                </div>
+                <Input 
+                    type="date" 
+                    value={format(selectedDate, 'yyyy-MM-dd')}
+                    onChange={(e) => setSelectedDate(new Date(e.target.value))}
+                    className="w-auto"
+                />
+            </div>
+             <div className="relative mt-4">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search students..."
+                className="w-full bg-background pl-8"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </CardHeader>
           <CardContent>
             <Table>
@@ -106,40 +224,49 @@ export default function AttendancePage() {
                   <TableHead className="text-center">Status</TableHead>
                   <TableHead className="hidden md:table-cell text-center">Clock In</TableHead>
                   <TableHead className="hidden md:table-cell text-center">Clock Out</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {students.map(student => (
-                  <TableRow key={student.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                         <Avatar className="h-10 w-10">
-                            <AvatarImage src={student.photoURL} data-ai-hint={student.avatarHint} />
-                            <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="font-medium">{student.name}</div>
-                          <div className="text-sm text-muted-foreground">
-                            Grade {student.grade}
+                {filteredStudents.map(student => {
+                  const attendance = dailyAttendance[student.id] || { status: 'Absent', clockedIn: null, clockedOut: null };
+                  return (
+                    <TableRow key={student.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                           <Avatar className="h-10 w-10">
+                              <AvatarImage src={student.photoURL} data-ai-hint={student.avatarHint} />
+                              <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-medium">{student.name}</div>
+                            <div className="text-sm text-muted-foreground">
+                              Grade {student.grade}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                        <Badge variant={student.status === 'Present' ? 'default' : student.status === 'Absent' ? 'destructive' : 'secondary'}
-                           className={cn(student.status === 'Present' && 'bg-green-500 hover:bg-green-600', student.status === 'Late' && 'bg-yellow-500 hover:bg-yellow-600' )}
-                        >
-                            {student.status}
-                        </Badge>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell text-center font-medium">
-                      {student.clockedIn || 'N/A'}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell text-center font-medium">
-                      {student.clockedOut || 'N/A'}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                      <TableCell className="text-center">
+                          <Badge variant={attendance.status === 'Present' ? 'default' : attendance.status === 'Absent' ? 'destructive' : 'secondary'}
+                             className={cn(attendance.status === 'Present' && 'bg-green-500 hover:bg-green-600', attendance.status === 'Late' && 'bg-yellow-500 hover:bg-yellow-600' )}
+                          >
+                              {attendance.status}
+                          </Badge>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-center font-medium">
+                        {attendance.clockedIn || 'N/A'}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-center font-medium">
+                        {attendance.clockedOut || 'N/A'}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="outline" size="sm" onClick={() => handleViewHistory(student)}>
+                            <History className="mr-2 h-4 w-4" /> History
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           </CardContent>
@@ -167,15 +294,49 @@ export default function AttendancePage() {
             </Select>
           </CardContent>
           <CardFooter className="grid grid-cols-2 gap-4">
-            <Button onClick={handleClockIn} disabled={!selectedStudent}>
+            <Button onClick={handleClockIn} disabled={!selectedStudent || !!dailyAttendance[selectedStudent as string]?.clockedIn}>
                 <LogIn className="mr-2 h-4 w-4" /> Clock In
             </Button>
-            <Button onClick={handleClockOut} disabled={!selectedStudent} variant="outline">
+            <Button onClick={handleClockOut} disabled={!selectedStudent || !dailyAttendance[selectedStudent as string]?.clockedIn || !!dailyAttendance[selectedStudent as string]?.clockedOut} variant="outline">
                 <LogOut className="mr-2 h-4 w-4" /> Clock Out
             </Button>
           </CardFooter>
         </Card>
       </div>
     </div>
+    <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
+        <DialogContent className="max-w-md">
+            <DialogHeader>
+                <DialogTitle>Attendance History for {historyStudent?.name}</DialogTitle>
+                <DialogDescription>A log of all check-in and check-out events.</DialogDescription>
+            </DialogHeader>
+            <div className="max-h-[60vh] overflow-y-auto">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Date</TableHead>
+                            <TableHead>Time</TableHead>
+                            <TableHead>Type</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {studentHistory.map(log => (
+                            <TableRow key={log.id}>
+                                <TableCell>{format(log.timestamp.toDate(), 'PPP')}</TableCell>
+                                <TableCell>{format(log.timestamp.toDate(), 'p')}</TableCell>
+                                <TableCell>
+                                    <Badge variant={log.type === 'clock-in' ? 'default' : 'secondary'} className={cn(log.type === 'clock-in' ? 'bg-green-500' : 'bg-yellow-500')}>
+                                      {log.type === 'clock-in' ? 'Clock In' : 'Clock Out'}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
+        </DialogContent>
+    </Dialog>
+    </>
   );
 }
+
