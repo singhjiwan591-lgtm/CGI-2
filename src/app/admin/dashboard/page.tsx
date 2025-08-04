@@ -10,8 +10,12 @@ import {
   DollarSign,
   CircleOff,
   Wallet,
+  Loader2,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { db } from '@/lib/firebase';
+import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -40,53 +44,17 @@ import {
 } from '@/components/ui/chart';
 import { Pie, PieChart, Cell } from 'recharts';
 
-const recentAdmissions = [
-    {
-        name: "Olivia Martin",
-        photoURL: "https://placehold.co/100x100.png",
-        avatarHint: "student portrait",
-        grade: "10th",
-        status: "Enrolled",
-        date: "2023-08-15",
-        program: "Science"
-    },
-    {
-        name: "Jackson Lee",
-        photoURL: "https://placehold.co/100x100.png",
-        avatarHint: "boy student",
-        grade: "9th",
-        status: "Enrolled",
-        date: "2023-08-14",
-        program: "Arts"
-    },
-    {
-        name: "Sofia Nguyen",
-        photoURL: "https://placehold.co/100x100.png",
-        avatarHint: "girl smiling",
-        grade: "11th",
-        status: "Enrolled",
-        date: "2023-08-12",
-        program: "Technology"
-    },
-    {
-        name: "Isabella Patel",
-        photoURL: "https://placehold.co/100x100.png",
-        avatarHint: "boy glasses",
-        grade: "12th",
-        status: "Enrolled",
-        date: "2023-08-10",
-        program: "Math"
-    },
-    {
-        name: "William Kim",
-        photoURL: "https://placehold.co/100x100.png",
-        avatarHint: "student smiling",
-        grade: "9th",
-        status: "Enrolled",
-        date: "2023-08-09",
-        program: "Arts"
-    }
-];
+type Student = {
+  id: string;
+  name: string;
+  grade: number;
+  status: 'Enrolled' | 'Withdrawn' | 'Graduated';
+  program: string;
+  avatarHint: string;
+  photoURL?: string;
+  admissionDate: string;
+};
+
 
 const teachers = [
     { name: 'Dr. Evelyn Reed', subject: 'Principal', avatarHint: 'woman teacher', photoURL: 'https://placehold.co/100x100.png'},
@@ -126,6 +94,20 @@ const chartConfig = {
 
 
 export default function DashboardPage() {
+  const [recentAdmissions, setRecentAdmissions] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const q = query(collection(db, "students"), orderBy("admissionDate", "desc"), limit(5));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+        const studentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Student));
+        setRecentAdmissions(studentsData);
+        setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <div className="flex flex-col sm:gap-4 sm:py-4">
@@ -205,6 +187,11 @@ export default function DashboardPage() {
                 </Button>
               </CardHeader>
               <CardContent>
+                {loading ? (
+                  <div className="flex justify-center items-center h-40">
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                  </div>
+                ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -222,19 +209,19 @@ export default function DashboardPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {recentAdmissions.map((student, index) => (
-                      <TableRow key={index}>
+                    {recentAdmissions.map((student) => (
+                      <TableRow key={student.id}>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <Avatar className="hidden h-9 w-9 sm:flex">
-                              <AvatarImage src={student.photoURL} data-ai-hint={student.avatarHint} alt="Avatar" />
+                              <AvatarImage src={student.photoURL || `https://placehold.co/100x100.png`} data-ai-hint={student.avatarHint} alt="Avatar" />
                               <AvatarFallback>{student.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
                             </Avatar>
                             <div className="font-medium">{student.name}</div>
                           </div>
                         </TableCell>
                         <TableCell className="hidden xl:table-column">
-                          {student.grade}
+                          {student.grade}th
                         </TableCell>
                         <TableCell className="hidden xl:table-column">
                           <Badge className="text-xs" variant="outline">
@@ -242,13 +229,14 @@ export default function DashboardPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          {student.date}
+                          {student.admissionDate}
                         </TableCell>
                         <TableCell className="text-right">{student.program}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
+                )}
               </CardContent>
             </Card>
             <Card>
@@ -314,5 +302,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    

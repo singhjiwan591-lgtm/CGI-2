@@ -121,9 +121,7 @@ export function LoginForm() {
                     </FormItem>
                 )}
                 />
-              <Button variant="link" asChild className="p-0 h-auto">
-                <Link href="#">Forgot password?</Link>
-              </Button>
+              <span className="text-sm">Forgot password?</span>
             </div>
             <Button type="submit" className="w-full">Login</Button>
           </form>
@@ -141,3 +139,9 @@ export function LoginForm() {
           Ready to start your tech journey?{' '}
           <Button variant="link" asChild className="p-0 h-auto">
             <Link href="/register">Enroll Now</Link>
+          </Button>
+        </p>
+      </CardFooter>
+    </Card>
+  );
+}
