@@ -17,8 +17,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from './ui/checkbox';
 
@@ -67,14 +65,15 @@ export function LoginForm() {
   );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="font-headline text-2xl">Admin Portal</CardTitle>
-        <CardDescription>Welcome back! Please enter your details to log in.</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <div className="w-full">
+        <div className="grid gap-2 text-center">
+            <h1 className="text-3xl font-bold font-headline">Admin Portal</h1>
+            <p className="text-balance text-muted-foreground">
+             Welcome back! Please enter your details to log in.
+            </p>
+        </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
             <FormField
               control={form.control}
               name="email"
@@ -121,27 +120,20 @@ export function LoginForm() {
                     </FormItem>
                 )}
                 />
-              <span className="text-sm">Forgot password?</span>
             </div>
             <Button type="submit" className="w-full">Login</Button>
-          </form>
-        </Form>
-        <Separator className="my-6" />
-        <div className="space-y-4">
             <Button variant="outline" className="w-full">
               <GoogleIcon />
               Log in with Google
             </Button>
+          </form>
+        </Form>
+        <div className="mt-4 text-center text-sm">
+           Ready to start your tech journey?{' '}
+          <Link href="/register" className="underline">
+            Enroll Now
+          </Link>
         </div>
-      </CardContent>
-      <CardFooter className="justify-center">
-        <p className="text-sm text-foreground/80">
-          Ready to start your tech journey?{' '}
-          <Button variant="link" asChild className="p-0 h-auto">
-            <Link href="/register">Enroll Now</Link>
-          </Button>
-        </p>
-      </CardFooter>
-    </Card>
+    </div>
   );
 }
