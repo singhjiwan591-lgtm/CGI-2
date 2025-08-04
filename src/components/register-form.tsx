@@ -1,4 +1,3 @@
-
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -108,7 +107,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
       router.push('/login');
 
     } catch (error) {
-      console.error("Error adding document: ", error);
+      
       toast({
         variant: 'destructive',
         title: 'Registration Failed',

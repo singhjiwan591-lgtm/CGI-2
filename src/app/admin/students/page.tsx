@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -125,7 +124,7 @@ export default function StudentsPage() {
         await deleteDoc(doc(db, "students", studentId));
         toast({ title: 'Success', description: 'Student has been deleted.' });
     } catch (error) {
-        console.error("Error deleting document: ", error);
+        
         toast({ variant: 'destructive', title: 'Error', description: 'Could not delete student.' });
     }
   };
@@ -160,7 +159,7 @@ export default function StudentsPage() {
         }
         setIsFormDialogOpen(false);
     } catch (error) {
-        console.error("Error saving document: ", error);
+        
         toast({ variant: 'destructive', title: 'Error', description: 'Could not save student data.' });
     }
   };

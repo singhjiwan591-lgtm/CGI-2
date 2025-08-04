@@ -47,7 +47,7 @@ export default function MessagesPage() {
     try {
         await updateDoc(messageRef, { read: true });
     } catch (error) {
-        console.error("Error updating document: ", error);
+        
     }
   };
 
@@ -107,9 +107,4 @@ export default function MessagesPage() {
                     </AccordionItem>
                 ))}
                 </Accordion>
-            </CardContent>
-        </Card>
-      )}
-    </div>
-  );
-}
+            

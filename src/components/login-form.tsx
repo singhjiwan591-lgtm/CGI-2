@@ -141,9 +141,3 @@ export function LoginForm() {
           Ready to start your tech journey?{' '}
           <Button variant="link" asChild className="p-0 h-auto">
             <Link href="/register">Enroll Now</Link>
-          </Button>
-        </p>
-      </CardFooter>
-    </Card>
-  );
-}

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -58,7 +57,7 @@ export function ContactForm() {
       });
       form.reset();
     } catch (error) {
-      console.error("Error sending message: ", error);
+      
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
