@@ -7,9 +7,42 @@ import { Toaster } from '@/components/ui/toaster';
 import { DiscountPopup } from '@/components/discount-popup';
 
 export const metadata: Metadata = {
-  title: 'Global Computer Institute',
-  description: 'A leading institution for technology education.',
+  title: {
+    default: 'Global Computer Institute | Jalalabad (West), Punjab',
+    template: '%s | Global Computer Institute',
+  },
+  description: 'Join Global Computer Institute in Jalalabad (West), Punjab for expert-led courses in Web Development, Data Science, Accounting, ADCA, CCA, and more. Start your tech career with us!',
+  keywords: ['Computer Institute Jalalabad', 'Global Computer Institute', 'Computer Courses', 'ADCA', 'DCA', 'Web Development Course', 'Learn HTML', 'Typing Course', 'Punjab Computer Education'],
+  authors: [{ name: 'Global Computer Institute', url: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png' }],
+  creator: 'Global Computer Institute',
+  openGraph: {
+    type: 'website',
+    locale: 'en_IN',
+    url: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png',
+    title: 'Global Computer Institute | Best Tech Education in Jalalabad',
+    description: 'Empowering the next generation of tech leaders with practical skills and placement assistance.',
+    images: [
+      {
+        url: 'https://i.ibb.co/6RdhCvSg/Compress-JPEG-Online-img-800x600.jpg',
+        width: 800,
+        height: 600,
+        alt: 'Students learning at Global Computer Institute',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Global Computer Institute | Start Your Tech Career',
+    description: 'Expert-led computer courses in Jalalabad, Punjab. Join us to build your future in technology.',
+    images: ['https://i.ibb.co/6RdhCvSg/Compress-JPEG-Online-img-800x600.jpg'],
+  },
   viewport: 'width=device-width, initial-scale=1',
+  robots: {
+    index: true,
+    follow: true,
+  },
+  assets: ['https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png/assets'],
+  category: 'Education',
 };
 
 export default function RootLayout({
