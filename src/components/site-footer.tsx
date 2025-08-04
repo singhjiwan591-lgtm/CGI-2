@@ -10,7 +10,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-4 md:text-left">
           <div className="flex flex-col items-center md:items-start md:col-span-2">
             <Link href="/" className="flex items-center space-x-2">
-              <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Global Computer Institute Logo" width={32} height={32} />
+              <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Global Computer Institute Logo" width={40} height={40} />
             </Link>
             <p className="mt-4 text-foreground/70">
               Building the future of technology, one student at a time.
