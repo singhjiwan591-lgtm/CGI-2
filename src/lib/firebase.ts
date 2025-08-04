@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration
+// Your web app's Firebase configuration - THIS IS SAFE TO EXPOSE
 const firebaseConfig = {
   "projectId": "webfolio-unb29",
   "appId": "1:120704760142:web:925456cffd2817de8a061f",
@@ -14,6 +14,7 @@ const firebaseConfig = {
   "measurementId": "",
   "messagingSenderId": "120704760142"
 };
+
 
 // Initialize Firebase
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
