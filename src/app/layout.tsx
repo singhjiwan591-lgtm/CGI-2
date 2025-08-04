@@ -5,6 +5,7 @@ import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { Toaster } from '@/components/ui/toaster';
 import { DiscountPopup } from '@/components/discount-popup';
+import { Preloader } from '@/components/preloader';
 
 export const metadata: Metadata = {
   manifest: '/manifest.json',
@@ -71,6 +72,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
+        <Preloader />
         <div className="relative flex flex-col items-center flex-1 w-full">
           <SiteHeader />
           <main className="flex-1 w-full">{children}</main>
