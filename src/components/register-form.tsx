@@ -5,6 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { db } from '@/lib/firebase';
+import { collection, addDoc } from 'firebase/firestore';
+import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -18,7 +24,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { useEffect } from 'react';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -40,6 +45,10 @@ const formSchema = z.object({
 });
 
 export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,9 +71,44 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     }
   }, [selectedCourse, form]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Handle registration logic for admissions application
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+    try {
+      // In a real app, you'd handle photo upload to a service like Firebase Storage
+      // For this prototype, we'll just save the rest of the data.
+      await addDoc(collection(db, "students"), {
+        name: values.fullName,
+        email: values.email,
+        phone: values.phoneNumber,
+        fatherName: values.fatherName,
+        motherName: values.motherName,
+        village: values.village,
+        program: values.course,
+        grade: 1, // Defaulting grade, can be updated later
+        status: 'Enrolled',
+        avatarHint: 'student portrait',
+        totalFees: 5000, // Default value
+        feesPaid: 0,
+        attendance: { present: 0, absent: 0, late: 0 },
+      });
+
+      toast({
+        title: 'Registration Successful!',
+        description: "Your application has been submitted. We'll be in touch soon.",
+      });
+      form.reset();
+      router.push('/login');
+
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      toast({
+        variant: 'destructive',
+        title: 'Registration Failed',
+        description: 'There was an error submitting your application. Please try again.',
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -231,7 +275,10 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">Create Account & Continue</Button>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {loading ? 'Submitting...' : 'Create Account & Continue'}
+            </Button>
           </form>
         </Form>
       </CardContent>
