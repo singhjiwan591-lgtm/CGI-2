@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { DiscountPopup } from '@/components/discount-popup';
 
 export const metadata: Metadata = {
+  manifest: '/manifest.json',
   title: {
     default: 'Global Computer Institute | Jalalabad (West), Punjab',
     template: '%s | Global Computer Institute',
