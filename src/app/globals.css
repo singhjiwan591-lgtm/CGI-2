@@ -4,58 +4,79 @@
 
 @layer base {
   :root {
-    --background: 28 56% 80%; /* softPeach */
-    --foreground: 221 83% 10%; /* royalBlue (darkened for text) */
-    --card: 28 56% 85%; /* softPeach (lighter) */
-    --card-foreground: 221 83% 10%;
-    --popover: 28 56% 85%;
-    --popover-foreground: 221 83% 10%;
-    --primary: 26 100% 50%; /* sunsetOrange */
-    --primary-foreground: 221 83% 10%;
-    --secondary: 221 83% 38%; /* royalBlue */
-    --secondary-foreground: 54 100% 95%; /* goldenGlow (lighter) */
-    --muted: 221 83% 68%; /* royalBlue (lighter) */
-    --muted-foreground: 221 83% 30%;
-    --accent: 54 100% 50%; /* goldenGlow */
-    --accent-foreground: 221 83% 10%;
+    --background: 42 100% 96%; /* #FFF9F0 - A very light, warm peach as a base */
+    --foreground: 24 50% 20%; /* #4D3830 - A dark, warm brown for text */
+    
+    --card: 42 100% 98%; /* #FFFCF7 - Almost white peach for cards */
+    --card-foreground: 24 50% 20%;
+    
+    --popover: 42 100% 98%;
+    --popover-foreground: 24 50% 20%;
+
+    --primary: 15 91% 50%;      /* #F43A09 (Bright Orange) */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
+
+    --secondary: 152 64% 85%;    /* #C2EDDA (Mint) */
+    --secondary-foreground: 148 40% 30%; /* Darker green for text on mint */
+
+    --muted: 152 64% 92%; /* Lighter mint for muted backgrounds */
+    --muted-foreground: 148 40% 40%; /* Subtly darker green for muted text */
+
+    --accent: 34 100% 70%;       /* #FFB766 (Warm Peach) */
+    --accent-foreground: 24 50% 20%; /* Dark brown text on accent */
+
     --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 98%;
-    --border: 221 83% 58%; /* royalBlue (lighter) */
-    --input: 221 83% 58%;
-    --ring: 54 100% 50%; /* goldenGlow */
+
+    --border: 152 64% 80%; /* A slightly darker mint for borders */
+    --input: 152 64% 80%;
+    --ring: 15 91% 50%; /* Primary color for rings/focus states */
+
     --radius: 0.5rem;
-    --chart-1: 221 83% 38%; /* royalBlue */
-    --chart-2: 26 100% 50%; /* sunsetOrange */
-    --chart-3: 54 100% 50%; /* goldenGlow */
-    --chart-4: 210 40% 96.1%;
-    --chart-5: 142.1 76.2% 36.3%;
+
+    /* Chart Colors from the Palette */
+    --chart-1: 15 91% 50%;   /* #F43A09 (Bright Orange) */
+    --chart-2: 145 49% 64%;  /* #68D388 (Live Green) */
+    --chart-3: 34 100% 70%;  /* #FFB766 (Warm Peach) */
+    --chart-4: 152 64% 85%;  /* #C2EDDA (Mint) */
+    --chart-5: 24 50% 30%;   /* Dark brown for contrast */
   }
 
   .dark {
-    --background: 221 83% 10%; /* royalBlue */
-    --foreground: 28 56% 80%; /* softPeach */
-    --card: 221 83% 15%; /* royalBlue (darker) */
-    --card-foreground: 28 56% 80%;
-    --popover: 221 83% 10%;
-    --popover-foreground: 28 56% 80%;
-    --primary: 26 100% 50%; /* sunsetOrange */
-    --primary-foreground: 221 83% 10%;
-    --secondary: 54 100% 50%; /* goldenGlow */
-    --secondary-foreground: 221 83% 10%;
-    --muted: 221 83% 15%;
-    --muted-foreground: 28 56% 70%;
-    --accent: 54 100% 50%;
-    --accent-foreground: 221 83% 10%;
-    --destructive: 0 63% 31%;
+    --background: 20 12% 10%; /* Dark warm gray */
+    --foreground: 30 20% 90%; /* Light grayish peach */
+
+    --card: 20 12% 15%; /* Slightly lighter dark gray */
+    --card-foreground: 30 20% 90%;
+
+    --popover: 20 12% 10%;
+    --popover-foreground: 30 20% 90%;
+
+    --primary: 15 91% 55%;      /* A slightly brighter #F43A09 */
+    --primary-foreground: 20 12% 5%; /* Very dark for text on primary */
+
+    --secondary: 145 49% 30%;    /* #337A4B - Dark Live Green */
+    --secondary-foreground: 150 50% 85%; /* Light minty text */
+
+    --muted: 145 49% 20%; /* Darker green for muted */
+    --muted-foreground: 150 50% 65%; /* Muted minty text */
+
+    --accent: 34 100% 60%;       /* #FFAB4D - A slightly more vivid Warm Peach */
+    --accent-foreground: 20 12% 5%;
+
+    --destructive: 0 63% 40%;
     --destructive-foreground: 0 0% 98%;
-    --border: 221 83% 20%;
-    --input: 221 83% 20%;
-    --ring: 26 100% 50%; /* sunsetOrange */
-    --chart-1: 26 100% 50%; /* sunsetOrange */
-    --chart-2: 54 100% 50%; /* goldenGlow */
-    --chart-3: 28 56% 80%; /* softPeach */
-    --chart-4: 210 40% 96.1%;
-    --chart-5: 142.1 76.2% 36.3%;
+
+    --border: 145 49% 25%;
+    --input: 145 49% 25%;
+    --ring: 15 91% 55%;
+
+    /* Chart Colors from the Palette (Dark Mode) */
+    --chart-1: 15 91% 55%;
+    --chart-2: 145 49% 55%;
+    --chart-3: 34 100% 60%;
+    --chart-4: 152 64% 40%;
+    --chart-5: 30 20% 80%;
   }
 }
 
