@@ -8,7 +8,6 @@ import { DiscountPopup } from '@/components/discount-popup';
 import { Preloader } from '@/components/preloader';
 
 export const metadata: Metadata = {
-  manifest: '/manifest.json',
   title: {
     default: 'Global Computer Institute | Jalalabad (West), Punjab',
     template: '%s | Global Computer Institute',
