@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   keywords: ['Computer Institute Jalalabad', 'Global Computer Institute', 'Computer Courses', 'ADCA', 'DCA', 'Web Development Course', 'Learn HTML', 'Typing Course', 'Punjab Computer Education'],
   authors: [{ name: 'Global Computer Institute', url: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png' }],
   creator: 'Global Computer Institute',
+  icons: {
+    icon: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png',
+    shortcut: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png',
+    apple: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_IN',
