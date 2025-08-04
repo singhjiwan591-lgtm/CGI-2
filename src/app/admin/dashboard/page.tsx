@@ -7,6 +7,9 @@ import {
   BookUser,
   GraduationCap,
   Users,
+  DollarSign,
+  CircleOff,
+  Wallet,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -32,24 +35,10 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent
 } from '@/components/ui/chart';
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
-
-const chartData = [
-  { month: 'January', students: 186 },
-  { month: 'February', students: 205 },
-  { month: 'March', students: 237 },
-  { month: 'April', students: 203 },
-  { month: 'May', students: 209 },
-  { month: 'June', students: 214 },
-];
-
-const chartConfig = {
-  students: {
-    label: 'Students',
-    color: 'hsl(var(--chart-1))',
-  },
-};
+import { Pie, PieChart, Cell } from 'recharts';
 
 const recentAdmissions = [
     {
@@ -97,7 +86,44 @@ const recentAdmissions = [
         date: "2023-08-09",
         program: "Arts"
     }
-]
+];
+
+const teachers = [
+    { name: 'Dr. Evelyn Reed', subject: 'Principal', avatarHint: 'woman teacher', photoURL: 'https://placehold.co/100x100.png'},
+    { name: 'Mr. David Chen', subject: 'Head of Academics', avatarHint: 'man teacher glasses', photoURL: 'https://placehold.co/100x100.png'},
+    { name: 'Ms. Sunita Patel', subject: 'Science', avatarHint: 'woman teaching', photoURL: 'https://placehold.co/100x100.png'},
+    { name: 'Mr. Amit Singh', subject: 'Mathematics', avatarHint: 'man corporate', photoURL: 'https://placehold.co/100x100.png'},
+];
+
+const programData = [
+  { program: 'Science', students: 45, fill: 'var(--color-science)' },
+  { program: 'Arts', students: 80, fill: 'var(--color-arts)' },
+  { program: 'Technology', students: 25, fill: 'var(--color-tech)' },
+  { program: 'Math', students: 50, fill: 'var(--color-math)' },
+];
+
+const chartConfig = {
+  students: {
+    label: 'Students',
+  },
+  science: {
+    label: 'Science',
+    color: 'hsl(var(--chart-1))',
+  },
+  arts: {
+    label: 'Arts',
+    color: 'hsl(var(--chart-2))',
+  },
+  tech: {
+    label: 'Technology',
+    color: 'hsl(var(--chart-3))',
+  },
+  math: {
+    label: 'Math',
+    color: 'hsl(var(--chart-4))',
+  },
+};
+
 
 export default function DashboardPage() {
   return (
@@ -105,59 +131,59 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:gap-4 sm:py-4">
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-            <Card className="bg-blue-500 text-white">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Students
+                  Total Income
                 </CardTitle>
-                <Users className="h-4 w-4 text-white/80" />
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">2,150</div>
-                <p className="text-xs text-white/80">
-                  +5.2% from last year
+                <div className="text-2xl font-bold">₹1,250,450</div>
+                <p className="text-xs text-muted-foreground">
+                  +15.2% from last month
                 </p>
               </CardContent>
             </Card>
-            <Card className="bg-orange-500 text-white">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Faculty Members
+                  Pending Fees
                 </CardTitle>
-                <BookUser className="h-4 w-4 text-white/80" />
+                <CircleOff className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">125</div>
-                <p className="text-xs text-white/80">
-                  +3 new hires this semester
+                <div className="text-2xl font-bold">₹89,500</div>
+                <p className="text-xs text-muted-foreground">
+                  from 42 students
                 </p>
               </CardContent>
             </Card>
-            <Card className="bg-fuchsia-500 text-white">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Graduation Rate
+                  This Month's Income
                 </CardTitle>
-                <GraduationCap className="h-4 w-4 text-white/80" />
+                <Wallet className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">98.5%</div>
-                <p className="text-xs text-white/80">
-                  Class of 2023
+                <div className="text-2xl font-bold">₹210,800</div>
+                <p className="text-xs text-muted-foreground">
+                  Target: ₹250,000
                 </p>
               </CardContent>
             </Card>
-            <Card className="bg-green-500 text-white">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Recent Activity
+                  Active Students
                 </CardTitle>
-                <Activity className="h-4 w-4 text-white/80" />
+                <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+54</div>
-                <p className="text-xs text-white/80">
-                  New applications this week
+                <div className="text-2xl font-bold">+2,150</div>
+                <p className="text-xs text-muted-foreground">
+                  +180 this month
                 </p>
               </CardContent>
             </Card>
@@ -168,7 +194,7 @@ export default function DashboardPage() {
                 <div className="grid gap-2">
                   <CardTitle>Recent Student Admissions</CardTitle>
                   <CardDescription>
-                    Showing the 10 most recent student admissions.
+                    Showing the 5 most recent student admissions.
                   </CardDescription>
                 </div>
                 <Button asChild size="sm" className="ml-auto gap-1">
@@ -227,34 +253,66 @@ export default function DashboardPage() {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Enrollment Analytics</CardTitle>
+                <CardTitle>Class Overview</CardTitle>
                 <CardDescription>
-                  New student enrollment over the last 6 months.
+                  Distribution of students across different programs.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                 <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
-                  <BarChart accessibilityLayer data={chartData}>
-                    <CartesianGrid vertical={false} />
-                    <XAxis
-                      dataKey="month"
-                      tickLine={false}
-                      tickMargin={10}
-                      axisLine={false}
-                      tickFormatter={(value) => value.slice(0, 3)}
-                    />
-                    <ChartTooltip
-                      cursor={false}
-                      content={<ChartTooltipContent indicator="dot" />}
-                    />
-                    <Bar dataKey="students" fill="var(--color-students)" radius={4} />
-                  </BarChart>
-                </ChartContainer>
+              <CardContent className="flex justify-center items-center pb-0">
+                 <ChartContainer config={chartConfig} className="mx-auto aspect-square h-[200px]">
+                    <PieChart>
+                        <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent hideLabel />}
+                        />
+                        <Pie
+                            data={programData}
+                            dataKey="students"
+                            nameKey="program"
+                            innerRadius={60}
+                            strokeWidth={5}
+                        >
+                            {programData.map((entry) => (
+                                <Cell key={entry.program} fill={entry.fill} />
+                            ))}
+                        </Pie>
+                        <ChartLegend
+                            content={<ChartLegendContent nameKey="program" />}
+                            className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+                        />
+                    </PieChart>
+                 </ChartContainer>
               </CardContent>
             </Card>
           </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Our Teachers</CardTitle>
+                    <CardDescription>
+                        List of faculty members at Oakridge International School.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        {teachers.map((teacher) => (
+                            <div key={teacher.name} className="flex items-center gap-4">
+                                <Avatar className="h-12 w-12">
+                                    <AvatarImage src={teacher.photoURL} data-ai-hint={teacher.avatarHint} alt={teacher.name} />
+                                    <AvatarFallback>{teacher.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <p className="font-semibold">{teacher.name}</p>
+                                    <p className="text-sm text-muted-foreground">{teacher.subject}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
         </main>
       </div>
     </div>
   );
 }
+
+    
