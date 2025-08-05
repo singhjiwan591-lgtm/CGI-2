@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,8 +19,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
@@ -45,11 +44,9 @@ export function ContactForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      await addDoc(collection(db, "contact_messages"), {
-        ...values,
-        timestamp: serverTimestamp(),
-        read: false,
-      });
+      // Mock submission
+      console.log('Form submitted:', values);
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       toast({
         title: 'Message Sent!',

@@ -2,8 +2,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { db } from '@/lib/firebase';
-import { collection, onSnapshot, query, orderBy, doc, updateDoc } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Loader2, Inbox, Mail, MailOpen } from 'lucide-react';
@@ -17,38 +15,59 @@ type Message = {
   email: string;
   subject: string;
   message: string;
-  timestamp: {
-    seconds: number;
-    nanoseconds: number;
-  } | null;
+  timestamp: Date;
   read: boolean;
 };
+
+const mockMessages: Message[] = [
+    {
+        id: '1',
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        subject: 'Inquiry about Web Development course',
+        message: 'Hello, I would like to know more about the Web Development course. What are the prerequisites and the total fee? Thank you.',
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+        read: false,
+    },
+    {
+        id: '2',
+        name: 'Jane Smith',
+        email: 'jane.smith@example.com',
+        subject: 'Question regarding placement assistance',
+        message: 'Hi, I am interested in your Data Science program and wanted to understand the placement assistance process. Could you please provide some details?',
+        timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+        read: true,
+    },
+    {
+        id: '3',
+        name: 'Amit Patel',
+        email: 'amit.patel@example.com',
+        subject: 'Free Counseling Session',
+        message: 'I would like to book a free counseling session for this Saturday. Please let me know the available time slots.',
+        timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+        read: true,
+    }
+]
+
 
 export default function MessagesPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(collection(db, "contact_messages"), orderBy("timestamp", "desc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const messagesData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Message));
-      setMessages(messagesData);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    // Simulate fetching data
+    setTimeout(() => {
+        setMessages(mockMessages);
+        setLoading(false);
+    }, 1000);
   }, []);
 
-  const handleMarkAsRead = async (id: string) => {
-    const messageRef = doc(db, "contact_messages", id);
-    try {
-        await updateDoc(messageRef, { read: true });
-    } catch (error) {
-        
-    }
+  const handleMarkAsRead = (id: string) => {
+    setMessages(prevMessages => 
+        prevMessages.map(msg => 
+            msg.id === id ? { ...msg, read: true } : msg
+        )
+    );
   };
 
   if (loading) {
@@ -95,7 +114,7 @@ export default function MessagesPage() {
                                 <div className="text-right">
                                     {!msg.read && <Badge>New</Badge>}
                                     <p className="text-xs text-muted-foreground mt-1">
-                                    {msg.timestamp ? formatDistanceToNow(new Date(msg.timestamp.seconds * 1000), { addSuffix: true }) : 'just now'}
+                                    {formatDistanceToNow(msg.timestamp, { addSuffix: true })}
                                     </p>
                                 </div>
                             </div>
@@ -107,4 +126,9 @@ export default function MessagesPage() {
                     </AccordionItem>
                 ))}
                 </Accordion>
-            
+            </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}

@@ -14,8 +14,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { db } from '@/lib/firebase';
-import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -54,6 +52,14 @@ type Student = {
   photoURL?: string;
   admissionDate: string;
 };
+
+const mockAdmissions: Student[] = [
+    { id: '1', name: 'Ravi Sharma', grade: 11, status: 'Enrolled', program: 'Science', avatarHint: 'indian student', admissionDate: '2024-07-28' },
+    { id: '2', name: 'Priya Patel', grade: 10, status: 'Enrolled', program: 'Arts', avatarHint: 'girl student', admissionDate: '2024-07-27' },
+    { id: '3', name: 'Arjun Singh', grade: 12, status: 'Enrolled', program: 'Technology', avatarHint: 'boy smiling', admissionDate: '2024-07-25' },
+    { id: '4', name: 'Sneha Gupta', grade: 11, status: 'Enrolled', program: 'Math', avatarHint: 'female student', admissionDate: '2024-07-24' },
+    { id: '5', name: 'Vikram Kumar', grade: 9, status: 'Enrolled', program: 'Science', avatarHint: 'male student', admissionDate: '2024-07-22' },
+];
 
 
 const teachers = [
@@ -98,14 +104,11 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(collection(db, "students"), orderBy("admissionDate", "desc"), limit(5));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-        const studentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Student));
-        setRecentAdmissions(studentsData);
+    // Simulate fetching data
+    setTimeout(() => {
+        setRecentAdmissions(mockAdmissions);
         setLoading(false);
-    });
-
-    return () => unsubscribe();
+    }, 1000);
   }, []);
 
   return (

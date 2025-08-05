@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -5,9 +6,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { db, storage } from '@/lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
@@ -74,31 +72,10 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      let photoURL = '';
-      if (values.photo && values.photo.length > 0) {
-        const photoFile = values.photo[0];
-        const storageRef = ref(storage, `student_photos/${Date.now()}_${photoFile.name}`);
-        const snapshot = await uploadBytes(storageRef, photoFile);
-        photoURL = await getDownloadURL(snapshot.ref);
-      }
+      // Mock registration
+      console.log('Registration submitted:', values);
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      await addDoc(collection(db, "students"), {
-        name: values.fullName,
-        email: values.email,
-        phone: values.phoneNumber,
-        fatherName: values.fatherName,
-        motherName: values.motherName,
-        village: values.village,
-        program: values.course,
-        photoURL: photoURL,
-        grade: 1, // Defaulting grade, can be updated later
-        status: 'Enrolled',
-        avatarHint: 'student portrait',
-        totalFees: 5000, // Default value
-        feesPaid: 0,
-        attendance: { present: 0, absent: 0, late: 0 },
-      });
-
       toast({
         title: 'Registration Successful!',
         description: "Your application has been submitted. We'll be in touch soon.",

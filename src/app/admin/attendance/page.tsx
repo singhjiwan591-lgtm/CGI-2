@@ -32,9 +32,6 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { db } from '@/lib/firebase';
-import { collection, onSnapshot, query, where, addDoc, serverTimestamp, getDocs, orderBy } from 'firebase/firestore';
-import type { DocumentData, Timestamp } from 'firebase/firestore';
 import {
   Dialog,
   DialogContent,
@@ -56,7 +53,7 @@ type AttendanceLog = {
     id: string;
     studentId: string;
     studentName: string;
-    timestamp: Timestamp;
+    timestamp: Date;
     type: 'clock-in' | 'clock-out';
 };
 
@@ -66,8 +63,21 @@ type DailyStatus = {
   clockedOut: string | null;
 };
 
+const mockStudents: Student[] = [
+    { id: '1', name: 'Olivia Martin', grade: 10, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'student portrait' },
+    { id: '2', name: 'Jackson Lee', grade: 9, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy student' },
+    { id: '3', name: 'Sofia Nguyen', grade: 11, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'girl smiling' },
+    { id: '4', name: 'Isabella Patel', grade: 12, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy glasses' },
+    { id: '5', name: 'William Kim', grade: 9, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'student smiling' },
+    { id: '6', name: 'Ava Brown', grade: 10, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'girl portrait' },
+];
+
+const mockLogs: AttendanceLog[] = [];
+
+
 export default function AttendancePage() {
-    const [students, setStudents] = useState<Student[]>([]);
+    const [students, setStudents] = useState<Student[]>(mockStudents);
+    const [attendanceLogs, setAttendanceLogs] = useState<AttendanceLog[]>(mockLogs);
     const [dailyAttendance, setDailyAttendance] = useState<Record<string, DailyStatus>>({});
     const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -78,56 +88,37 @@ export default function AttendancePage() {
     const { toast } = useToast();
 
     useEffect(() => {
-        const unsubscribeStudents = onSnapshot(collection(db, "students"), (snapshot) => {
-            const studentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Student));
-            setStudents(studentsData);
-        });
-
-        return () => unsubscribeStudents();
-    }, []);
-
-    useEffect(() => {
         const startOfDay = new Date(selectedDate);
         startOfDay.setHours(0, 0, 0, 0);
         const endOfDay = new Date(selectedDate);
         endOfDay.setHours(23, 59, 59, 999);
 
-        const q = query(
-            collection(db, "attendance_logs"),
-            where("timestamp", ">=", startOfDay),
-            where("timestamp", "<=", endOfDay)
-        );
+        const logsForDate = attendanceLogs.filter(log => log.timestamp >= startOfDay && log.timestamp <= endOfDay);
+        
+        const newDailyAttendance: Record<string, DailyStatus> = {};
+        
+        students.forEach(student => {
+            const studentLogs = logsForDate.filter(log => log.studentId === student.id).sort((a,b) => a.timestamp.getTime() - b.timestamp.getTime());
+            const clockInLog = studentLogs.find(l => l.type === 'clock-in');
+            const clockOutLog = studentLogs.find(l => l.type === 'clock-out');
 
-        const unsubscribeLogs = onSnapshot(q, (snapshot) => {
-            const logs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as AttendanceLog));
-            
-            const newDailyAttendance: Record<string, DailyStatus> = {};
-            
-            students.forEach(student => {
-                const studentLogs = logs.filter(log => log.studentId === student.id).sort((a,b) => a.timestamp.toMillis() - b.timestamp.toMillis());
-                const clockInLog = studentLogs.find(l => l.type === 'clock-in');
-                const clockOutLog = studentLogs.find(l => l.type === 'clock-out');
+            let status: 'Present' | 'Absent' | 'Late' = 'Absent';
+            let clockedIn: string | null = null;
 
-                let status: 'Present' | 'Absent' | 'Late' = 'Absent';
-                let clockedIn: string | null = null;
+            if (clockInLog) {
+                const clockInTime = clockInLog.timestamp;
+                clockedIn = format(clockInTime, 'p');
+                status = clockInTime.getHours() >= 9 && clockInTime.getMinutes() > 0 ? 'Late' : 'Present';
+            }
 
-                if (clockInLog) {
-                    const clockInTime = clockInLog.timestamp.toDate();
-                    clockedIn = format(clockInTime, 'p');
-                    status = clockInTime.getHours() >= 9 && clockInTime.getMinutes() > 0 ? 'Late' : 'Present';
-                }
-
-                newDailyAttendance[student.id] = {
-                    status,
-                    clockedIn: clockedIn,
-                    clockedOut: clockOutLog ? format(clockOutLog.timestamp.toDate(), 'p') : null,
-                };
-            });
-            setDailyAttendance(newDailyAttendance);
+            newDailyAttendance[student.id] = {
+                status,
+                clockedIn: clockedIn,
+                clockedOut: clockOutLog ? format(clockOutLog.timestamp, 'p') : null,
+            };
         });
-
-        return () => unsubscribeLogs();
-    }, [selectedDate, students]);
+        setDailyAttendance(newDailyAttendance);
+    }, [selectedDate, students, attendanceLogs]);
 
     const handleClockIn = async () => {
         if (!selectedStudent) {
@@ -139,12 +130,14 @@ export default function AttendancePage() {
         const student = students.find(s => s.id === selectedStudent);
         if (!student || dailyAttendance[selectedStudent]?.clockedIn) return;
 
-        await addDoc(collection(db, "attendance_logs"), {
+        const newLog: AttendanceLog = {
+            id: Date.now().toString(),
             studentId: selectedStudent,
             studentName: student.name,
-            timestamp: serverTimestamp(),
+            timestamp: now,
             type: 'clock-in'
-        });
+        }
+        setAttendanceLogs(prev => [...prev, newLog]);
 
         toast({ title: 'Clocked In', description: `${student.name} has been clocked in.` });
         setSelectedStudent(null);
@@ -159,12 +152,14 @@ export default function AttendancePage() {
         const student = students.find(s => s.id === selectedStudent);
         if (!student || !dailyAttendance[selectedStudent]?.clockedIn || dailyAttendance[selectedStudent]?.clockedOut) return;
         
-        await addDoc(collection(db, "attendance_logs"), {
+        const newLog: AttendanceLog = {
+            id: Date.now().toString(),
             studentId: selectedStudent,
             studentName: student.name,
-            timestamp: serverTimestamp(),
+            timestamp: new Date(),
             type: 'clock-out'
-        });
+        }
+        setAttendanceLogs(prev => [...prev, newLog]);
 
         toast({ title: 'Clocked Out', description: `${student.name} has been clocked out.` });
         setSelectedStudent(null);
@@ -172,13 +167,9 @@ export default function AttendancePage() {
 
     const handleViewHistory = async (student: Student) => {
         setHistoryStudent(student);
-        const q = query(
-            collection(db, "attendance_logs"),
-            where("studentId", "==", student.id),
-            orderBy("timestamp", "desc")
-        );
-        const querySnapshot = await getDocs(q);
-        const historyData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as AttendanceLog));
+        const historyData = attendanceLogs
+            .filter(log => log.studentId === student.id)
+            .sort((a,b) => b.timestamp.getTime() - a.timestamp.getTime());
         setStudentHistory(historyData);
         setIsHistoryOpen(true);
     };
@@ -322,8 +313,8 @@ export default function AttendancePage() {
                     <TableBody>
                         {studentHistory.map(log => (
                             <TableRow key={log.id}>
-                                <TableCell>{format(log.timestamp.toDate(), 'PPP')}</TableCell>
-                                <TableCell>{format(log.timestamp.toDate(), 'p')}</TableCell>
+                                <TableCell>{format(log.timestamp, 'PPP')}</TableCell>
+                                <TableCell>{format(log.timestamp, 'p')}</TableCell>
                                 <TableCell>
                                     <Badge variant={log.type === 'clock-in' ? 'default' : 'secondary'} className={cn(log.type === 'clock-in' ? 'bg-green-500' : 'bg-yellow-500')}>
                                       {log.type === 'clock-in' ? 'Clock In' : 'Clock Out'}
@@ -339,4 +330,3 @@ export default function AttendancePage() {
     </>
   );
 }
-
