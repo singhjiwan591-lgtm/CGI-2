@@ -70,8 +70,21 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
-      </head>
-      <body className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
+        <Script id="google-consent-mode" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              'ad_storage': 'denied',
+              'ad_user_data': 'denied',
+              'ad_personalization': 'denied',
+              'analytics_storage': 'denied'
+            });
+          `}
+        </Script>
+        
+        {/* PASTE YOUR COOKIEHUB CMP CODE SNIPPET HERE */}
+
         <Script src="https://www.google.com/recaptcha/enterprise.js?render=6LfKyJorAAAAAFAe9pw-5iKhu74C63ieHcwflRXG" strategy="beforeInteractive" />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-B8YMN5JCXM"
@@ -79,12 +92,12 @@ export default function RootLayout({
         />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-B8YMN5JCXM');
           `}
         </Script>
+      </head>
+      <body className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
         <Preloader />
         <div className="relative flex flex-col items-center flex-1 w-full">
           <SiteHeader />
