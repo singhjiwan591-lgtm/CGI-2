@@ -5,13 +5,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  "projectId": "webfolio-unb29",
-  "appId": "1:120704760142:web:925456cffd2817de8a061f",
-  "storageBucket": "webfolio-unb29.firebasestorage.app",
-  "apiKey": "AIzaSyBxFNo_sOOM2uGHqzA1eqKFEbVR48wG1CM",
-  "authDomain": "webfolio-unb29.firebaseapp.com",
-  "measurementId": "",
-  "messagingSenderId": "120704760142"
+  "projectId": "global-786",
+  "appId": "1:1098988712906:web:d2948c2692ff21696078e8",
+  "storageBucket": "global-786.appspot.com",
+  "apiKey": "AIzaSyARNMWvmeDy812-OjytkUTM_ajFDQ4yJIY",
+  "authDomain": "global-786.firebaseapp.com",
+  "messagingSenderId": "1098988712906"
 };
 
 // Initialize Firebase
