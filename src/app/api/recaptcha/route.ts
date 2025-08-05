@@ -24,11 +24,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing required parameters.' }, { status: 400 });
   }
 
-  const projectId = process.env.GOOGLE_CLOUD_PROJECT;
+  const projectId = 'global-786'; // Hardcoded project ID
   const apiKey = process.env.FIREBASE_API_KEY; 
 
-  if (!projectId || !apiKey) {
-     return NextResponse.json({ error: 'Server configuration error.' }, { status: 500 });
+  if (!apiKey) {
+     return NextResponse.json({ error: 'Server configuration error: Missing API Key.' }, { status: 500 });
   }
 
   const verificationUrl = `https://recaptchaenterprise.googleapis.com/v1/projects/${projectId}/assessments?key=${apiKey}`;
