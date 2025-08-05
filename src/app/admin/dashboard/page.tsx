@@ -70,29 +70,29 @@ const teachers = [
 ];
 
 const programData = [
-  { program: 'Science', students: 45, fill: 'var(--color-science)' },
-  { program: 'Arts', students: 80, fill: 'var(--color-arts)' },
-  { program: 'Technology', students: 25, fill: 'var(--color-tech)' },
-  { program: 'Math', students: 50, fill: 'var(--color-math)' },
+  { program: 'Science', students: 45, fill: 'hsl(var(--chart-1))' },
+  { program: 'Arts', students: 80, fill: 'hsl(var(--chart-2))' },
+  { program: 'Technology', students: 25, fill: 'hsl(var(--chart-3))' },
+  { program: 'Math', students: 50, fill: 'hsl(var(--chart-4))' },
 ];
 
 const chartConfig = {
   students: {
     label: 'Students',
   },
-  science: {
+  Science: {
     label: 'Science',
     color: 'hsl(var(--chart-1))',
   },
-  arts: {
+  Arts: {
     label: 'Arts',
     color: 'hsl(var(--chart-2))',
   },
-  tech: {
+  Technology: {
     label: 'Technology',
     color: 'hsl(var(--chart-3))',
   },
-  math: {
+  Math: {
     label: 'Math',
     color: 'hsl(var(--chart-4))',
   },
@@ -264,7 +264,7 @@ export default function DashboardPage() {
                             strokeWidth={5}
                         >
                             {programData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                                <Cell key={`cell-${index}`} fill={entry.fill} name={entry.program} />
                             ))}
                         </Pie>
                         <ChartLegend
