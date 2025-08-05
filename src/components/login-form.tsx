@@ -31,6 +31,12 @@ const formSchema = z.object({
   rememberMe: z.boolean().default(false).optional(),
 });
 
+declare global {
+    interface Window {
+      grecaptcha: any;
+    }
+}
+
 export function LoginForm() {
   const router = useRouter();
   const { toast } = useToast();
@@ -49,47 +55,69 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
-      toast({
-        title: 'Login Successful',
-        description: 'Redirecting to your dashboard...',
-      });
-      // Redirect to admin dashboard if admin logs in, otherwise to a general user page
-      if (values.email === 'admin@example.com') {
-        router.push('/admin/dashboard');
-      } else {
-        router.push('/'); 
+    grecaptcha.enterprise.ready(async () => {
+      try {
+        const token = await grecaptcha.enterprise.execute('6LfKyJorAAAAAFAe9pw-5iKhu74C63ieHcwflRXG', {action: 'LOGIN'});
+        if (!token) {
+            throw new Error('reCAPTCHA verification failed. Please try again.');
+        }
+        
+        await signInWithEmailAndPassword(auth, values.email, values.password);
+        toast({
+          title: 'Login Successful',
+          description: 'Redirecting to your dashboard...',
+        });
+        // Redirect to admin dashboard if admin logs in, otherwise to a general user page
+        if (values.email === 'admin@example.com') {
+          router.push('/admin/dashboard');
+        } else {
+          router.push('/'); 
+        }
+      } catch (error: any) {
+        let errorMessage = 'Invalid email or password. Please try again.';
+        if (error.message.includes('reCAPTCHA')) {
+            errorMessage = error.message;
+        }
+        toast({
+          variant: 'destructive',
+          title: 'Login Failed',
+          description: errorMessage,
+        });
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Login Failed',
-        description: 'Invalid email or password. Please try again.',
-      });
-    } finally {
-      setLoading(false);
-    }
+    });
   }
 
   const handleGoogleLogin = async () => {
     setLoading(true);
-    try {
-        await signInWithPopup(auth, googleProvider);
-        toast({
-            title: 'Login Successful',
-            description: 'Welcome!',
-        });
-        router.push('/');
-    } catch (error: any) {
-        toast({
-            variant: 'destructive',
-            title: 'Google Login Failed',
-            description: 'Could not log in with Google. Please try again.',
-        });
-    } finally {
-        setLoading(false);
-    }
+     grecaptcha.enterprise.ready(async () => {
+        try {
+            const token = await grecaptcha.enterprise.execute('6LfKyJorAAAAAFAe9pw-5iKhu74C63ieHcwflRXG', {action: 'LOGIN_GOOGLE'});
+            if (!token) {
+                throw new Error('reCAPTCHA verification failed. Please try again.');
+            }
+
+            await signInWithPopup(auth, googleProvider);
+            toast({
+                title: 'Login Successful',
+                description: 'Welcome!',
+            });
+            router.push('/');
+        } catch (error: any) {
+            let errorMessage = 'Could not log in with Google. Please try again.';
+            if (error.message.includes('reCAPTCHA')) {
+                errorMessage = error.message;
+            }
+            toast({
+                variant: 'destructive',
+                title: 'Google Login Failed',
+                description: errorMessage,
+            });
+        } finally {
+            setLoading(false);
+        }
+    });
   }
   
   const GoogleIcon = () => (
@@ -162,7 +190,7 @@ export function LoginForm() {
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Login
             </Button>
-            <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
+            <Button variant="outline" type="button" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <GoogleIcon />
               Log in with Google
