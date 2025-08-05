@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -20,6 +22,9 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from './ui/checkbox';
 
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { app } from '@/lib/firebase';
+
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
@@ -29,6 +34,10 @@ const formSchema = z.object({
 export function LoginForm() {
   const router = useRouter();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,20 +47,48 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Basic hardcoded login for prototyping
-    if (values.email === 'admin@example.com' && values.password === 'admin123') {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password);
       toast({
         title: 'Login Successful',
         description: 'Redirecting to your dashboard...',
       });
-      router.push('/admin/dashboard');
-    } else {
+      // Redirect to admin dashboard if admin logs in, otherwise to a general user page
+      if (values.email === 'admin@example.com') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/'); 
+      }
+    } catch (error: any) {
       toast({
         variant: 'destructive',
         title: 'Login Failed',
         description: 'Invalid email or password. Please try again.',
       });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+        await signInWithPopup(auth, googleProvider);
+        toast({
+            title: 'Login Successful',
+            description: 'Welcome!',
+        });
+        router.push('/');
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: 'Google Login Failed',
+            description: 'Could not log in with Google. Please try again.',
+        });
+    } finally {
+        setLoading(false);
     }
   }
   
@@ -67,7 +104,7 @@ export function LoginForm() {
   return (
     <div className="w-full">
         <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold font-headline">Admin Portal</h1>
+            <h1 className="text-3xl font-bold font-headline">Portal Login</h1>
             <p className="text-balance text-muted-foreground">
              Welcome back! Please enter your details to log in.
             </p>
@@ -121,8 +158,12 @@ export function LoginForm() {
                 )}
                 />
             </div>
-            <Button type="submit" className="w-full">Login</Button>
-            <Button variant="outline" className="w-full">
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Login
+            </Button>
+            <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <GoogleIcon />
               Log in with Google
             </Button>
