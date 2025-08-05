@@ -26,7 +26,7 @@ export function Preloader() {
       <div className="animate-pulse">
         <Image
           src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png"
-          alt="Global Computer Institute Logo"
+          alt="Web an d App Logo"
           width={150}
           height={150}
           className="object-contain"

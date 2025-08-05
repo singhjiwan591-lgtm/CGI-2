@@ -29,7 +29,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -59,7 +59,7 @@ export default function DashboardLayout({
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
               <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Logo" width={24} height={24} />
-              <span className="">Oakridge School</span>
+              <span className="">Web an d App</span>
             </Link>
             <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
               <Bell className="h-4 w-4" />
@@ -121,7 +121,7 @@ export default function DashboardLayout({
                     className="flex items-center gap-2 text-lg font-semibold"
                   >
                     <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Logo" width={24} height={24} />
-                    <span>Oakridge School</span>
+                    <span>Web an d App</span>
                   </Link>
               </SheetHeader>
               <div className="flex-1 overflow-y-auto">

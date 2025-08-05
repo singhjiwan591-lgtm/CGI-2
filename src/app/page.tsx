@@ -69,7 +69,7 @@ export default function Home() {
       avatar: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
       dataAiHint: 'man developer',
       quote:
-        'Global Computer Institute provided the perfect launchpad for my career. The hands-on approach and expert faculty are unmatched. Highly recommended!',
+        'Web an d App provided the perfect launchpad for my career. The hands-on approach and expert faculty are unmatched. Highly recommended!',
     },
     {
       name: 'Jeevan Singh',
@@ -237,7 +237,7 @@ export default function Home() {
                 Shape Your Future in Tech
               </h2>
               <p className="mt-4 text-base text-foreground/80 md:text-lg">
-                At Global Computer Institute, we are dedicated to providing top-tier education in the latest technologies. Our curriculum is designed by industry experts to equip you with the practical skills and theoretical knowledge needed to excel in the fast-paced world of technology. Join us to turn your passion for computing into a rewarding career.
+                At Web an d App, we are dedicated to providing top-tier education in the latest technologies. Our curriculum is designed by industry experts to equip you with the practical skills and theoretical knowledge needed to excel in the fast-paced world of technology. Join us to turn your passion for computing into a rewarding career.
               </p>
             </div>
             <div className="order-1 md:order-2">
@@ -344,7 +344,7 @@ export default function Home() {
           <Card className="w-full max-w-sm p-8 bg-card transform transition-transform duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-primary/30 flex justify-center items-center">
             <Image
               src="https://i.ibb.co/bR68ms4K/Compress-JPEG-Online-img-800x600.jpg"
-              alt="Global Computer Institute Logo"
+              alt="Web an d App Logo"
               width={200}
               height={200}
               className="object-contain"

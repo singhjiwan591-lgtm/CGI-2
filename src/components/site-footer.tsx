@@ -10,7 +10,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-4 md:text-left">
           <div className="flex flex-col items-center md:items-start md:col-span-2">
             <Link href="/" className="flex items-center space-x-2">
-              <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Global Computer Institute Logo" width={40} height={40} />
+              <Image src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png" alt="Web an d App Logo" width={40} height={40} />
             </Link>
             <p className="mt-4 text-foreground/70">
               Building the future of technology, one student at a time.
@@ -62,7 +62,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-foreground/60">
-          <p>&copy; {new Date().getFullYear()} Global Computer Institute. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Web an d App. All rights reserved.</p>
         </div>
       </div>
     </footer>

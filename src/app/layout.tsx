@@ -10,13 +10,13 @@ import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Global Computer Institute | Jalalabad (West), Punjab',
-    template: '%s | Global Computer Institute',
+    default: 'Web an d App | Jalalabad (West), Punjab',
+    template: '%s | Web an d App',
   },
-  description: 'Join Global Computer Institute in Jalalabad (West), Punjab for expert-led courses in Web Development, Data Science, Accounting, ADCA, CCA, and more. Start your tech career with us!',
-  keywords: ['Computer Institute Jalalabad', 'Global Computer Institute', 'Computer Courses', 'ADCA', 'DCA', 'Web Development Course', 'Learn HTML', 'Typing Course', 'Punjab Computer Education'],
-  authors: [{ name: 'Global Computer Institute', url: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png' }],
-  creator: 'Global Computer Institute',
+  description: 'Join Web an d App in Jalalabad (West), Punjab for expert-led courses in Web Development, Data Science, Accounting, ADCA, CCA, and more. Start your tech career with us!',
+  keywords: ['Computer Institute Jalalabad', 'Web an d App', 'Computer Courses', 'ADCA', 'DCA', 'Web Development Course', 'Learn HTML', 'Typing Course', 'Punjab Computer Education'],
+  authors: [{ name: 'Web an d App', url: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png' }],
+  creator: 'Web an d App',
   icons: {
     icon: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png',
     shortcut: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png',
@@ -26,20 +26,20 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_IN',
     url: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png',
-    title: 'Global Computer Institute | Best Tech Education in Jalalabad',
+    title: 'Web an d App | Best Tech Education in Jalalabad',
     description: 'Empowering the next generation of tech leaders with practical skills and placement assistance.',
     images: [
       {
         url: 'https://i.ibb.co/6RdhCvSg/Compress-JPEG-Online-img-800x600.jpg',
         width: 800,
         height: 600,
-        alt: 'Students learning at Global Computer Institute',
+        alt: 'Students learning at Web an d App',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Global Computer Institute | Start Your Tech Career',
+    title: 'Web an d App | Start Your Tech Career',
     description: 'Expert-led computer courses in Jalalabad, Punjab. Join us to build your future in technology.',
     images: ['https://i.ibb.co/6RdhCvSg/Compress-JPEG-Online-img-800x600.jpg'],
   },

@@ -26,7 +26,7 @@ export default function CertificatePage({ params }: { params: { studentId: strin
   };
   
   const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
-  const shareText = `Check out the certificate for ${student.name} from Oakridge International School!`;
+  const shareText = `Check out the certificate for ${student.name} from Web an d App!`;
 
 
   return (
@@ -59,7 +59,7 @@ export default function CertificatePage({ params }: { params: { studentId: strin
 
                     <header className="flex flex-col items-center">
                         <BookOpen className="h-16 w-16 text-primary" />
-                        <h1 className="text-3xl sm:text-4xl font-headline font-bold mt-2">Oakridge International School</h1>
+                        <h1 className="text-3xl sm:text-4xl font-headline font-bold mt-2">Web an d App</h1>
                     </header>
 
                     <div className="space-y-2">
@@ -114,5 +114,3 @@ export default function CertificatePage({ params }: { params: { studentId: strin
     </div>
   );
 }
-
-    

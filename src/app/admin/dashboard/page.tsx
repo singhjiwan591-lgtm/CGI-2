@@ -280,7 +280,7 @@ export default function DashboardPage() {
                 <CardHeader>
                     <CardTitle>Our Teachers</CardTitle>
                     <CardDescription>
-                        List of faculty members at Oakridge International School.
+                        List of faculty members at Web an d App.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

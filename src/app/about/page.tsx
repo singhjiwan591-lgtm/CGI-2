@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function AboutPage() {
   const timeline = [
-    { year: 2010, event: 'Institute Founded', description: 'Global Computer Institute began with a mission to bridge the tech skills gap.' },
+    { year: 2010, event: 'Institute Founded', description: 'Web an d App began with a mission to bridge the tech skills gap.' },
     { year: 2015, event: 'First 1000 Graduates', description: 'We proudly celebrated our first thousand successful graduates entering the tech industry.' },
     { year: 2019, event: 'New Advanced AI/ML Course', description: 'Launched our state-of-the-art curriculum in Artificial Intelligence and Machine Learning.' },
     { year: 2023, event: 'Top Placement Award', description: 'Recognized for achieving the highest placement rate in the region.' },
@@ -59,7 +59,7 @@ export default function AboutPage() {
     <div className="flex flex-col items-center">
       <section className="w-full bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-headline text-3xl font-bold md:text-5xl">About Global Computer Institute</h1>
+          <h1 className="font-headline text-3xl font-bold md:text-5xl">About Web an d App</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-lg">
             We are a community of innovators, dedicated to providing world-class technical education and fostering the next generation of tech leaders.
           </p>
@@ -156,5 +156,3 @@ export default function AboutPage() {
     </div>
   );
 }
-
-    

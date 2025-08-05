@@ -6,7 +6,7 @@ import { ContactForm } from '@/components/contact-form';
 export default function ContactPage() {
   const contactDetails = [
     { icon: <MapPin className="h-6 w-6 text-primary" />, text: 'Main Road, Near Bus Stand, Jalalabad (West), Punjab' },
-    { icon: <Mail className="h-6 w-6 text-primary" />, text: 'admissions@globalcomputer.edu' },
+    { icon: <Mail className="h-6 w-6 text-primary" />, text: 'admissions@webandapp.edu' },
     { icon: <Phone className="h-6 w-6 text-primary" />, text: '(123) 555-2024' },
   ];
 
