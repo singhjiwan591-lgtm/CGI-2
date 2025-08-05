@@ -41,6 +41,9 @@ import {
   ChartLegendContent
 } from '@/components/ui/chart';
 import { Pie, PieChart, Cell } from 'recharts';
+import { db } from '@/lib/firebase';
+import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { format } from 'date-fns';
 
 type Student = {
   id: string;
@@ -50,7 +53,9 @@ type Student = {
   program: string;
   avatarHint: string;
   photoURL?: string;
-  admissionDate: string;
+  admissionDate: string; // Assuming this is stored as a string or timestamp
+  totalFees: number;
+  feesPaid: number;
 };
 
 const teachers = [
@@ -60,45 +65,70 @@ const teachers = [
     { name: 'Mr. Amit Singh', subject: 'Mathematics', avatarHint: 'man corporate', photoURL: 'https://placehold.co/100x100.png'},
 ];
 
-const programData = [
-  { program: 'Science', students: 45, fill: 'hsl(var(--chart-1))' },
-  { program: 'Arts', students: 80, fill: 'hsl(var(--chart-2))' },
-  { program: 'Technology', students: 25, fill: 'hsl(var(--chart-3))' },
-  { program: 'Math', students: 50, fill: 'hsl(var(--chart-4))' },
-];
-
 const chartConfig = {
   students: {
     label: 'Students',
   },
-  Science: {
-    label: 'Science',
-    color: 'hsl(var(--chart-1))',
-  },
-  Arts: {
-    label: 'Arts',
-    color: 'hsl(var(--chart-2))',
-  },
-  Technology: {
-    label: 'Technology',
-    color: 'hsl(var(--chart-3))',
-  },
-  Math: {
-    label: 'Math',
-    color: 'hsl(var(--chart-4))',
-  },
+  Science: { label: 'Science', color: 'hsl(var(--chart-1))' },
+  Arts: { label: 'Arts', color: 'hsl(var(--chart-2))' },
+  Technology: { label: 'Technology', color: 'hsl(var(--chart-3))' },
+  Math: { label: 'Math', color: 'hsl(var(--chart-4))' },
+  // Add other programs here as needed
 };
 
 
 export default function DashboardPage() {
-  const [recentAdmissions, setRecentAdmissions] = useState<Student[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // This would be replaced with a real API call to fetch data from Firestore
-    // For now, we'll keep it empty and rely on the students page for management
-    setLoading(false);
+    const studentsCollectionRef = collection(db, 'students');
+    const q = query(studentsCollectionRef, orderBy('admissionDate', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const studentsData: Student[] = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            studentsData.push({ 
+                id: doc.id, 
+                ...data,
+                // Ensure admissionDate is a string for consistent handling
+                admissionDate: data.admissionDate ? format(new Date(data.admissionDate), 'PPP') : 'N/A'
+            } as Student);
+        });
+        setStudents(studentsData);
+        setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
+
+  const recentAdmissions = students.slice(0, 5);
+
+  const totalIncome = students.reduce((acc, student) => acc + (student.feesPaid || 0), 0);
+  const totalFees = students.reduce((acc, student) => acc + (student.totalFees || 0), 0);
+  const pendingFees = totalFees - totalIncome;
+  const activeStudents = students.filter(s => s.status === 'Enrolled').length;
+
+  const programCounts = students.reduce((acc, student) => {
+    acc[student.program] = (acc[student.program] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const programData = Object.entries(programCounts).map(([program, count], index) => ({
+      program,
+      students: count,
+      fill: `hsl(var(--chart-${(index % 5) + 1}))`
+  }));
+  
+
+  if (loading) {
+      return (
+          <div className="flex items-center justify-center h-full">
+              <Loader2 className="h-8 w-8 animate-spin" />
+          </div>
+      )
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -113,9 +143,9 @@ export default function DashboardPage() {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹0</div>
+                <div className="text-2xl font-bold">₹{totalIncome.toLocaleString()}</div>
                 <p className="text-xs text-muted-foreground">
-                  +0.0% from last month
+                  from all students
                 </p>
               </CardContent>
             </Card>
@@ -127,9 +157,9 @@ export default function DashboardPage() {
                 <CircleOff className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹0</div>
+                <div className="text-2xl font-bold">₹{pendingFees.toLocaleString()}</div>
                 <p className="text-xs text-muted-foreground">
-                  from 0 students
+                  across all students
                 </p>
               </CardContent>
             </Card>
@@ -143,7 +173,7 @@ export default function DashboardPage() {
               <CardContent>
                 <div className="text-2xl font-bold">₹0</div>
                 <p className="text-xs text-muted-foreground">
-                  Target: ₹250,000
+                  (Functionality coming soon)
                 </p>
               </CardContent>
             </Card>
@@ -155,9 +185,9 @@ export default function DashboardPage() {
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+0</div>
+                <div className="text-2xl font-bold">+{activeStudents}</div>
                 <p className="text-xs text-muted-foreground">
-                  +0 this month
+                  currently enrolled
                 </p>
               </CardContent>
             </Card>
@@ -168,7 +198,7 @@ export default function DashboardPage() {
                 <div className="grid gap-2">
                   <CardTitle>Recent Student Admissions</CardTitle>
                   <CardDescription>
-                    No recent student admissions.
+                    {recentAdmissions.length} of {students.length} most recent admissions.
                   </CardDescription>
                 </div>
                 <Button asChild size="sm" className="ml-auto gap-1">
@@ -179,11 +209,6 @@ export default function DashboardPage() {
                 </Button>
               </CardHeader>
               <CardContent>
-                {loading ? (
-                  <div className="flex justify-center items-center h-40">
-                    <Loader2 className="h-8 w-8 animate-spin" />
-                  </div>
-                ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -234,7 +259,6 @@ export default function DashboardPage() {
                     ))}
                   </TableBody>
                 </Table>
-                )}
               </CardContent>
             </Card>
             <Card>
@@ -258,8 +282,8 @@ export default function DashboardPage() {
                             innerRadius={60}
                             strokeWidth={5}
                         >
-                            {programData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.fill} name={entry.program} />
+                            {programData.map((entry) => (
+                                <Cell key={`cell-${entry.program}`} fill={entry.fill} name={entry.program} />
                             ))}
                         </Pie>
                         <ChartLegend
@@ -300,3 +324,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    

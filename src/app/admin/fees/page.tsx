@@ -1,12 +1,13 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   DollarSign,
   Receipt,
   MoreHorizontal,
   PlusCircle,
+  Loader2
 } from 'lucide-react';
 import {
   Card,
@@ -47,6 +48,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
+import { db } from '@/lib/firebase';
+import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 
 type StudentFee = {
   id: string;
@@ -58,15 +61,27 @@ type StudentFee = {
   feesPaid: number;
 };
 
-// This will be replaced by data from Firestore later
-const initialStudents: StudentFee[] = [];
-
 export default function FeesPage() {
-  const [students, setStudents] = useState(initialStudents);
+  const [students, setStudents] = useState<StudentFee[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isCollectFeeDialogOpen, setIsCollectFeeDialogOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentFee | null>(null);
   const [paymentAmount, setPaymentAmount] = useState('');
   const { toast } = useToast();
+
+  useEffect(() => {
+    const studentsCollectionRef = collection(db, 'students');
+    const unsubscribe = onSnapshot(studentsCollectionRef, (querySnapshot) => {
+        const studentsData: StudentFee[] = [];
+        querySnapshot.forEach((doc) => {
+            studentsData.push({ id: doc.id, ...doc.data() } as StudentFee);
+        });
+        setStudents(studentsData);
+        setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleCollectFeeClick = (student: StudentFee) => {
     setSelectedStudent(student);
@@ -74,7 +89,7 @@ export default function FeesPage() {
     setIsCollectFeeDialogOpen(true);
   };
 
-  const handleProcessPayment = () => {
+  const handleProcessPayment = async () => {
     if (!selectedStudent || !paymentAmount) return;
 
     const amount = parseFloat(paymentAmount);
@@ -89,21 +104,31 @@ export default function FeesPage() {
       return;
     }
 
-    // This would be an update call to Firestore
-    setStudents(students.map(s => 
-      s.id === selectedStudent.id 
-        ? { ...s, feesPaid: s.feesPaid + amount } 
-        : s
-    ));
-    
-    toast({ title: 'Payment Successful', description: `₹${amount} collected from ${selectedStudent.name}.` });
-    setIsCollectFeeDialogOpen(false);
-    setSelectedStudent(null);
+    try {
+        const studentDocRef = doc(db, 'students', selectedStudent.id);
+        await updateDoc(studentDocRef, {
+            feesPaid: selectedStudent.feesPaid + amount
+        });
+        
+        toast({ title: 'Payment Successful', description: `₹${amount} collected from ${selectedStudent.name}.` });
+        setIsCollectFeeDialogOpen(false);
+        setSelectedStudent(null);
+    } catch (error) {
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not process payment.' });
+    }
   };
 
   const totalCollected = students.reduce((acc, s) => acc + s.feesPaid, 0);
   const totalFees = students.reduce((acc, s) => acc + s.totalFees, 0);
   const totalRemaining = totalFees - totalCollected;
+
+  if (loading) {
+      return (
+        <div className="flex items-center justify-center h-full">
+            <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+    )
+  }
 
   return (
     <>
@@ -258,3 +283,5 @@ export default function FeesPage() {
     </>
   );
 }
+
+    

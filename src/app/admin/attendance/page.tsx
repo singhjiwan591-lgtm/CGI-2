@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Fingerprint, LogIn, LogOut, Search, History } from 'lucide-react';
+import { Fingerprint, LogIn, LogOut, Search, History, Loader2 } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -40,6 +40,9 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { format } from 'date-fns';
+import { db } from '@/lib/firebase';
+import { collection, onSnapshot, addDoc, query, where, orderBy, getDocs } from 'firebase/firestore';
+
 
 type Student = {
   id: string;
@@ -63,16 +66,10 @@ type DailyStatus = {
   clockedOut: string | null;
 };
 
-// This will be replaced by data from Firestore later
-const mockStudents: Student[] = [];
-
-// This will be replaced by data from Firestore later
-const mockLogs: AttendanceLog[] = [];
-
-
 export default function AttendancePage() {
-    const [students, setStudents] = useState<Student[]>(mockStudents);
-    const [attendanceLogs, setAttendanceLogs] = useState<AttendanceLog[]>(mockLogs);
+    const [students, setStudents] = useState<Student[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [attendanceLogs, setAttendanceLogs] = useState<AttendanceLog[]>([]);
     const [dailyAttendance, setDailyAttendance] = useState<Record<string, DailyStatus>>({});
     const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -83,17 +80,40 @@ export default function AttendancePage() {
     const { toast } = useToast();
 
     useEffect(() => {
+        const studentsUnsub = onSnapshot(collection(db, 'students'), (snapshot) => {
+            const studentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Student));
+            setStudents(studentsData);
+            setLoading(false);
+        });
+
+        return () => studentsUnsub();
+    }, []);
+
+    useEffect(() => {
         const startOfDay = new Date(selectedDate);
         startOfDay.setHours(0, 0, 0, 0);
         const endOfDay = new Date(selectedDate);
         endOfDay.setHours(23, 59, 59, 999);
 
-        const logsForDate = attendanceLogs.filter(log => log.timestamp >= startOfDay && log.timestamp <= endOfDay);
+        const logsQuery = query(collection(db, 'attendance'), where('timestamp', '>=', startOfDay), where('timestamp', '<=', endOfDay));
         
+        const logsUnsub = onSnapshot(logsQuery, (snapshot) => {
+            const logsData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                timestamp: doc.data().timestamp.toDate(),
+            } as AttendanceLog));
+            setAttendanceLogs(logsData);
+        });
+        
+        return () => logsUnsub();
+    }, [selectedDate]);
+
+    useEffect(() => {
         const newDailyAttendance: Record<string, DailyStatus> = {};
         
         students.forEach(student => {
-            const studentLogs = logsForDate.filter(log => log.studentId === student.id).sort((a,b) => a.timestamp.getTime() - b.timestamp.getTime());
+            const studentLogs = attendanceLogs.filter(log => log.studentId === student.id).sort((a,b) => a.timestamp.getTime() - b.timestamp.getTime());
             const clockInLog = studentLogs.find(l => l.type === 'clock-in');
             const clockOutLog = studentLogs.find(l => l.type === 'clock-out');
 
@@ -113,7 +133,7 @@ export default function AttendancePage() {
             };
         });
         setDailyAttendance(newDailyAttendance);
-    }, [selectedDate, students, attendanceLogs]);
+    }, [students, attendanceLogs]);
 
     const handleClockIn = async () => {
         if (!selectedStudent) {
@@ -121,22 +141,21 @@ export default function AttendancePage() {
             return;
         }
         
-        const now = new Date();
         const student = students.find(s => s.id === selectedStudent);
         if (!student || dailyAttendance[selectedStudent]?.clockedIn) return;
-
-        // This would be an add call to Firestore
-        const newLog: AttendanceLog = {
-            id: Date.now().toString(),
-            studentId: selectedStudent,
-            studentName: student.name,
-            timestamp: now,
-            type: 'clock-in'
+        
+        try {
+            await addDoc(collection(db, 'attendance'), {
+                studentId: selectedStudent,
+                studentName: student.name,
+                timestamp: new Date(),
+                type: 'clock-in'
+            });
+            toast({ title: 'Clocked In', description: `${student.name} has been clocked in.` });
+            setSelectedStudent(null);
+        } catch (error) {
+             toast({ variant: 'destructive', title: 'Error', description: 'Could not clock in student.' });
         }
-        setAttendanceLogs(prev => [...prev, newLog]);
-
-        toast({ title: 'Clocked In', description: `${student.name} has been clocked in.` });
-        setSelectedStudent(null);
     };
 
     const handleClockOut = async () => {
@@ -148,31 +167,42 @@ export default function AttendancePage() {
         const student = students.find(s => s.id === selectedStudent);
         if (!student || !dailyAttendance[selectedStudent]?.clockedIn || dailyAttendance[selectedStudent]?.clockedOut) return;
         
-        // This would be an add call to Firestore
-        const newLog: AttendanceLog = {
-            id: Date.now().toString(),
-            studentId: selectedStudent,
-            studentName: student.name,
-            timestamp: new Date(),
-            type: 'clock-out'
+         try {
+            await addDoc(collection(db, 'attendance'), {
+                studentId: selectedStudent,
+                studentName: student.name,
+                timestamp: new Date(),
+                type: 'clock-out'
+            });
+            toast({ title: 'Clocked Out', description: `${student.name} has been clocked out.` });
+            setSelectedStudent(null);
+        } catch (error) {
+             toast({ variant: 'destructive', title: 'Error', description: 'Could not clock out student.' });
         }
-        setAttendanceLogs(prev => [...prev, newLog]);
-
-        toast({ title: 'Clocked Out', description: `${student.name} has been clocked out.` });
-        setSelectedStudent(null);
     };
 
     const handleViewHistory = async (student: Student) => {
         setHistoryStudent(student);
-        // This would be a query to Firestore
-        const historyData = attendanceLogs
-            .filter(log => log.studentId === student.id)
-            .sort((a,b) => b.timestamp.getTime() - a.timestamp.getTime());
+        const historyQuery = query(collection(db, 'attendance'), where('studentId', '==', student.id), orderBy('timestamp', 'desc'));
+        const snapshot = await getDocs(historyQuery);
+        const historyData = snapshot.docs.map(doc => ({ 
+            id: doc.id,
+            ...doc.data(),
+            timestamp: doc.data().timestamp.toDate(),
+        } as AttendanceLog));
         setStudentHistory(historyData);
         setIsHistoryOpen(true);
     };
 
     const filteredStudents = students.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+        );
+    }
 
   return (
     <>
@@ -340,3 +370,5 @@ export default function AttendancePage() {
     </>
   );
 }
+
+    
