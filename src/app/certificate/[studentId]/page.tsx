@@ -8,8 +8,8 @@ import { Award, BookOpen, Download, Share2, Twitter, Linkedin, Facebook } from '
 
 // Mock student data - in a real application, this would be fetched from a database
 const students = [
-  { id: '24001', name: 'Olivia Martin', grade: 10, status: 'Enrolled', program: 'Science' },
-  { id: '24004', name: 'Isabella Patel', grade: 12, status: 'Graduated', program: 'Math' },
+  { id: '1', name: 'Olivia Martin', grade: 10, status: 'Enrolled', program: 'Science' },
+  { id: '4', name: 'Isabella Patel', grade: 12, status: 'Graduated', program: 'Math' },
   // Add other students here...
 ];
 

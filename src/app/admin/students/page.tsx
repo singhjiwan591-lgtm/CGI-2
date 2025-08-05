@@ -150,7 +150,7 @@ export default function StudentsPage() {
             toast({ title: 'Success', description: 'Student information has been updated.' });
         } else {
             const newStudent: Student = {
-              id: (Math.random() * 10000).toString(),
+              id: `STU-${Date.now()}`,
               status: 'Enrolled',
               avatarHint: 'student portrait',
               photoURL: '',

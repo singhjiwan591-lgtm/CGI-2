@@ -72,18 +72,18 @@ export default function Home() {
         'Web an d App provided the perfect launchpad for my career. The hands-on approach and expert faculty are unmatched. Highly recommended!',
     },
     {
-      name: 'Jeevan Singh',
-      title: 'Alumnus, Class of 2022',
-      avatar: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
-      dataAiHint: 'man programmer',
+      name: 'Priya Kaur',
+      title: 'Alumna, Class of 2023',
+      avatar: 'https://placehold.co/100x100.png',
+      dataAiHint: 'woman programmer',
       quote:
         'The skills I gained here were directly applicable to my job from day one. The career support team was fantastic in helping me land my first role.',
     },
     {
-      name: 'Jeevan Singh',
+      name: 'Amit Sharma',
       title: 'UI/UX Designer',
-      avatar: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
-      dataAiHint: 'woman designer',
+      avatar: 'https://placehold.co/100x100.png',
+      dataAiHint: 'man designer',
       quote:
         'A great learning environment with a focus on practical skills. The instructors are always ready to help and the community is very supportive.',
     },
@@ -343,7 +343,7 @@ export default function Home() {
           </h2>
           <Card className="w-full max-w-sm p-8 bg-card transform transition-transform duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-primary/30 flex justify-center items-center">
             <Image
-              src="https://i.ibb.co/bR68ms4K/Compress-JPEG-Online-img-800x600.jpg"
+              src="https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png"
               alt="Web an d App Logo"
               width={200}
               height={200}
