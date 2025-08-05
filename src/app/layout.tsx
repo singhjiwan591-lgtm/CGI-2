@@ -1,5 +1,5 @@
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
@@ -43,13 +43,17 @@ export const metadata: Metadata = {
     description: 'Expert-led computer courses in Jalalabad, Punjab. Join us to build your future in technology.',
     images: ['https://i.ibb.co/6RdhCvSg/Compress-JPEG-Online-img-800x600.jpg'],
   },
-  viewport: 'width=device-width, initial-scale=1',
   robots: {
     index: true,
     follow: true,
   },
   assets: ['https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png/assets'],
   category: 'Education',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({
