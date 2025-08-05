@@ -4,9 +4,9 @@ import './globals.css';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { Toaster } from '@/components/ui/toaster';
-import { DiscountPopup } from '@/components/discount-popup';
 import { Preloader } from '@/components/preloader';
 import Script from 'next/script';
+import { DynamicDiscountPopup } from '@/components/dynamic-components';
 
 export const metadata: Metadata = {
   title: {
@@ -105,7 +105,7 @@ export default function RootLayout({
           <SiteFooter />
         </div>
         <Toaster />
-        <DiscountPopup />
+        <DynamicDiscountPopup />
       </body>
     </html>
   );
