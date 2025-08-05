@@ -30,6 +30,7 @@ export function Preloader() {
           width={150}
           height={150}
           className="object-contain"
+          style={{ height: 'auto' }}
           priority
         />
       </div>
