@@ -4,13 +4,14 @@ import { initializeApp } from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+// IMPORTANT: Replace the placeholder values with the actual values from your Firebase project console.
 const firebaseConfig = {
-  "projectId": "global-786",
-  "appId": "1:1098988712906:web:d2948c2692ff21696078e8",
-  "storageBucket": "global-786.appspot.com",
-  "apiKey": "AIzaSyARNMWvmeDy812-OjytkUTM_ajFDQ4yJIY",
-  "authDomain": "global-786.firebaseapp.com",
-  "messagingSenderId": "1098988712906"
+  "projectId": "studio-8507896087", // Provided project ID
+  "appId": "YOUR_APP_ID",
+  "storageBucket": "YOUR_STORAGE_BUCKET",
+  "apiKey": "YOUR_API_KEY",
+  "authDomain": "YOUR_AUTH_DOMAIN",
+  "messagingSenderId": "YOUR_MESSAGING_SENDER_ID"
 };
 
 // Initialize Firebase
