@@ -58,14 +58,8 @@ type StudentFee = {
   feesPaid: number;
 };
 
-const initialStudents: StudentFee[] = [
-  { id: '24001', name: 'Olivia Martin', grade: 10, avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png', totalFees: 5000, feesPaid: 2500 },
-  { id: '24002', name: 'Jackson Lee', grade: 9, avatarHint: 'boy student', photoURL: 'https://placehold.co/100x100.png', totalFees: 5000, feesPaid: 5000 },
-  { id: '24003', name: 'Sofia Nguyen', grade: 11, avatarHint: 'girl smiling', photoURL: 'https://placehold.co/100x100.png', totalFees: 5500, feesPaid: 1000 },
-  { id: '24004', name: 'Isabella Patel', grade: 12, avatarHint: 'boy glasses', photoURL: 'https://placehold.co/100x100.png', totalFees: 6000, feesPaid: 6000 },
-  { id: '24005', name: 'William Kim', grade: 9, avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png', totalFees: 5000, feesPaid: 3000 },
-  { id: '24006', name: 'Ava Brown', grade: 10, avatarHint: 'girl portrait', photoURL: 'https://placehold.co/100x100.png', totalFees: 5000, feesPaid: 0 },
-];
+// This will be replaced by data from Firestore later
+const initialStudents: StudentFee[] = [];
 
 export default function FeesPage() {
   const [students, setStudents] = useState(initialStudents);
@@ -95,6 +89,7 @@ export default function FeesPage() {
       return;
     }
 
+    // This would be an update call to Firestore
     setStudents(students.map(s => 
       s.id === selectedStudent.id 
         ? { ...s, feesPaid: s.feesPaid + amount } 
@@ -149,7 +144,7 @@ export default function FeesPage() {
                 <Receipt className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">{((totalCollected / totalFees) * 100).toFixed(1)}%</div>
+                <div className="text-2xl font-bold">{totalFees > 0 ? ((totalCollected / totalFees) * 100).toFixed(1) : '0.0'}%</div>
                 <p className="text-xs text-muted-foreground">of total fee target collected</p>
             </CardContent>
         </Card>
@@ -171,9 +166,15 @@ export default function FeesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {students.map((student) => {
+              {students.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="h-24 text-center">
+                    No student data available. Manage students to see fee details.
+                  </TableCell>
+                </TableRow>
+              ) : students.map((student) => {
                 const remaining = student.totalFees - student.feesPaid;
-                const paidPercentage = (student.feesPaid / student.totalFees) * 100;
+                const paidPercentage = student.totalFees > 0 ? (student.feesPaid / student.totalFees) * 100 : 0;
                 const isPaid = remaining <= 0;
 
                 return (

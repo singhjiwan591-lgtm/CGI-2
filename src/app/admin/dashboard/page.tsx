@@ -53,15 +53,6 @@ type Student = {
   admissionDate: string;
 };
 
-const mockAdmissions: Student[] = [
-    { id: '1', name: 'Ravi Sharma', grade: 11, status: 'Enrolled', program: 'Science', avatarHint: 'indian student', admissionDate: '2024-07-28' },
-    { id: '2', name: 'Priya Patel', grade: 10, status: 'Enrolled', program: 'Arts', avatarHint: 'girl student', admissionDate: '2024-07-27' },
-    { id: '3', name: 'Arjun Singh', grade: 12, status: 'Enrolled', program: 'Technology', avatarHint: 'boy smiling', admissionDate: '2024-07-25' },
-    { id: '4', name: 'Sneha Gupta', grade: 11, status: 'Enrolled', program: 'Math', avatarHint: 'female student', admissionDate: '2024-07-24' },
-    { id: '5', name: 'Vikram Kumar', grade: 9, status: 'Enrolled', program: 'Science', avatarHint: 'male student', admissionDate: '2024-07-22' },
-];
-
-
 const teachers = [
     { name: 'Dr. Evelyn Reed', subject: 'Principal', avatarHint: 'woman teacher', photoURL: 'https://placehold.co/100x100.png'},
     { name: 'Mr. David Chen', subject: 'Head of Academics', avatarHint: 'man teacher glasses', photoURL: 'https://placehold.co/100x100.png'},
@@ -104,11 +95,9 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate fetching data
-    setTimeout(() => {
-        setRecentAdmissions(mockAdmissions);
-        setLoading(false);
-    }, 1000);
+    // This would be replaced with a real API call to fetch data from Firestore
+    // For now, we'll keep it empty and rely on the students page for management
+    setLoading(false);
   }, []);
 
   return (
@@ -124,9 +113,9 @@ export default function DashboardPage() {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹1,250,450</div>
+                <div className="text-2xl font-bold">₹0</div>
                 <p className="text-xs text-muted-foreground">
-                  +15.2% from last month
+                  +0.0% from last month
                 </p>
               </CardContent>
             </Card>
@@ -138,9 +127,9 @@ export default function DashboardPage() {
                 <CircleOff className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹89,500</div>
+                <div className="text-2xl font-bold">₹0</div>
                 <p className="text-xs text-muted-foreground">
-                  from 42 students
+                  from 0 students
                 </p>
               </CardContent>
             </Card>
@@ -152,7 +141,7 @@ export default function DashboardPage() {
                 <Wallet className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹210,800</div>
+                <div className="text-2xl font-bold">₹0</div>
                 <p className="text-xs text-muted-foreground">
                   Target: ₹250,000
                 </p>
@@ -166,9 +155,9 @@ export default function DashboardPage() {
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+2,150</div>
+                <div className="text-2xl font-bold">+0</div>
                 <p className="text-xs text-muted-foreground">
-                  +180 this month
+                  +0 this month
                 </p>
               </CardContent>
             </Card>
@@ -179,7 +168,7 @@ export default function DashboardPage() {
                 <div className="grid gap-2">
                   <CardTitle>Recent Student Admissions</CardTitle>
                   <CardDescription>
-                    Showing the 5 most recent student admissions.
+                    No recent student admissions.
                   </CardDescription>
                 </div>
                 <Button asChild size="sm" className="ml-auto gap-1">
@@ -212,7 +201,13 @@ export default function DashboardPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {recentAdmissions.map((student) => (
+                    {recentAdmissions.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={5} className="h-24 text-center">
+                                No admissions yet.
+                            </TableCell>
+                        </TableRow>
+                    ) : recentAdmissions.map((student) => (
                       <TableRow key={student.id}>
                         <TableCell>
                           <div className="flex items-center gap-2">

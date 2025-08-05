@@ -63,15 +63,10 @@ type DailyStatus = {
   clockedOut: string | null;
 };
 
-const mockStudents: Student[] = [
-    { id: '1', name: 'Olivia Martin', grade: 10, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'student portrait' },
-    { id: '2', name: 'Jackson Lee', grade: 9, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy student' },
-    { id: '3', name: 'Sofia Nguyen', grade: 11, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'girl smiling' },
-    { id: '4', name: 'Isabella Patel', grade: 12, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy glasses' },
-    { id: '5', name: 'William Kim', grade: 9, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'student smiling' },
-    { id: '6', name: 'Ava Brown', grade: 10, photoURL: 'https://placehold.co/100x100.png', avatarHint: 'girl portrait' },
-];
+// This will be replaced by data from Firestore later
+const mockStudents: Student[] = [];
 
+// This will be replaced by data from Firestore later
 const mockLogs: AttendanceLog[] = [];
 
 
@@ -130,6 +125,7 @@ export default function AttendancePage() {
         const student = students.find(s => s.id === selectedStudent);
         if (!student || dailyAttendance[selectedStudent]?.clockedIn) return;
 
+        // This would be an add call to Firestore
         const newLog: AttendanceLog = {
             id: Date.now().toString(),
             studentId: selectedStudent,
@@ -152,6 +148,7 @@ export default function AttendancePage() {
         const student = students.find(s => s.id === selectedStudent);
         if (!student || !dailyAttendance[selectedStudent]?.clockedIn || dailyAttendance[selectedStudent]?.clockedOut) return;
         
+        // This would be an add call to Firestore
         const newLog: AttendanceLog = {
             id: Date.now().toString(),
             studentId: selectedStudent,
@@ -167,6 +164,7 @@ export default function AttendancePage() {
 
     const handleViewHistory = async (student: Student) => {
         setHistoryStudent(student);
+        // This would be a query to Firestore
         const historyData = attendanceLogs
             .filter(log => log.studentId === student.id)
             .sort((a,b) => b.timestamp.getTime() - a.timestamp.getTime());
@@ -219,7 +217,13 @@ export default function AttendancePage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredStudents.map(student => {
+                 {filteredStudents.length === 0 ? (
+                    <TableRow>
+                        <TableCell colSpan={5} className="h-24 text-center">
+                            No student data available. Manage students first.
+                        </TableCell>
+                    </TableRow>
+                ) : filteredStudents.map(student => {
                   const attendance = dailyAttendance[student.id] || { status: 'Absent', clockedIn: null, clockedOut: null };
                   return (
                     <TableRow key={student.id}>
@@ -311,7 +315,13 @@ export default function AttendancePage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {studentHistory.map(log => (
+                        {studentHistory.length === 0 ? (
+                             <TableRow>
+                                <TableCell colSpan={3} className="h-24 text-center">
+                                    No attendance history found.
+                                </TableCell>
+                            </TableRow>
+                        ) : studentHistory.map(log => (
                             <TableRow key={log.id}>
                                 <TableCell>{format(log.timestamp, 'PPP')}</TableCell>
                                 <TableCell>{format(log.timestamp, 'p')}</TableCell>

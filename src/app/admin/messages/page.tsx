@@ -19,35 +19,8 @@ type Message = {
   read: boolean;
 };
 
-const mockMessages: Message[] = [
-    {
-        id: '1',
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        subject: 'Inquiry about Web Development course',
-        message: 'Hello, I would like to know more about the Web Development course. What are the prerequisites and the total fee? Thank you.',
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-        read: false,
-    },
-    {
-        id: '2',
-        name: 'Jane Smith',
-        email: 'jane.smith@example.com',
-        subject: 'Question regarding placement assistance',
-        message: 'Hi, I am interested in your Data Science program and wanted to understand the placement assistance process. Could you please provide some details?',
-        timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-        read: true,
-    },
-    {
-        id: '3',
-        name: 'Amit Patel',
-        email: 'amit.patel@example.com',
-        subject: 'Free Counseling Session',
-        message: 'I would like to book a free counseling session for this Saturday. Please let me know the available time slots.',
-        timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-        read: true,
-    }
-]
+// This will be replaced by data from Firestore later
+const mockMessages: Message[] = []
 
 
 export default function MessagesPage() {
@@ -55,7 +28,7 @@ export default function MessagesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate fetching data
+    // This would be replaced by a real API call to fetch data from Firestore
     setTimeout(() => {
         setMessages(mockMessages);
         setLoading(false);
@@ -63,6 +36,7 @@ export default function MessagesPage() {
   }, []);
 
   const handleMarkAsRead = (id: string) => {
+    // This would be an update call to Firestore
     setMessages(prevMessages => 
         prevMessages.map(msg => 
             msg.id === id ? { ...msg, read: true } : msg

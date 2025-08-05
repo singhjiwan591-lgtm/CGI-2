@@ -65,6 +65,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { db } from '@/lib/firebase';
+import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot } from "firebase/firestore";
 
 type Student = {
   id: string;
@@ -84,14 +86,6 @@ type Student = {
   }
 };
 
-const mockStudents: Student[] = [
-    { id: '1', name: 'Olivia Martin', grade: 10, status: 'Enrolled', email: 'olivia.martin@example.com', program: 'Science', avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png', totalFees: 5000, feesPaid: 2500, attendance: { present: 120, absent: 5, late: 3 } },
-    { id: '2', name: 'Jackson Lee', grade: 9, status: 'Enrolled', email: 'jackson.lee@example.com', program: 'Arts', avatarHint: 'boy student', photoURL: 'https://placehold.co/100x100.png', totalFees: 5000, feesPaid: 5000, attendance: { present: 125, absent: 2, late: 1 } },
-    { id: '3', name: 'Sofia Nguyen', grade: 11, status: 'Withdrawn', email: 'sofia.nguyen@example.com', program: 'Technology', avatarHint: 'girl smiling', photoURL: 'https://placehold.co/100x100.png', totalFees: 5500, feesPaid: 1000, attendance: { present: 90, absent: 15, late: 8 } },
-    { id: '4', name: 'Isabella Patel', grade: 12, status: 'Graduated', email: 'isabella.patel@example.com', program: 'Math', avatarHint: 'boy glasses', photoURL: 'https://placehold.co/100x100.png', totalFees: 6000, feesPaid: 6000, attendance: { present: 200, absent: 1, late: 0 } },
-];
-
-
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
@@ -102,11 +96,17 @@ export default function StudentsPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Simulate fetching data
-    setTimeout(() => {
-        setStudents(mockStudents);
+    const studentsCollectionRef = collection(db, 'students');
+    const unsubscribe = onSnapshot(studentsCollectionRef, (querySnapshot) => {
+        const studentsData: Student[] = [];
+        querySnapshot.forEach((doc) => {
+            studentsData.push({ id: doc.id, ...doc.data() } as Student);
+        });
+        setStudents(studentsData);
         setLoading(false);
-    }, 1000);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleAddNew = () => {
@@ -126,7 +126,7 @@ export default function StudentsPage() {
 
   const handleDelete = async (studentId: string) => {
     try {
-        setStudents(prev => prev.filter(s => s.id !== studentId));
+        await deleteDoc(doc(db, "students", studentId));
         toast({ title: 'Success', description: 'Student has been deleted.' });
     } catch (error) {
         toast({ variant: 'destructive', title: 'Error', description: 'Could not delete student.' });
@@ -146,11 +146,11 @@ export default function StudentsPage() {
 
     try {
         if (editingStudent) {
-            setStudents(prev => prev.map(s => s.id === editingStudent.id ? { ...s, ...newStudentData } : s));
+            const studentDocRef = doc(db, 'students', editingStudent.id);
+            await updateDoc(studentDocRef, newStudentData);
             toast({ title: 'Success', description: 'Student information has been updated.' });
         } else {
-            const newStudent: Student = {
-              id: `STU-${Date.now()}`,
+            const newStudentPayload = {
               status: 'Enrolled',
               avatarHint: 'student portrait',
               photoURL: '',
@@ -158,12 +158,13 @@ export default function StudentsPage() {
               attendance: { present: 0, absent: 0, late: 0 },
               ...newStudentData,
             }
-            setStudents(prev => [...prev, newStudent]);
+            await addDoc(collection(db, "students"), newStudentPayload);
             toast({ title: 'Success', description: 'New student has been added.' });
         }
         setIsFormDialogOpen(false);
+        setEditingStudent(null);
     } catch (error) {
-        
+        console.error("Error saving student:", error);
         toast({ variant: 'destructive', title: 'Error', description: 'Could not save student data.' });
     }
   };
