@@ -7,11 +7,11 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   "projectId": "courses-1-11b17",
-  "appId": "1:1098988712906:web:b8c5f2d1e4f3a7c6e0f9b1",
+  "appId": "1:550601892749:web:b8c5f2d1e4f3a7c6e0f9b1",
   "storageBucket": "courses-1-11b17.appspot.com",
   "apiKey": "AIzaSyARNMWvmeDy812-OjytkUTM_ajFDQ4yJIY",
   "authDomain": "courses-1-11b17.firebaseapp.com",
-  "messagingSenderId": "1098988712906"
+  "messagingSenderId": "550601892749"
 };
 
 // Initialize Firebase
