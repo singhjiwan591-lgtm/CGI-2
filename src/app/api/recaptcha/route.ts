@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing required parameters.' }, { status: 400 });
   }
 
-  const projectId = 'global-786'; // Hardcoded project ID
+  const projectId = 'courses-1-11b17'; // Hardcoded project ID
   const apiKey = process.env.FIREBASE_API_KEY; 
 
   if (!apiKey) {

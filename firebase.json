@@ -1,7 +1,8 @@
+
 {
   "hosting": [
     {
-      "site": "global-786",
+      "site": "courses-1-11b17",
       "public": "public",
       "ignore": [
         "firebase.json",
