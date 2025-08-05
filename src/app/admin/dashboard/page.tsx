@@ -263,8 +263,8 @@ export default function DashboardPage() {
                             innerRadius={60}
                             strokeWidth={5}
                         >
-                            {programData.map((entry) => (
-                                <Cell key={entry.program} fill={entry.fill} />
+                            {programData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
                             ))}
                         </Pie>
                         <ChartLegend

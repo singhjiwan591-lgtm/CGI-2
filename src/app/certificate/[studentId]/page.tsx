@@ -9,6 +9,8 @@ import { Award, BookOpen, Download, Share2, Twitter, Linkedin, Facebook } from '
 // Mock student data - in a real application, this would be fetched from a database
 const students = [
   { id: '1', name: 'Olivia Martin', grade: 10, status: 'Enrolled', program: 'Science' },
+  { id: '2', name: 'Jackson Lee', grade: 9, status: 'Enrolled', program: 'Arts' },
+  { id: '3', name: 'Sofia Nguyen', grade: 11, status: 'Withdrawn', program: 'Technology' },
   { id: '4', name: 'Isabella Patel', grade: 12, status: 'Graduated', program: 'Math' },
   // Add other students here...
 ];
