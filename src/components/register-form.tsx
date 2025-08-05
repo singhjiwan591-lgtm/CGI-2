@@ -84,7 +84,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
 
     window.grecaptcha.enterprise.ready(async () => {
         try {
-            const token = await window.grecaptcha.enterprise.execute('6LfKyJorAAAAAFAe9pw-5iKhu74C63ieHcwflRXG', {action: 'REGISTER'});
+            const token = await window.grecaptcha.enterprise.execute('6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7', {action: 'REGISTER'});
             
             // In a real app, you'd send this token to your backend for verification along with the form data.
             // For this demo, we'll assume verification is successful if a token is received.

@@ -85,7 +85,7 @@ export default function RootLayout({
         
         {/* PASTE YOUR COOKIEHUB CMP CODE SNIPPET HERE */}
 
-        <Script src="https://www.google.com/recaptcha/enterprise.js?render=6LfKyJorAAAAAFAe9pw-5iKhu74C63ieHcwflRXG" strategy="beforeInteractive" />
+        <Script src="https://www.google.com/recaptcha/enterprise.js?render=6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7" strategy="beforeInteractive" />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-B8YMN5JCXM"
           strategy="afterInteractive"

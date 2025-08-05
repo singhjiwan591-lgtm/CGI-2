@@ -57,7 +57,7 @@ export function LoginForm() {
     setLoading(true);
     grecaptcha.enterprise.ready(async () => {
       try {
-        const token = await grecaptcha.enterprise.execute('6LfKyJorAAAAAFAe9pw-5iKhu74C63ieHcwflRXG', {action: 'LOGIN'});
+        const token = await grecaptcha.enterprise.execute('6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7', {action: 'LOGIN'});
         if (!token) {
             throw new Error('reCAPTCHA verification failed. Please try again.');
         }
@@ -93,7 +93,7 @@ export function LoginForm() {
     setLoading(true);
      grecaptcha.enterprise.ready(async () => {
         try {
-            const token = await grecaptcha.enterprise.execute('6LfKyJorAAAAAFAe9pw-5iKhu74C63ieHcwflRXG', {action: 'LOGIN_GOOGLE'});
+            const token = await grecaptcha.enterprise.execute('6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7', {action: 'LOGIN_GOOGLE'});
             if (!token) {
                 throw new Error('reCAPTCHA verification failed. Please try again.');
             }
