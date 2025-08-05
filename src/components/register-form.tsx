@@ -45,6 +45,12 @@ const formSchema = z.object({
   path: ['confirmPassword'],
 });
 
+declare global {
+    interface Window {
+      grecaptcha: any;
+    }
+}
+
 export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   const router = useRouter();
   const { toast } = useToast();
@@ -75,31 +81,44 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    try {
-      await createUserWithEmailAndPassword(auth, values.email, values.password);
-      
-      toast({
-        title: 'Registration Successful!',
-        description: "Your account has been created. Please log in.",
-      });
-      form.reset();
-      router.push('/login');
 
-    } catch (error: any) {
-      const errorCode = error.code;
-      let errorMessage = 'There was an error submitting your application. Please try again.';
-      if (errorCode === 'auth/email-already-in-use') {
-        errorMessage = 'This email address is already in use. Please use a different email or log in.';
-      }
-      
-      toast({
-        variant: 'destructive',
-        title: 'Registration Failed',
-        description: errorMessage,
-      });
-    } finally {
-      setLoading(false);
-    }
+    window.grecaptcha.enterprise.ready(async () => {
+        try {
+            const token = await window.grecaptcha.enterprise.execute('6LfKyJorAAAAAFAe9pw-5iKhu74C63ieHcwflRXG', {action: 'REGISTER'});
+            
+            // In a real app, you'd send this token to your backend for verification along with the form data.
+            // For this demo, we'll assume verification is successful if a token is received.
+            if (!token) {
+                throw new Error('reCAPTCHA verification failed. Please try again.');
+            }
+
+            await createUserWithEmailAndPassword(auth, values.email, values.password);
+            
+            toast({
+                title: 'Registration Successful!',
+                description: "Your account has been created. Please log in.",
+            });
+            form.reset();
+            router.push('/login');
+
+        } catch (error: any) {
+            const errorCode = error.code;
+            let errorMessage = 'There was an error submitting your application. Please try again.';
+            if (errorCode === 'auth/email-already-in-use') {
+                errorMessage = 'This email address is already in use. Please use a different email or log in.';
+            } else if (error.message.includes('reCAPTCHA')) {
+                errorMessage = error.message;
+            }
+            
+            toast({
+                variant: 'destructive',
+                title: 'Registration Failed',
+                description: errorMessage,
+            });
+        } finally {
+            setLoading(false);
+        }
+    });
   }
 
   return (

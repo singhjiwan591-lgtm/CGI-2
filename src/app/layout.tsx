@@ -6,6 +6,7 @@ import { SiteFooter } from '@/components/site-footer';
 import { Toaster } from '@/components/ui/toaster';
 import { DiscountPopup } from '@/components/discount-popup';
 import { Preloader } from '@/components/preloader';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: {
@@ -71,6 +72,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
+        <Script src="https://www.google.com/recaptcha/enterprise.js?render=6LfKyJorAAAAAFAe9pw-5iKhu74C63ieHcwflRXG" strategy="beforeInteractive" />
         <Preloader />
         <div className="relative flex flex-col items-center flex-1 w-full">
           <SiteHeader />
