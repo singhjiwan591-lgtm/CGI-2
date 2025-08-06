@@ -2,12 +2,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Loader2, Inbox, Mail, MailOpen } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { db } from '@/lib/firebase';
+import { collection, onSnapshot, orderBy, query, doc, updateDoc } from 'firebase/firestore';
 
 type Message = {
   id: string;
@@ -19,29 +20,32 @@ type Message = {
   read: boolean;
 };
 
-// This will be replaced by data from Firestore later
-const mockMessages: Message[] = []
-
-
 export default function MessagesPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // This would be replaced by a real API call to fetch data from Firestore
-    setTimeout(() => {
-        setMessages(mockMessages);
-        setLoading(false);
-    }, 1000);
+    const messagesQuery = query(collection(db, 'messages'), orderBy('timestamp', 'desc'));
+    const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
+      const messagesData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        timestamp: doc.data().timestamp.toDate(),
+      } as Message));
+      setMessages(messagesData);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const handleMarkAsRead = (id: string) => {
-    // This would be an update call to Firestore
-    setMessages(prevMessages => 
-        prevMessages.map(msg => 
-            msg.id === id ? { ...msg, read: true } : msg
-        )
-    );
+  const handleMarkAsRead = async (id: string) => {
+    const messageRef = doc(db, 'messages', id);
+    try {
+      await updateDoc(messageRef, { read: true });
+    } catch (error) {
+      console.error("Error marking message as read: ", error);
+    }
   };
 
   if (loading) {

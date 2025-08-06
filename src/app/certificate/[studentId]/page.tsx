@@ -4,23 +4,74 @@
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Award, BookOpen, Download, Share2, Twitter, Linkedin, Facebook } from 'lucide-react';
+import { Award, BookOpen, Download, Share2, Twitter, Linkedin, Facebook, Loader2 } from 'lucide-react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { useEffect, useState } from 'react';
 
-// Mock student data - in a real application, this would be fetched from a database
-const students = [
-  { id: '1', name: 'Olivia Martin', grade: 10, status: 'Enrolled', program: 'Science' },
-  { id: '2', name: 'Jackson Lee', grade: 9, status: 'Enrolled', program: 'Arts' },
-  { id: '3', name: 'Sofia Nguyen', grade: 11, status: 'Withdrawn', program: 'Technology' },
-  { id: '4', name: 'Isabella Patel', grade: 12, status: 'Graduated', program: 'Math' },
-  // Add other students here...
-];
-
+type Student = {
+  id: string;
+  name: string;
+  program: string;
+  status: 'Graduated' | 'Enrolled' | 'Withdrawn';
+};
 
 export default function CertificatePage({ params }: { params: { studentId: string } }) {
-  const student = students.find(s => s.id === params.studentId && s.status === 'Graduated');
+  const [student, setStudent] = useState<Student | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentDate, setCurrentDate] = useState('');
 
-  if (!student) {
+  useEffect(() => {
+    setCurrentDate(new Date().toLocaleDateString());
+
+    const fetchStudent = async () => {
+      if (!params.studentId) {
+        setError('No student ID provided.');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const studentRef = doc(db, 'students', params.studentId);
+        const studentSnap = await getDoc(studentRef);
+
+        if (studentSnap.exists()) {
+          const studentData = studentSnap.data();
+          if (studentData.status === 'Graduated') {
+            setStudent({ id: studentSnap.id, ...studentData } as Student);
+          } else {
+            setError('This student has not graduated yet.');
+          }
+        } else {
+          setError('No student found with this ID.');
+        }
+      } catch (err) {
+        console.error(err);
+        setError('Failed to fetch student data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudent();
+  }, [params.studentId]);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-secondary">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    // You can create a more styled error page
     notFound();
+  }
+  
+  if (!student) {
+    return null;
   }
 
   const handlePrint = () => {
@@ -94,7 +145,7 @@ export default function CertificatePage({ params }: { params: { studentId: strin
                     </div>
 
                     <footer className="pt-4">
-                        <p className="text-muted-foreground text-sm">Issued on: {new Date().toLocaleDateString()}</p>
+                        <p className="text-muted-foreground text-sm">Issued on: {currentDate}</p>
                         <p className="text-muted-foreground text-xs mt-1">Student ID: {student.id}</p>
                     </footer>
                 </div>
