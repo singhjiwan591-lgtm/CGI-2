@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -39,8 +40,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import React from 'react';
 import { DynamicScrollingText } from '@/components/dynamic-components';
+import { usePageAnimations } from '@/hooks/usePageAnimations';
 
 export default function Home() {
+  const pageRef = useRef<HTMLDivElement>(null);
+  usePageAnimations(pageRef);
+
   const features = [
     {
       icon: <Code className="h-10 w-10 text-primary" />,
@@ -173,8 +178,8 @@ export default function Home() {
   ];
 
   return (
-    <div className="flex flex-col items-center">
-       <section className="w-full py-20 md:py-32">
+    <div ref={pageRef} className="flex flex-col items-center">
+       <section data-animate="fade-in" className="w-full py-20 md:py-32">
          <div className="container mx-auto px-4 text-center">
             <DynamicScrollingText />
             <p className="mx-auto mt-6 max-w-3xl text-lg text-foreground/80 md:text-xl">
@@ -195,7 +200,7 @@ export default function Home() {
           </div>
       </section>
 
-      <section id="courses" className="w-full py-12 md:py-20 bg-secondary">
+      <section id="courses" data-animate="fade-in-up" className="w-full py-12 md:py-20 bg-secondary">
         <div className="container mx-auto px-4">
            <div className="text-center mb-12">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -209,6 +214,7 @@ export default function Home() {
             {courseCards.map((card) => (
               <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block group">
                 <Card 
+                  data-animate="stagger-item"
                   className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/50 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
                 >
                   {card.imageUrl ? (
@@ -229,7 +235,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="introduction" className="w-full py-12 md:py-24">
+      <section id="introduction" data-animate="fade-in-up" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
             <div className="order-2 md:order-1">
@@ -254,7 +260,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="w-full py-12 md:py-24 bg-secondary">
+      <section id="features" data-animate="fade-in-up" className="w-full py-12 md:py-24 bg-secondary">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -266,7 +272,7 @@ export default function Home() {
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {features.map((feature) => (
-              <Card key={feature.title} className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl bg-card">
+              <Card key={feature.title} data-animate="stagger-item-2" className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl bg-card">
                 <CardHeader>
                   <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
                     {feature.icon}
@@ -284,7 +290,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="testimonials" className="w-full py-12 md:py-24">
+      <section id="testimonials" data-animate="fade-in-up" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -336,7 +342,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="logo-card" className="w-full py-12 md:py-24">
+      <section id="logo-card" data-animate="fade-in-up" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4 flex flex-col items-center">
           <h2 className="font-headline text-2xl font-bold md-text-4xl text-center mb-8">
             Our Identity

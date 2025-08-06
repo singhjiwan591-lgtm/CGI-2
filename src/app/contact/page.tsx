@@ -1,9 +1,16 @@
 
+'use client';
+
+import { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { Mail, MapPin, Phone, Facebook, Instagram, Linkedin } from 'lucide-react';
 import { ContactForm } from '@/components/contact-form';
+import { usePageAnimations } from '@/hooks/usePageAnimations';
 
 export default function ContactPage() {
+  const pageRef = useRef<HTMLDivElement>(null);
+  usePageAnimations(pageRef);
+
   const contactDetails = [
     { icon: <MapPin className="h-6 w-6 text-primary" />, text: 'Main Road, Near Bus Stand, Jalalabad (West), Punjab' },
     { icon: <Mail className="h-6 w-6 text-primary" />, text: 'admissions@webandapp.edu' },
@@ -11,8 +18,8 @@ export default function ContactPage() {
   ];
 
   return (
-    <div className="flex flex-col items-center">
-      <section className="w-full bg-secondary py-16 md:py-24">
+    <div ref={pageRef} className="flex flex-col items-center">
+      <section data-animate="fade-in" className="w-full bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">Get in Touch</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base md:text-lg text-foreground/80">
@@ -21,7 +28,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="w-full py-12 md:py-20">
+      <section data-animate="fade-in-up" className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-12">
             <div>
@@ -31,7 +38,7 @@ export default function ContactPage() {
               </p>
               <ul className="mt-6 space-y-4 md:mt-8 md:space-y-6">
                 {contactDetails.map((detail, index) => (
-                  <li key={index} className="flex items-start">
+                  <li key={index} data-animate="stagger-item" className="flex items-start">
                     <div className="flex-shrink-0">{detail.icon}</div>
                     <span className="ml-3 md:ml-4 text-base md:text-lg">{detail.text}</span>
                   </li>
@@ -53,7 +60,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="w-full">
+      <section data-animate="fade-in-up" className="w-full">
         <div className="container mx-auto px-4 pb-12 md:pb-24">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl mb-6 md:mb-8">Our Location</h2>
           <div className="aspect-video w-full">

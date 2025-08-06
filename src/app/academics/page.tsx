@@ -1,10 +1,17 @@
 
+'use client';
+
+import { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Codepen, Database, Layers, ArrowRight } from 'lucide-react';
+import { usePageAnimations } from '@/hooks/usePageAnimations';
 
 export default function AcademicsPage() {
+  const pageRef = useRef<HTMLDivElement>(null);
+  usePageAnimations(pageRef);
+  
   const academicPrograms = [
     {
       icon: <Codepen className="h-10 w-10 text-primary" />,
@@ -33,8 +40,8 @@ export default function AcademicsPage() {
   ];
 
   return (
-    <div className="flex flex-col items-center">
-      <section className="w-full bg-secondary py-16 md:py-24">
+    <div ref={pageRef} className="flex flex-col items-center">
+      <section data-animate="fade-in" className="w-full bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">Our Courses</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base md:text-lg text-foreground/80">
@@ -43,12 +50,12 @@ export default function AcademicsPage() {
         </div>
       </section>
 
-      <section className="w-full py-12 md:py-20">
+      <section data-animate="fade-in-up" className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl mb-10">Flagship Programs</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {academicPrograms.map((program) => (
-              <Card key={program.name} className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
+              <Card key={program.name} data-animate="stagger-item" className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
                 <CardHeader>
                   <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
                     {program.icon}
@@ -64,7 +71,7 @@ export default function AcademicsPage() {
         </div>
       </section>
 
-      <section className="w-full bg-secondary py-12 md:py-20">
+      <section data-animate="fade-in-up" className="w-full bg-secondary py-12 md:py-20">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">Curriculum Highlights</h2>
@@ -74,7 +81,7 @@ export default function AcademicsPage() {
           </div>
           <div className="mx-auto mt-10 max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
             {curriculumHighlights.map((highlight) => (
-              <div key={highlight} className="flex items-start">
+              <div key={highlight} data-animate="stagger-item-2" className="flex items-start">
                 <ArrowRight className={`h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0`} />
                 <p className="text-base md:text-lg">{highlight}</p>
               </div>
@@ -83,7 +90,7 @@ export default function AcademicsPage() {
         </div>
       </section>
       
-      <section className="w-full py-12 md:py-20">
+      <section data-animate="fade-in-up" className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4 text-center">
             <h2 className="font-headline text-2xl font-bold md:text-3xl">Ready to Start Your Tech Journey?</h2>
             <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg text-foreground/80">
