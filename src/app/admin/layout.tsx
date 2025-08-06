@@ -58,7 +58,7 @@ export default function DashboardLayout({
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
-              <Image src="https://i.ibb.co/9mp7zWKw/GCI-Logo-png.png" alt="Logo" width={24} height={24} />
+              <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Logo" width={24} height={24} />
               <span className="">Web an d App</span>
             </Link>
             <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
@@ -120,7 +120,7 @@ export default function DashboardLayout({
                     href="/"
                     className="flex items-center gap-2 text-lg font-semibold"
                   >
-                    <Image src="https://i.ibb.co/9mp7zWKw/GCI-Logo-png.png" alt="Logo" width={24} height={24} />
+                    <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Logo" width={24} height={24} />
                     <span>Web an d App</span>
                   </Link>
               </SheetHeader>

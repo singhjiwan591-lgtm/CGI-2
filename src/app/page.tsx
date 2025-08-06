@@ -343,7 +343,7 @@ export default function Home() {
           </h2>
           <Card className="w-full max-w-sm p-8 bg-card transform transition-transform duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-primary/30 flex justify-center items-center">
             <Image
-              src="https://i.ibb.co/9mp7zWKw/GCI-Logo-png.png"
+              src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png"
               alt="Web an d App Logo"
               width={200}
               height={200}

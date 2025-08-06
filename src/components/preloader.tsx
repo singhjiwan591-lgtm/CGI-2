@@ -25,7 +25,7 @@ export function Preloader() {
     >
       <div className="animate-pulse">
         <Image
-          src="https://i.ibb.co/9mp7zWKw/GCI-Logo-png.png"
+          src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png"
           alt="Web an d App Logo"
           width={150}
           height={150}
