@@ -1,3 +1,4 @@
+
 import { LoginForm } from '@/components/login-form';
 import Image from 'next/image';
 
@@ -11,7 +12,7 @@ export default function LoginPage() {
       </div>
       <div className="hidden bg-muted lg:block">
         <Image
-          src="https://i.ibb.co/3k1W9yY/login-security.jpg"
+          src="https://i.ibb.co/gLxhYndw/Login-Button-with-Padlock-Icon.png"
           alt="Image"
           width="1920"
           height="1080"
