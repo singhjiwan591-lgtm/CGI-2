@@ -15,17 +15,17 @@ export const metadata: Metadata = {
   },
   description: 'Join Web an d App in Jalalabad (West), Punjab for expert-led courses in Web Development, Data Science, Accounting, ADCA, CCA, and more. Start your tech career with us!',
   keywords: ['Computer Institute Jalalabad', 'Web an d App', 'Computer Courses', 'ADCA', 'DCA', 'Web Development Course', 'Learn HTML', 'Typing Course', 'Punjab Computer Education'],
-  authors: [{ name: 'Web an d App', url: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png' }],
+  authors: [{ name: 'Web an d App', url: 'https://i.ibb.co/9mp7zWKw/GCI-Logo-png.png' }],
   creator: 'Web an d App',
   icons: {
-    icon: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png',
-    shortcut: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png',
-    apple: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png',
+    icon: 'https://i.ibb.co/9mp7zWKw/GCI-Logo-png.png',
+    shortcut: 'https://i.ibb.co/9mp7zWKw/GCI-Logo-png.png',
+    apple: 'https://i.ibb.co/9mp7zWKw/GCI-Logo-png.png',
   },
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png',
+    url: 'https://i.ibb.co/9mp7zWKw/GCI-Logo-png.png',
     title: 'Web an d App | Best Tech Education in Jalalabad',
     description: 'Empowering the next generation of tech leaders with practical skills and placement assistance.',
     images: [
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  assets: ['https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png/assets'],
+  assets: ['https://i.ibb.co/9mp7zWKw/GCI-Logo-png.png/assets'],
   category: 'Education',
 };
 
