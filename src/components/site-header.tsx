@@ -88,27 +88,6 @@ export function SiteHeader() {
                     <Link href="/login">Login</Link>
                 </Button>
             </nav>
-            <div className="hidden md:flex items-center gap-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="secondary" size="icon" className="rounded-full">
-                       <Avatar>
-                        <AvatarImage src="https://i.ibb.co/TDhF0sY8/IMG-20250804-WA0006.jpg" data-ai-hint="user portrait" />
-                        <AvatarFallback><User className="h-5 w-5"/></AvatarFallback>
-                      </Avatar>
-                      <span className="sr-only">Toggle user menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild><Link href="/login">Portal Login</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/register">Register</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/admin/dashboard">Admin Dashboard</Link></DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-            </div>
 
             {/* Mobile Navigation */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
