@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Menu, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,16 +18,26 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import Image from 'next/image';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
 
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [user, loading] = useAuthState(auth);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push('/login');
+  };
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -57,6 +67,42 @@ export function SiteHeader() {
     </>
   );
 
+  const AuthButton = () => {
+    if (loading) {
+      return <Button variant="outline" size="sm" disabled>Loading...</Button>
+    }
+
+    if (user) {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="secondary" size="icon" className="rounded-full">
+              <Avatar>
+                <AvatarImage src={user.photoURL ?? "https://placehold.co/100x100.png"} data-ai-hint="admin user" />
+                <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <span className="sr-only">Toggle user menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>{user.displayName || user.email}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>Dashboard</DropdownMenuItem>
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    }
+
+    return (
+       <Button variant="outline" asChild>
+          <Link href="/login">Login</Link>
+      </Button>
+    )
+  }
+
   if (!isMounted) {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
@@ -84,9 +130,7 @@ export function SiteHeader() {
             {/* Desktop Navigation */}
             <nav className="hidden items-center gap-6 text-sm md:flex">
                 <NavLinksContent />
-                 <Button variant="outline" asChild>
-                    <Link href="/login">Login</Link>
-                </Button>
+                 <AuthButton />
             </nav>
 
             {/* Mobile Navigation */}
@@ -110,15 +154,23 @@ export function SiteHeader() {
                   <NavLinksContent />
                 </nav>
                  <div className="mt-auto flex flex-col gap-2 border-t pt-4">
-                    <Button variant="ghost" asChild onClick={() => setIsMobileMenuOpen(false)}>
-                      <Link href="/login">Portal Login</Link>
-                    </Button>
-                    <Button asChild onClick={() => setIsMobileMenuOpen(false)}>
-                      <Link href="/register">Enroll Now</Link>
-                    </Button>
-                    <Button variant="outline" asChild onClick={() => setIsMobileMenuOpen(false)}>
-                      <Link href="/admin/dashboard">Admin Dashboard</Link>
-                    </Button>
+                    {user ? (
+                      <>
+                        <Button variant="ghost" asChild onClick={() => setIsMobileMenuOpen(false)}>
+                          <Link href="/admin/dashboard">Dashboard</Link>
+                        </Button>
+                        <Button variant="outline" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}>Logout</Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button asChild onClick={() => setIsMobileMenuOpen(false)}>
+                          <Link href="/login">Login</Link>
+                        </Button>
+                        <Button variant="outline" asChild onClick={() => setIsMobileMenuOpen(false)}>
+                          <Link href="/register">Enroll Now</Link>
+                        </Button>
+                      </>
+                    )}
                   </div>
               </div>
             </SheetContent>
