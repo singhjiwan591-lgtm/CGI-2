@@ -86,8 +86,10 @@
   }
   body {
     @apply bg-background text-foreground;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
   }
+}
+
+.grecaptcha-badge {
+    transform: scale(0.7) !important;
+    transform-origin: bottom right !important;
 }
