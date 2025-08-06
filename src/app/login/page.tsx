@@ -12,7 +12,7 @@ export default function LoginPage() {
       </div>
       <div className="hidden bg-muted lg:block">
         <Image
-          src="https://i.ibb.co/gLxhYndw/Login-Button-with-Padlock-Icon.png"
+          src="https://i.ibb.co/Y7B7Z2G3/4d58d051-30f2-4046-83aa-5d05ac0ec33c.png"
           alt="Image"
           width="1920"
           height="1080"
