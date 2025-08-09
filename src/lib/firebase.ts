@@ -1,10 +1,11 @@
-
 'use client';
 
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import { useEffect } from 'react';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
