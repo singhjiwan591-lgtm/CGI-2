@@ -60,7 +60,7 @@ export default function CertificatePage({ params }: CertificatePageProps) {
 
     fetchStudent();
   }, [params.studentId]);
-
+  
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center bg-secondary">
@@ -74,6 +74,9 @@ export default function CertificatePage({ params }: CertificatePageProps) {
   }
   
   if (!student) {
+    // This can happen briefly or if there's an issue before error is set.
+    // It can also be the state if a non-graduated student was found.
+    // notFound() will handle the error case above.
     return null;
   }
 

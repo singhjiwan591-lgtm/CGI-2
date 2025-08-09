@@ -5,17 +5,17 @@
 import { initializeApp, getApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
-import { useEffect } from 'react';
 
 // Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  "projectId": "jbd-31",
-  "appId": "1:452056696306:web:15a51c4161b04678d2b992",
-  "storageBucket": "jbd-31.appspot.com",
-  "apiKey": "AIzaSyCxrjG1_17p2N-dC_wDsoGpg-H22n3hXBA",
-  "authDomain": "jbd-31.firebaseapp.com",
-  "messagingSenderId": "452056696306"
+  apiKey: "AIzaSyDyqOae7f0T4HducBU37pD1maDmmc_9nDM",
+  authDomain: "jbd-31.firebaseapp.com",
+  projectId: "jbd-31",
+  storageBucket: "jbd-31.firebasestorage.app",
+  messagingSenderId: "452056696306",
+  appId: "1:452056696306:web:0fe259d22fa8531890176b",
+  measurementId: "G-NSDVPWMS6Q"
 };
 
 // Initialize Firebase
