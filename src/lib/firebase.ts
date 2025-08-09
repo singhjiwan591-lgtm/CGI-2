@@ -10,12 +10,12 @@ import { useEffect } from 'react';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  "projectId": "fir-feat-prod-9892b",
-  "appId": "1:95804345479:web:9f8319fca378e5f2e62a19",
-  "storageBucket": "fir-feat-prod-9892b.appspot.com",
-  "apiKey": "AIzaSyCX_S8vR4D8G6w_Z3v6e5GfI7sW3x_QJjY",
-  "authDomain": "fir-feat-prod-9892b.firebaseapp.com",
-  "messagingSenderId": "95804345479"
+  "projectId": "jbd-31",
+  "appId": "1:452056696306:web:15a51c4161b04678d2b992",
+  "storageBucket": "jbd-31.appspot.com",
+  "apiKey": "AIzaSyCxrjG1_17p2N-dC_wDsoGpg-H22n3hXBA",
+  "authDomain": "jbd-31.firebaseapp.com",
+  "messagingSenderId": "452056696306"
 };
 
 // Initialize Firebase
