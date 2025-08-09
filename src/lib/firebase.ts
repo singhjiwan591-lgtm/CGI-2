@@ -26,49 +26,46 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-console.log("Firebase app initialized successfully!", app);
+console.log("Firebase app initialized successfully!");
 
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
-console.log("Firebase Auth service ready!", auth);
+console.log("Firebase Auth service ready!");
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
-console.log("Firebase Firestore service ready!", db);
+console.log("Firebase Firestore service ready!");
 
-
-// Function to initialize App Check
+// Function to initialize App Check, only runs on client
 const initializeFirebaseAppCheck = () => {
-    // Ensure this runs only on the client
-    if (typeof window !== 'undefined') {
-        const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-        if (!siteKey) {
-            console.warn("reCAPTCHA Site Key is not found in .env. App Check is not initialized.");
-            return;
-        }
-        
-        // Check if grecaptcha is available
-        if (window.grecaptcha && window.grecaptcha.enterprise) {
-             window.grecaptcha.enterprise.ready(() => {
-                try {
-                    initializeAppCheck(app, {
-                        provider: new ReCaptchaV3Provider(siteKey),
-                        // Optional: set to true for automated token refresh
-                        isTokenAutoRefreshEnabled: true
-                    });
-                    console.log("Firebase App Check initialized successfully!");
-                } catch (error) {
-                    console.error("Error initializing Firebase App Check:", error);
-                }
-            });
-        } else {
-            console.error("reCAPTCHA script not loaded yet. App Check initialization deferred.");
-        }
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+    if (!siteKey) {
+        console.warn("reCAPTCHA Site Key is not found. App Check is not initialized.");
+        return;
+    }
+    
+    // Check if grecaptcha is available and ready
+    if (window.grecaptcha && window.grecaptcha.enterprise && typeof window.grecaptcha.enterprise.ready === 'function') {
+         window.grecaptcha.enterprise.ready(() => {
+            try {
+                initializeAppCheck(app, {
+                    provider: new ReCaptchaV3Provider(siteKey),
+                    isTokenAutoRefreshEnabled: true
+                });
+                console.log("Firebase App Check initialized successfully!");
+            } catch (error) {
+                console.error("Error initializing Firebase App Check:", error);
+            }
+        });
+    } else {
+        console.error("reCAPTCHA script not loaded or ready yet. App Check initialization deferred.");
     }
 };
 
-// Call the function to initialize App Check when the script is ready
-initializeFirebaseAppCheck();
+// Ensure this runs only on the client
+if (typeof window !== 'undefined') {
+    initializeFirebaseAppCheck();
+}
 
 
 export { app, auth, db };
