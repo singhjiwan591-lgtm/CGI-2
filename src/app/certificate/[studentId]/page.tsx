@@ -1,13 +1,10 @@
 
-'use client';
-
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Award, BookOpen, Download, Share2, Twitter, Linkedin, Facebook, Loader2 } from 'lucide-react';
+import { Award, BookOpen, Download, Twitter, Linkedin, Facebook } from 'lucide-react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { useEffect, useState } from 'react';
 
 type Student = {
   id: string;
@@ -16,68 +13,47 @@ type Student = {
   status: 'Graduated' | 'Enrolled' | 'Withdrawn';
 };
 
-export default function CertificatePage({ params }: { params: { studentId: string } }) {
-  const [student, setStudent] = useState<Student | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState('');
+type CertificatePageProps = {
+  params: {
+    studentId: string;
+  };
+};
 
-  useEffect(() => {
-    setCurrentDate(new Date().toLocaleDateString());
+async function getStudent(studentId: string): Promise<Student | null> {
+    if (!studentId) return null;
 
-    const fetchStudent = async () => {
-      if (!params.studentId) {
-        setError('No student ID provided.');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const studentRef = doc(db, 'students', params.studentId);
+    try {
+        const studentRef = doc(db, 'students', studentId);
         const studentSnap = await getDoc(studentRef);
 
         if (studentSnap.exists()) {
-          const studentData = studentSnap.data();
-          if (studentData.status === 'Graduated') {
-            setStudent({ id: studentSnap.id, ...studentData } as Student);
-          } else {
-            setError('This student has not graduated yet.');
-          }
-        } else {
-          setError('No student found with this ID.');
+            const studentData = studentSnap.data();
+            if (studentData.status === 'Graduated') {
+                return { id: studentSnap.id, ...studentData } as Student;
+            }
         }
-      } catch (err) {
-        console.error(err);
-        setError('Failed to fetch student data.');
-      } finally {
-        setLoading(false);
-      }
-    };
+    } catch (err) {
+        console.error('Failed to fetch student data:', err);
+    }
+    return null;
+}
 
-    fetchStudent();
-  }, [params.studentId]);
-  
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-secondary">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
-      </div>
-    );
-  }
 
-  if (error) {
+export default async function CertificatePage({ params }: CertificatePageProps) {
+  const student = await getStudent(params.studentId);
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  if (!student) {
     notFound();
   }
-  
-  if (!student) {
-    return null;
-  }
 
-  const handlePrint = () => {
-    window.print();
-  };
-  
-  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  // NOTE: Sharing functionality will not work in a Server Component as it requires client-side window object.
+  // For a real app, this would need to be extracted into a client component.
+  const shareUrl = `https://your-app-domain.com/certificate/${student.id}`;
   const shareText = `Check out the certificate for ${student.name} from Web an d App!`;
 
 
@@ -85,7 +61,7 @@ export default function CertificatePage({ params }: { params: { studentId: strin
     <div className="bg-secondary min-h-screen p-4 sm:p-8 flex items-center justify-center">
         <div className="w-full max-w-4xl">
             <div className="flex flex-col sm:flex-row gap-4 justify-end mb-4 print:hidden">
-                <Button onClick={handlePrint}><Download className="mr-2 h-4 w-4" /> Download / Print</Button>
+                <Button><Download className="mr-2 h-4 w-4" /> Download / Print</Button>
                 <div className="flex gap-2">
                     <Button asChild variant="outline">
                         <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`} target="_blank" rel="noopener noreferrer">
