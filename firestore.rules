@@ -1,42 +1,11 @@
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper functions
-    function isOwner(userId) {
-      return request.auth.uid == userId;
-    }
-
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    // USER DATA: Users can only read and write their own data.
-    match /users/{userId} {
-      allow read, write: if isOwner(userId);
-    }
-    
-    // CONTACT MESSAGES: Anyone can create a message, but only admins can read.
-    // In a real app, you would add logic to identify admins.
-    match /contacts/{contactId} {
-      allow create: if true;
-      allow read, update, delete: if false; // Or add admin check: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true
-    }
-
-    // SHOPPING CARTS: Users can create, read, update, and delete their own shopping cart.
-    match /shoppingCarts/{cartId} {
-      // A user can create a cart if they are signed in and they are the owner.
-      allow create: if isSignedIn() && isOwner(request.resource.data.ownerUID);
-
-      // A user can read, update, or delete their cart if they are the owner.
-      // We check the existing resource's data for ownership.
-      allow read, update, delete: if isOwner(resource.data.ownerUID);
-
-      // ITEMS SUB-COLLECTION: Rules for items within a shopping cart.
-      match /items/{itemId} {
-        // A user can add, update, or remove items from their own cart.
-        // We check the parent cart document for ownership.
-        allow read, write: if isOwner(get(/databases/$(database)/documents/shoppingCarts/$(cartId)).data.ownerUID);
-      }
+    match /{document=**} {
+      // Deny all reads and writes by default.
+      // This is a good starting point for security.
+      // You should add specific rules to allow access where needed.
+      allow read, write: if false;
     }
   }
 }
