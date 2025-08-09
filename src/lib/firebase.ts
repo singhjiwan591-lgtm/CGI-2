@@ -20,19 +20,12 @@ const firebaseConfig = {
   measurementId: "G-NSDVPWMS6Q"
 };
 
-// Initialize Firebase
+// Initialize Firebase for SSR, if not already initialized
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-// Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
-
-// Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
-
-// Initialize Cloud Storage and get a reference to the service
 const storage = getStorage(app);
-
-// Initialize Firebase Cloud Messaging and get a reference to the service
 const messaging = (typeof window !== 'undefined') ? getMessaging(app) : null;
 
 const VAPID_KEY = 'BFvFzlUy4XcVX1Epvkhrm7tOG4wKju9y9x6VPhhb0SOiEMzZoKX_enFG-2FteaqISyWSqb1hN20zyvvV92nDeRA';
@@ -57,6 +50,5 @@ const requestNotificationPermission = async () => {
     console.error('An error occurred while retrieving token. ', error);
   }
 };
-
 
 export { app, auth, db, storage, messaging, requestNotificationPermission };
