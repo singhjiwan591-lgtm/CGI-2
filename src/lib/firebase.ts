@@ -18,14 +18,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-console.log("Firebase app initialized successfully!");
 
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
-console.log("Firebase Auth service ready!");
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
-console.log("Firebase Firestore service ready!");
 
 export { app, auth, db };
