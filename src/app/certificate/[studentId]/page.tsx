@@ -2,7 +2,7 @@
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Award, BookOpen, Download, Twitter, Linkedin, Facebook } from 'lucide-react';
+import { BookOpen, Download, Twitter, Linkedin, Facebook } from 'lucide-react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
@@ -11,12 +11,6 @@ type Student = {
   name: string;
   program: string;
   status: 'Graduated' | 'Enrolled' | 'Withdrawn';
-};
-
-type CertificatePageProps = {
-  params: {
-    studentId: string;
-  };
 };
 
 async function getStudent(studentId: string): Promise<Student | null> {
@@ -38,8 +32,7 @@ async function getStudent(studentId: string): Promise<Student | null> {
     return null;
 }
 
-
-export default async function CertificatePage({ params }: CertificatePageProps) {
+export default async function CertificatePage({ params }: { params: { studentId: string } }) {
   const student = await getStudent(params.studentId);
   const currentDate = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
