@@ -103,7 +103,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
+      <body suppressHydrationWarning={true} className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
         <AppCheckInitializer />
         <Preloader />
         <div className="relative flex flex-col items-center flex-1 w-full">
