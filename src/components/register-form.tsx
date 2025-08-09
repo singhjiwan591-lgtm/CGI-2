@@ -45,12 +45,6 @@ const formSchema = z.object({
   path: ['confirmPassword'],
 });
 
-declare global {
-    interface Window {
-      grecaptcha: any;
-    }
-}
-
 const GoogleIcon = () => (
     <svg className="mr-2 h-4 w-4" viewBox="0 0 48 48">
       <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
@@ -92,85 +86,51 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-    if (!siteKey) {
-        toast({ variant: 'destructive', title: 'Client-side Error', description: 'reCAPTCHA site key is not configured.' });
-        setLoading(false);
-        return;
-    }
+    try {
+        await createUserWithEmailAndPassword(auth, values.email, values.password);
+        
+        toast({
+            title: 'Registration Successful!',
+            description: "Your account has been created. Please log in.",
+        });
+        form.reset();
+        router.push('/login');
 
-    window.grecaptcha.enterprise.ready(async () => {
-        try {
-            const token = await window.grecaptcha.enterprise.execute(siteKey, {action: 'REGISTER'});
-            
-            if (!token) {
-                throw new Error('reCAPTCHA verification failed. Please try again.');
-            }
-
-            await createUserWithEmailAndPassword(auth, values.email, values.password);
-            
-            toast({
-                title: 'Registration Successful!',
-                description: "Your account has been created. Please log in.",
-            });
-            form.reset();
-            router.push('/login');
-
-        } catch (error: any) {
-            const errorCode = error.code;
-            let errorMessage = 'There was an error submitting your application. Please try again.';
-            if (errorCode === 'auth/email-already-in-use') {
-                errorMessage = 'This email address is already in use. Please use a different email or log in.';
-            } else if (error.message.includes('reCAPTCHA')) {
-                errorMessage = error.message;
-            }
-            
-            toast({
-                variant: 'destructive',
-                title: 'Registration Failed',
-                description: errorMessage,
-            });
-        } finally {
-            setLoading(false);
+    } catch (error: any) {
+        const errorCode = error.code;
+        let errorMessage = 'There was an error submitting your application. Please try again.';
+        if (errorCode === 'auth/email-already-in-use') {
+            errorMessage = 'This email address is already in use. Please use a different email or log in.';
         }
-    });
+        
+        toast({
+            variant: 'destructive',
+            title: 'Registration Failed',
+            description: errorMessage,
+        });
+    } finally {
+        setLoading(false);
+    }
   }
 
   const handleGoogleRegister = async () => {
     setLoading(true);
-    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-    if (!siteKey) {
-        toast({ variant: 'destructive', title: 'Client-side Error', description: 'reCAPTCHA site key is not configured.' });
+    try {
+        await signInWithPopup(auth, googleProvider);
+        toast({
+            title: 'Registration Successful',
+            description: "Your account has been created. Please log in.",
+        });
+        router.push('/login');
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: 'Google Registration Failed',
+            description: 'Could not register with Google. Please try again.',
+        });
+    } finally {
         setLoading(false);
-        return;
     }
-    grecaptcha.enterprise.ready(async () => {
-        try {
-            const token = await grecaptcha.enterprise.execute(siteKey, {action: 'REGISTER_GOOGLE'});
-            if (!token) {
-                throw new Error('reCAPTCHA verification failed. Please try again.');
-            }
-
-            await signInWithPopup(auth, googleProvider);
-            toast({
-                title: 'Registration Successful',
-                description: "Your account has been created. Please log in.",
-            });
-            router.push('/login');
-        } catch (error: any) {
-            let errorMessage = 'Could not register with Google. Please try again.';
-            if (error.message.includes('reCAPTCHA')) {
-                errorMessage = error.message;
-            }
-            toast({
-                variant: 'destructive',
-                title: 'Google Registration Failed',
-                description: errorMessage,
-            });
-        } finally {
-            setLoading(false);
-        }
-    });
   }
 
   return (

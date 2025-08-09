@@ -42,9 +42,14 @@ const initializeFirebaseAppCheck = () => {
     // Ensure this runs only on the client
     if (typeof window !== 'undefined') {
         const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-        if (siteKey) {
-            // Wait for reCAPTCHA to be ready
-            window.grecaptcha.enterprise.ready(() => {
+        if (!siteKey) {
+            console.warn("reCAPTCHA Site Key is not found in .env. App Check is not initialized.");
+            return;
+        }
+        
+        // Check if grecaptcha is available
+        if (window.grecaptcha && window.grecaptcha.enterprise) {
+             window.grecaptcha.enterprise.ready(() => {
                 try {
                     initializeAppCheck(app, {
                         provider: new ReCaptchaV3Provider(siteKey),
@@ -57,12 +62,12 @@ const initializeFirebaseAppCheck = () => {
                 }
             });
         } else {
-            console.warn("reCAPTCHA Site Key is not found. Firebase App Check is not initialized.");
+            console.error("reCAPTCHA script not loaded yet. App Check initialization deferred.");
         }
     }
 };
 
-// Call the function to initialize App Check
+// Call the function to initialize App Check when the script is ready
 initializeFirebaseAppCheck();
 
 
