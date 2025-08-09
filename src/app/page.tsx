@@ -219,7 +219,7 @@ export default function Home() {
                 >
                   {card.imageUrl ? (
                     <>
-                      <Image src={card.imageUrl} alt={card.title} fill className="z-0 transition-transform duration-300 group-hover:scale-110 object-cover" data-ai-hint={card.dataAiHint} />
+                      <Image src={card.imageUrl} alt={card.title} fill sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw" className="z-0 transition-transform duration-300 group-hover:scale-110 object-cover" data-ai-hint={card.dataAiHint} />
                       <div className="absolute inset-0 bg-black/50 z-10"></div>
                     </>
                   ) : null}
