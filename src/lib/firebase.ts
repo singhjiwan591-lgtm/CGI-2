@@ -1,9 +1,18 @@
 
+'use client';
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+
+declare global {
+    interface Window {
+      FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
+      grecaptcha: any;
+    }
+}
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -17,22 +26,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize App Check
-if (typeof window !== 'undefined') {
-  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-  if (siteKey) {
-    initializeAppCheck(app, {
-      provider: new ReCaptchaV3Provider(siteKey),
-      // Optional: set to true for automated token refresh
-      isTokenAutoRefreshEnabled: true
-    });
-     console.log("Firebase App Check initialized successfully!");
-  } else {
-    console.warn("reCAPTCHA Site Key is not found. Firebase App Check is not initialized.");
-  }
-}
-
 console.log("Firebase app initialized successfully!", app);
 
 // Initialize Firebase Authentication and get a reference to the service
@@ -42,6 +35,35 @@ console.log("Firebase Auth service ready!", auth);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 console.log("Firebase Firestore service ready!", db);
+
+
+// Function to initialize App Check
+const initializeFirebaseAppCheck = () => {
+    // Ensure this runs only on the client
+    if (typeof window !== 'undefined') {
+        const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+        if (siteKey) {
+            // Wait for reCAPTCHA to be ready
+            window.grecaptcha.enterprise.ready(() => {
+                try {
+                    initializeAppCheck(app, {
+                        provider: new ReCaptchaV3Provider(siteKey),
+                        // Optional: set to true for automated token refresh
+                        isTokenAutoRefreshEnabled: true
+                    });
+                    console.log("Firebase App Check initialized successfully!");
+                } catch (error) {
+                    console.error("Error initializing Firebase App Check:", error);
+                }
+            });
+        } else {
+            console.warn("reCAPTCHA Site Key is not found. Firebase App Check is not initialized.");
+        }
+    }
+};
+
+// Call the function to initialize App Check
+initializeFirebaseAppCheck();
 
 
 export { app, auth, db };
