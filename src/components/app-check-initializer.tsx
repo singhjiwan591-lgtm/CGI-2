@@ -29,13 +29,14 @@ export function AppCheckInitializer() {
       const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
       if (!siteKey) {
         console.warn("reCAPTCHA Site Key is not found. App Check will not be initialized in production.");
-        return;
+        // In dev, we might proceed with a debug token, but in prod this is a problem.
+        if (process.env.NODE_ENV === 'production') return;
       }
       
       try {
         // Initialize App Check
         initializeAppCheck(app, {
-          provider: new ReCaptchaV3Provider(siteKey),
+          provider: new ReCaptchaV3Provider(siteKey || 'dummy-site-key-for-local-dev'),
           isTokenAutoRefreshEnabled: true
         });
         console.log("Firebase App Check initialized successfully.");
