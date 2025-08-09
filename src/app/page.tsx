@@ -253,6 +253,7 @@ export default function Home() {
                 alt="Students learning to code"
                 width={600}
                 height={400}
+                style={{ height: 'auto', width: '100%' }}
                 className="rounded-lg shadow-lg"
               />
             </div>

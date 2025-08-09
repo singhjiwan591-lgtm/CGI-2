@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 declare global {
   interface Window {
     grecaptcha: any;
+    FIREBASE_APPCHECK_DEBUG_TOKEN?: boolean | string;
   }
 }
 
@@ -16,6 +17,13 @@ export function AppCheckInitializer() {
   useEffect(() => {
     // This effect runs only once on the client-side after the component mounts
     if (typeof window !== 'undefined') {
+      // Set the debug token to true to get a token printed in the console.
+      // This is useful for development and debugging.
+      // Remember to register this token in the Firebase console.
+      if (process.env.NODE_ENV !== 'production') {
+        self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+      }
+      
       const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
       if (!siteKey) {
         console.warn("reCAPTCHA Site Key is not found in .env. App Check is not initialized.");
