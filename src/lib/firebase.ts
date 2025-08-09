@@ -6,6 +6,7 @@ import { initializeApp, getApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getMessaging, getToken } from "firebase/messaging";
+import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -13,7 +14,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyDyqOae7f0T4HducBU37pD1maDmmc_9nDM",
   authDomain: "jbd-31.firebaseapp.com",
   projectId: "jbd-31",
-  storageBucket: "jbd-31.firebasestorage.app",
+  storageBucket: "jbd-31.appspot.com",
   messagingSenderId: "452056696306",
   appId: "1:452056696306:web:0fe259d22fa8531890176b",
   measurementId: "G-NSDVPWMS6Q"
@@ -27,6 +28,9 @@ const auth = getAuth(app);
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
+
+// Initialize Cloud Storage and get a reference to the service
+const storage = getStorage(app);
 
 // Initialize Firebase Cloud Messaging and get a reference to the service
 const messaging = (typeof window !== 'undefined') ? getMessaging(app) : null;
@@ -55,4 +59,4 @@ const requestNotificationPermission = async () => {
 };
 
 
-export { app, auth, db, messaging, requestNotificationPermission };
+export { app, auth, db, storage, messaging, requestNotificationPermission };

@@ -23,8 +23,10 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { app } from '@/lib/firebase';
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, updateProfile } from "firebase/auth";
+import { app, db } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { uploadFile } from '@/lib/storage';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -87,8 +89,39 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-        await createUserWithEmailAndPassword(auth, values.email, values.password);
+        const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+        const user = userCredential.user;
+
+        let photoURL = '';
+        if (values.photo && values.photo.length > 0) {
+            const file = values.photo[0];
+            photoURL = await uploadFile(file, `profile_pictures/${user.uid}`);
+        }
         
+        await updateProfile(user, {
+          displayName: values.fullName,
+          photoURL: photoURL
+        });
+        
+        await setDoc(doc(db, "students", user.uid), {
+            name: values.fullName,
+            email: values.email,
+            phoneNumber: values.phoneNumber,
+            fatherName: values.fatherName,
+            motherName: values.motherName,
+            village: values.village,
+            course: values.course,
+            photoURL: photoURL,
+            admissionDate: new Date().toISOString(),
+            status: 'Enrolled',
+            avatarHint: 'student portrait',
+            totalFees: 0,
+            feesPaid: 0,
+            grade: 1, // Default grade, can be updated later
+            program: values.course,
+            attendance: { present: 0, absent: 0, late: 0 },
+        });
+
         toast({
             title: 'Registration Successful!',
             description: "Your account has been created. Please log in.",
@@ -116,12 +149,33 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   const handleGoogleRegister = async () => {
     setLoading(true);
     try {
-        await signInWithPopup(auth, googleProvider);
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+
+        await setDoc(doc(db, "students", user.uid), {
+            name: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            admissionDate: new Date().toISOString(),
+            status: 'Enrolled',
+            avatarHint: 'student portrait',
+            totalFees: 0,
+            feesPaid: 0,
+            grade: 1,
+            program: 'Unassigned',
+            attendance: { present: 0, absent: 0, late: 0 },
+            phoneNumber: '',
+            fatherName: '',
+            motherName: '',
+            village: '',
+            course: 'Unassigned',
+        }, { merge: true }); // Merge to not overwrite if a document already exists
+
         toast({
             title: 'Registration Successful',
-            description: "Your account has been created. Please log in.",
+            description: "Your account has been created. Welcome!",
         });
-        router.push('/login');
+        router.push('/admin/dashboard');
     } catch (error: any) {
         toast({
             variant: 'destructive',
