@@ -16,7 +16,11 @@ type Student = {
   status: 'Graduated' | 'Enrolled' | 'Withdrawn';
 };
 
-export default function CertificatePage({ params }: { params: { studentId: string } }) {
+type CertificatePageProps = {
+  params: { studentId: string };
+};
+
+export default function CertificatePage({ params }: CertificatePageProps) {
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -66,7 +70,6 @@ export default function CertificatePage({ params }: { params: { studentId: strin
   }
 
   if (error) {
-    // You can create a more styled error page
     notFound();
   }
   
