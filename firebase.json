@@ -1,6 +1,13 @@
 
 {
   "hosting": {
+    "public": "public",
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "nextServer"
+      }
+    ],
     "source": ".",
     "frameworksBackend": {
       "region": "us-central1"
