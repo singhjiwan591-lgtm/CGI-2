@@ -1,3 +1,4 @@
+
 'use client';
 
 // Import the functions you need from the SDKs you need
@@ -9,12 +10,12 @@ import { useEffect } from 'react';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  "projectId": "courses-1-11b17",
-  "appId": "1:550601892749:web:b8c5f2d1e4f3a7c6e0f9b1",
-  "storageBucket": "courses-1-11b17.appspot.com",
-  "apiKey": "AIzaSyARNMWvmeDy812-OjytkUTM_ajFDQ4yJIY",
-  "authDomain": "courses-1-11b17.firebaseapp.com",
-  "messagingSenderId": "550601892749"
+  "projectId": "fir-feat-prod-9892b",
+  "appId": "1:95804345479:web:9f8319fca378e5f2e62a19",
+  "storageBucket": "fir-feat-prod-9892b.appspot.com",
+  "apiKey": "AIzaSyCX_S8vR4D8G6w_Z3v6e5GfI7sW3x_QJjY",
+  "authDomain": "fir-feat-prod-9892b.firebaseapp.com",
+  "messagingSenderId": "95804345479"
 };
 
 // Initialize Firebase
