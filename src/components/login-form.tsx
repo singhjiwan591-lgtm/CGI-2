@@ -55,9 +55,16 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+    if (!siteKey) {
+        toast({ variant: 'destructive', title: 'Client-side Error', description: 'reCAPTCHA site key is not configured.' });
+        setLoading(false);
+        return;
+    }
+
     grecaptcha.enterprise.ready(async () => {
       try {
-        const token = await grecaptcha.enterprise.execute('6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7', {action: 'LOGIN'});
+        const token = await grecaptcha.enterprise.execute(siteKey, {action: 'LOGIN'});
         if (!token) {
             throw new Error('reCAPTCHA verification failed. Please try again.');
         }
@@ -91,9 +98,15 @@ export function LoginForm() {
 
   const handleGoogleLogin = async () => {
     setLoading(true);
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+    if (!siteKey) {
+        toast({ variant: 'destructive', title: 'Client-side Error', description: 'reCAPTCHA site key is not configured.' });
+        setLoading(false);
+        return;
+    }
      grecaptcha.enterprise.ready(async () => {
         try {
-            const token = await grecaptcha.enterprise.execute('6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7', {action: 'LOGIN_GOOGLE'});
+            const token = await grecaptcha.enterprise.execute(siteKey, {action: 'LOGIN_GOOGLE'});
             if (!token) {
                 throw new Error('reCAPTCHA verification failed. Please try again.');
             }

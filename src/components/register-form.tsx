@@ -92,10 +92,16 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+    if (!siteKey) {
+        toast({ variant: 'destructive', title: 'Client-side Error', description: 'reCAPTCHA site key is not configured.' });
+        setLoading(false);
+        return;
+    }
 
     window.grecaptcha.enterprise.ready(async () => {
         try {
-            const token = await window.grecaptcha.enterprise.execute('6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7', {action: 'REGISTER'});
+            const token = await window.grecaptcha.enterprise.execute(siteKey, {action: 'REGISTER'});
             
             if (!token) {
                 throw new Error('reCAPTCHA verification failed. Please try again.');
@@ -132,9 +138,15 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
 
   const handleGoogleRegister = async () => {
     setLoading(true);
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+    if (!siteKey) {
+        toast({ variant: 'destructive', title: 'Client-side Error', description: 'reCAPTCHA site key is not configured.' });
+        setLoading(false);
+        return;
+    }
     grecaptcha.enterprise.ready(async () => {
         try {
-            const token = await grecaptcha.enterprise.execute('6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7', {action: 'REGISTER_GOOGLE'});
+            const token = await grecaptcha.enterprise.execute(siteKey, {action: 'REGISTER_GOOGLE'});
             if (!token) {
                 throw new Error('reCAPTCHA verification failed. Please try again.');
             }
