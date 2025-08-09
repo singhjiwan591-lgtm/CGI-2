@@ -90,7 +90,7 @@ export default function RootLayout({
         
         {/* PASTE YOUR COOKIEHUB CMP CODE SNIPPET HERE */}
 
-        <Script src={`https://www.google.com/recaptcha/enterprise.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`} strategy="beforeInteractive" />
+        <Script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`} strategy="beforeInteractive" />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-B8YMN5JCXM"
           strategy="afterInteractive"
