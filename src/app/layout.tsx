@@ -7,6 +7,9 @@ import { Toaster } from '@/components/ui/toaster';
 import { Preloader } from '@/components/preloader';
 import Script from 'next/script';
 import { DynamicDiscountPopup } from '@/components/dynamic-components';
+import { app } from '@/lib/firebase';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import { useEffect } from 'react';
 
 export const metadata: Metadata = {
   title: {
@@ -56,6 +59,31 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+function AppCheckInitializer() {
+  'use client';
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+      if (!siteKey) {
+        console.warn("reCAPTCHA Site Key is not found in .env. App Check is not initialized.");
+        return;
+      }
+      try {
+        initializeAppCheck(app, {
+          provider: new ReCaptchaV3Provider(siteKey),
+          isTokenAutoRefreshEnabled: true
+        });
+        console.log("Firebase App Check initialized successfully from RootLayout!");
+      } catch (error) {
+        console.error("Error initializing Firebase App Check in RootLayout:", error);
+      }
+    }
+  }, []);
+
+  return null;
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -89,7 +117,7 @@ export default function RootLayout({
         
         {/* PASTE YOUR COOKIEHUB CMP CODE SNIPPET HERE */}
 
-        <Script src="https://www.google.com/recaptcha/enterprise.js?render=6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7" strategy="beforeInteractive" />
+        <Script src={`https://www.google.com/recaptcha/enterprise.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`} strategy="beforeInteractive" />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-B8YMN5JCXM"
           strategy="afterInteractive"
@@ -102,6 +130,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
+        <AppCheckInitializer />
         <Preloader />
         <div className="relative flex flex-col items-center flex-1 w-full">
           <SiteHeader />
