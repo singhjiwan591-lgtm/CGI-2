@@ -16,11 +16,7 @@ type Student = {
   status: 'Graduated' | 'Enrolled' | 'Withdrawn';
 };
 
-type CertificatePageProps = {
-  params: { studentId: string };
-};
-
-export default function CertificatePage({ params }: CertificatePageProps) {
+export default function CertificatePage({ params }: { params: { studentId: string } }) {
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
