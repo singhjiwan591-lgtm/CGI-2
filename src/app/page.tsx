@@ -274,7 +274,7 @@ export default function Home() {
             </div>
             <div className="order-1 md:order-2">
               <Image
-                src="https://i.ibb.co/6RdhCvSg/Compress-JPEG-Online-img-800x600.jpg"
+                src="https://i.ibb.co/4wy0PXmb/Compress-JPEG-Online-img-800x600.jpg"
                 data-ai-hint="students coding"
                 alt="Students learning to code"
                 width={800}
