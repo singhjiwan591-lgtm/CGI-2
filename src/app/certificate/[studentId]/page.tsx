@@ -32,11 +32,7 @@ async function getStudent(studentId: string): Promise<Student | null> {
     return null;
 }
 
-type CertificatePageProps = {
-  params: { studentId: string };
-};
-
-export default async function CertificatePage({ params }: CertificatePageProps) {
+export default async function CertificatePage({ params }: { params: { studentId: string } }) {
   const student = await getStudent(params.studentId);
   const currentDate = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
@@ -51,7 +47,7 @@ export default async function CertificatePage({ params }: CertificatePageProps) 
   // NOTE: Sharing functionality will not work in a Server Component as it requires client-side window object.
   // For a real app, this would need to be extracted into a client component.
   const shareUrl = `https://your-app-domain.com/certificate/${student.id}`;
-  const shareText = `Check out the certificate for ${student.name} from Web an d App!`;
+  const shareText = `Check out the certificate for ${student.name} from Web and App!`;
 
 
   return (
@@ -84,7 +80,7 @@ export default async function CertificatePage({ params }: CertificatePageProps) 
 
                     <header className="flex flex-col items-center">
                         <BookOpen className="h-16 w-16 text-primary" />
-                        <h1 className="text-3xl sm:text-4xl font-headline font-bold mt-2">Web an d App</h1>
+                        <h1 className="text-3xl sm:text-4xl font-headline font-bold mt-2">Web and App</h1>
                     </header>
 
                     <div className="space-y-2">

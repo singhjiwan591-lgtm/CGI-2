@@ -19,7 +19,7 @@ export default function AboutPage() {
   usePageAnimations(pageRef);
 
   const timeline = [
-    { year: 2010, event: 'Institute Founded', description: 'Web an d App began with a mission to bridge the tech skills gap.' },
+    { year: 2010, event: 'Institute Founded', description: 'Web and App began with a mission to bridge the tech skills gap.' },
     { year: 2015, event: 'First 1000 Graduates', description: 'We proudly celebrated our first thousand successful graduates entering the tech industry.' },
     { year: 2019, event: 'New Advanced AI/ML Course', description: 'Launched our state-of-the-art curriculum in Artificial Intelligence and Machine Learning.' },
     { year: 2023, event: 'Top Placement Award', description: 'Recognized for achieving the highest placement rate in the region.' },
@@ -65,9 +65,9 @@ export default function AboutPage() {
     <div ref={pageRef} className="flex flex-col items-center">
       <section data-animate="fade-in" className="w-full bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-headline text-3xl font-bold md:text-5xl">About Web an d App</h1>
+          <h1 className="font-headline text-3xl font-bold md:text-5xl">About Web and App</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-lg">
-            Welcome to Web an d App, where we turn passion for technology into professional expertise. We are a leading computer education institute dedicated to providing high-quality, practical training that empowers our students to succeed in the fast-paced digital world.
+            Welcome to Web and App, where we turn passion for technology into professional expertise. We are a leading computer education institute dedicated to providing high-quality, practical training that empowers our students to succeed in the fast-paced digital world.
           </p>
         </div>
       </section>

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const texts = [
-  'Web an d App',
+  'Web and App',
   'Learn In-Demand Skills',
   'Get Certified By Experts',
   'Start Your Tech Journey Today',

@@ -299,7 +299,7 @@ export default function DashboardPage() {
                 <CardHeader>
                     <CardTitle>Our Teachers</CardTitle>
                     <CardDescription>
-                        List of faculty members at Web an d App.
+                        List of faculty members at Web and App.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -324,5 +324,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    

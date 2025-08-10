@@ -108,7 +108,7 @@ export function SiteHeader() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Web an d App Logo" width={40} height={40} style={{ height: 'auto' }} />
+            <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Web and App Logo" width={40} height={40} style={{ height: 'auto' }} />
             
           </Link>
           <div className="flex flex-1 items-center justify-end">
@@ -123,7 +123,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Web an d App Logo" width={40} height={40} style={{ height: 'auto' }} />
+          <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Web and App Logo" width={40} height={40} style={{ height: 'auto' }} />
           
         </Link>
         <div className="flex flex-1 items-center justify-end gap-2">
@@ -145,7 +145,7 @@ export function SiteHeader() {
                 <SheetHeader className="border-b pb-4">
                   <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                   <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Web an d App Logo" width={40} height={40} style={{ height: 'auto' }}/>
+                    <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Web and App Logo" width={40} height={40} style={{ height: 'auto' }}/>
                     
                   </Link>
                 </SheetHeader>

@@ -10,7 +10,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-4 md:text-left">
           <div className="flex flex-col items-center md:items-start md:col-span-2">
             <Link href="/" className="flex items-center space-x-2">
-              <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Web an d App Logo" width={40} height={40} style={{ height: 'auto' }} />
+              <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Web and App Logo" width={40} height={40} style={{ height: 'auto' }} />
             </Link>
             <p className="mt-4 text-foreground/70">
               Building the future of technology, one student at a time.
@@ -62,7 +62,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-foreground/60">
-          <p>&copy; {new Date().getFullYear()} Web an d App. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Web and App. All rights reserved.</p>
         </div>
       </div>
     </footer>

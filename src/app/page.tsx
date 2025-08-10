@@ -74,7 +74,7 @@ export default function Home() {
       avatar: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
       dataAiHint: 'man developer',
       quote:
-        'Web an d App provided the perfect launchpad for my career. The hands-on approach and expert faculty are unmatched. Highly recommended!',
+        'Web and App provided the perfect launchpad for my career. The hands-on approach and expert faculty are unmatched. Highly recommended!',
     },
     {
       name: 'Priya Kaur',
@@ -243,7 +243,7 @@ export default function Home() {
                 Shape Your Future in Tech
               </h2>
               <p className="mt-4 text-base text-foreground/80 md:text-lg">
-                At Web an d App, we are dedicated to providing top-tier education in the latest technologies. Our curriculum is designed by industry experts to equip you with the practical skills and theoretical knowledge needed to excel in the fast-paced world of technology. Join us to turn your passion for computing into a rewarding career.
+                At Web and App, we are dedicated to providing top-tier education in the latest technologies. Our curriculum is designed by industry experts to equip you with the practical skills and theoretical knowledge needed to excel in the fast-paced world of technology. Join us to turn your passion for computing into a rewarding career.
               </p>
             </div>
             <div className="order-1 md:order-2">
@@ -351,7 +351,7 @@ export default function Home() {
           <Card className="w-full max-w-sm p-8 bg-card transform transition-transform duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-primary/30 flex justify-center items-center">
             <Image
               src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png"
-              alt="Web an d App Logo"
+              alt="Web and App Logo"
               width={200}
               height={200}
               className="object-contain"
