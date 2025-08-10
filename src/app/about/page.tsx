@@ -67,7 +67,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">About Web an d App</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-lg">
-            We are a community of innovators, dedicated to providing world-class technical education and fostering the next generation of tech leaders.
+            At Web an d App, we believe that education is the key to unlocking human potential. We are dedicated to providing accessible, high-quality technical education that empowers our students to build successful careers in the ever-evolving world of technology.
           </p>
         </div>
       </section>
@@ -78,7 +78,7 @@ export default function AboutPage() {
             <div className="order-2 md:order-1">
               <h2 className="font-headline text-2xl font-bold md:text-3xl">Our Mission</h2>
               <p className="mt-4 text-foreground/80">
-                Our mission is to empower individuals with the knowledge and skills required to thrive in the ever-evolving technology landscape. We are committed to delivering high-quality, accessible, and affordable tech education that bridges the gap between academia and industry, creating job-ready professionals.
+                Our mission is to bridge the gap between academic learning and industry demands. We are committed to fostering a hands-on learning environment where students not only gain theoretical knowledge but also develop the practical, real-world skills needed to thrive. We aim to create a community of skilled professionals who are ready to innovate and lead in the global tech landscape.
               </p>
             </div>
             <div className="order-1 md:order-2">
