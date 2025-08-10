@@ -34,7 +34,8 @@ const formSchema = z.object({
 export function LoginForm() {
   const router = useRouter();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
 
@@ -48,7 +49,7 @@ export function LoginForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
+    setEmailLoading(true);
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password);
       toast({
@@ -56,7 +57,7 @@ export function LoginForm() {
         description: 'Redirecting to your dashboard...',
       });
       // Redirect to admin dashboard if admin logs in, otherwise to a general user page
-      if (values.email === 'admin@example.com') {
+      if (values.email.startsWith('admin')) {
         router.push('/admin/dashboard');
       } else {
         router.push('/');
@@ -68,12 +69,12 @@ export function LoginForm() {
         description: 'Invalid email or password. Please try again.',
       });
     } finally {
-      setLoading(false);
+      setEmailLoading(false);
     }
   }
 
   const handleGoogleLogin = async () => {
-    setLoading(true);
+    setGoogleLoading(true);
     try {
         await signInWithPopup(auth, googleProvider);
         toast({
@@ -88,7 +89,7 @@ export function LoginForm() {
             description: 'Could not log in with Google. Please try again.',
         });
     } finally {
-        setLoading(false);
+        setGoogleLoading(false);
     }
   }
   
@@ -100,6 +101,8 @@ export function LoginForm() {
       <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C42.022,35.244,44,30.036,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
     </svg>
   );
+
+  const anyLoading = emailLoading || googleLoading;
 
   return (
     <div className="w-full">
@@ -118,7 +121,7 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="admin@example.com" {...field} />
+                    <Input type="email" placeholder="admin@example.com" {...field} disabled={anyLoading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -131,7 +134,7 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="••••••••" {...field} />
+                    <Input type="password" placeholder="••••••••" {...field} disabled={anyLoading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -147,6 +150,7 @@ export function LoginForm() {
                         <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
+                        disabled={anyLoading}
                         />
                     </FormControl>
                     <div className="space-y-1 leading-none">
@@ -158,12 +162,12 @@ export function LoginForm() {
                 )}
                 />
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" className="w-full" disabled={anyLoading}>
+              {emailLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Login
             </Button>
-            <Button variant="outline" type="button" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button variant="outline" type="button" className="w-full" onClick={handleGoogleLogin} disabled={anyLoading}>
+              {googleLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <GoogleIcon />
               Log in with Google
             </Button>
