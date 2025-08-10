@@ -64,14 +64,16 @@ export default function ContactPage() {
         <div className="container mx-auto px-4 pb-12 md:pb-24">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl mb-6 md:mb-8">Our Location</h2>
           <div className="aspect-video w-full">
-            <Image 
-              src="https://placehold.co/1200x600.png"
-              data-ai-hint="map Jalalabad"
-              alt="Map showing institute location in Jalalabad"
-              width={1200}
-              height={600}
-              className="w-full h-full object-cover rounded-lg shadow-md"
-            />
+            <iframe
+                src="https://maps.google.com/maps?q=P9P5%2BG6%20Wasal%20Mohan%20Ke%20(Golu%20Ka%20Mor),%20Punjab&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="rounded-lg shadow-md"
+            ></iframe>
           </div>
         </div>
       </section>
