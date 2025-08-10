@@ -1,29 +1,48 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { gsap } from 'gsap';
 
 export function Preloader() {
   const [isVisible, setIsVisible] = useState(true);
+  const preloaderRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 2000); // 2 seconds
+    if (preloaderRef.current && logoRef.current) {
+      gsap.fromTo(
+        logoRef.current,
+        { scale: 0.5, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 1.5, ease: 'power3.out' }
+      );
 
-    return () => clearTimeout(timer);
+      const timer = setTimeout(() => {
+        gsap.to(preloaderRef.current, {
+          opacity: 0,
+          duration: 0.5,
+          onComplete: () => setIsVisible(false),
+        });
+      }, 2000); // Total preloader time
+
+      return () => clearTimeout(timer);
+    }
   }, []);
+
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <div
+      ref={preloaderRef}
       className={cn(
-        'fixed inset-0 z-[100] flex items-center justify-center bg-background transition-opacity duration-1000',
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        'fixed inset-0 z-[100] flex items-center justify-center bg-background'
       )}
     >
-      <div className="animate-pulse">
+      <div ref={logoRef}>
         <Image
           src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png"
           alt="Web and App Logo"
