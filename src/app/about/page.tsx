@@ -67,7 +67,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">About Web an d App</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-lg">
-            At Web an d App, we believe that education is the key to unlocking human potential. We are dedicated to providing accessible, high-quality technical education that empowers our students to build successful careers in the ever-evolving world of technology.
+            Welcome to Web an d App, where we turn passion for technology into professional expertise. We are a leading computer education institute dedicated to providing high-quality, practical training that empowers our students to succeed in the fast-paced digital world.
           </p>
         </div>
       </section>
@@ -78,7 +78,7 @@ export default function AboutPage() {
             <div className="order-2 md:order-1">
               <h2 className="font-headline text-2xl font-bold md:text-3xl">Our Mission</h2>
               <p className="mt-4 text-foreground/80">
-                Our mission is to bridge the gap between academic learning and industry demands. We are committed to fostering a hands-on learning environment where students not only gain theoretical knowledge but also develop the practical, real-world skills needed to thrive. We aim to create a community of skilled professionals who are ready to innovate and lead in the global tech landscape.
+                Our mission is to democratize tech education and bridge the gap between academic knowledge and industry demands. We are committed to fostering an inclusive, hands-on learning environment where students from all backgrounds can acquire the skills, confidence, and real-world experience needed to thrive. We aim to build a community of innovators and problem-solvers who will lead the next wave of technological advancement.
               </p>
             </div>
             <div className="order-1 md:order-2">
