@@ -73,7 +73,7 @@ export default function AdmissionsPage() {
                     {item.step}
                   </div>
                   <div className={`w-full md:w-5/12 ${index % 2 === 0 ? 'md:pl-8' : 'md:pr-8 md:text-right'} `}>
-                     <Card className="h-full transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                     <Card className="h-full transform transition-transform duration-300 hover:scale-[1.03] hover:shadow-xl">
                       <CardHeader>
                         <CardTitle className="font-headline text-xl">{item.title}</CardTitle>
                       </CardHeader>
@@ -95,7 +95,7 @@ export default function AdmissionsPage() {
           <div className="mx-auto mt-10 max-w-2xl">
             <ul className="space-y-4">
               {keyDates.map((item) => (
-                <li key={item.event} data-animate="stagger-item" className="flex items-center rounded-lg bg-background p-4 shadow transform transition-transform duration-300 hover:scale-105">
+                <li key={item.event} data-animate="stagger-item" className="flex items-center rounded-lg bg-background p-4 shadow-md transform transition-transform duration-300 hover:scale-[1.03] hover:shadow-lg">
                   <CheckCircle2 className={`h-6 w-6 text-primary mr-4`} />
                   <div>
                     <p className="font-semibold">{item.date}</p>
@@ -114,7 +114,7 @@ export default function AdmissionsPage() {
             <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg text-foreground/80">
                 Ready to take the first step? Our online portal makes it easy to get started.
             </p>
-            <Button asChild size="lg" className="mt-6">
+            <Button asChild size="lg" className="mt-6 transform transition-transform hover:scale-105">
               <Link href="/register">
                 Enroll Online Now <ArrowRight className="ml-2 h-5 w-5" />
               </Link>

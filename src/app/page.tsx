@@ -200,12 +200,12 @@ export default function Home() {
               Master the most in-demand tech skills with our expert-led courses. Explore our programs and find the perfect path for you.
             </p>
              <div className="mt-8 flex justify-center gap-4">
-               <Button asChild size="lg">
+               <Button asChild size="lg" className="transform transition-transform hover:scale-105">
                   <Link href="/academics">
                     Explore Courses <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                 <Button asChild size="lg" variant="outline">
+                 <Button asChild size="lg" variant="outline" className="transform transition-transform hover:scale-105">
                   <Link href="/contact">
                     Contact Us
                   </Link>
@@ -241,7 +241,7 @@ export default function Home() {
               <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block group">
                 <Card 
                   data-animate="stagger-item"
-                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/50 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
+                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/30 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
                 >
                   {card.imageUrl ? (
                     <>
@@ -280,7 +280,7 @@ export default function Home() {
                 width={600}
                 height={400}
                 style={{ height: 'auto', width: '100%' }}
-                className="rounded-lg shadow-lg"
+                className="rounded-lg shadow-xl"
               />
             </div>
           </div>
@@ -335,7 +335,7 @@ export default function Home() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index}>
                   <div className="p-1">
-                    <Card className="transform transition-transform duration-300 hover:scale-105 bg-secondary">
+                    <Card className="transform transition-transform duration-300 hover:scale-[1.03] bg-secondary/80">
                       <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                         <p className="text-base italic text-foreground/90 md:text-lg">
                           "{testimonial.quote}"

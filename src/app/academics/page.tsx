@@ -96,7 +96,7 @@ export default function AcademicsPage() {
             <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg text-foreground/80">
                 Take the first step towards a rewarding career in technology.
             </p>
-            <Button asChild size="lg" className="mt-6">
+            <Button asChild size="lg" className="mt-6 transform transition-transform hover:scale-105">
               <Link href="/admissions">
                 Enroll Now <ArrowRight className="ml-2 h-5 w-5" />
               </Link>

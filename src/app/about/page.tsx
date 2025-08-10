@@ -67,7 +67,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">About Web and App</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-lg">
-            Welcome to Web and App, where we turn passion for technology into professional expertise. We are a leading computer education institute dedicated to providing high-quality, practical training that empowers our students to succeed in the fast-paced digital world.
+            Welcome to Web and App, a premier computer education institute where we transform passion for technology into professional excellence. We are committed to providing top-quality, practical training that empowers our students to thrive in the dynamic digital landscape. Our mission is to make tech education accessible, fostering a community of innovators and problem-solvers who will shape the future.
           </p>
         </div>
       </section>
@@ -78,7 +78,7 @@ export default function AboutPage() {
             <div className="order-2 md:order-1">
               <h2 className="font-headline text-2xl font-bold md:text-3xl">Our Mission</h2>
               <p className="mt-4 text-foreground/80">
-                Our mission is to democratize tech education and bridge the gap between academic knowledge and industry demands. We are committed to fostering an inclusive, hands-on learning environment where students from all backgrounds can acquire the skills, confidence, and real-world experience needed to thrive. We aim to build a community of innovators and problem-solvers who will lead the next wave of technological advancement.
+                Our mission is to democratize technology education by bridging the gap between academic learning and the demands of the tech industry. We provide a hands-on, inclusive learning environment where students from all backgrounds can develop the skills, confidence, and real-world experience needed to excel. We are dedicated to building a community of forward-thinking professionals who will lead the next wave of technological innovation and solve real-world challenges.
               </p>
             </div>
             <div className="order-1 md:order-2">
@@ -88,7 +88,7 @@ export default function AboutPage() {
                 alt="Modern computer lab"
                 width={600}
                 height={400}
-                className="rounded-lg shadow-lg"
+                className="rounded-lg shadow-xl"
               />
             </div>
           </div>
@@ -107,7 +107,7 @@ export default function AboutPage() {
                   <CheckCircle2 className="h-5 w-5" />
                 </div>
                 <div className="w-full pl-12 md:w-5/12 md:pl-0">
-                  <Card className="p-4 md:p-6 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                  <Card className="p-4 md:p-6 transform transition-transform duration-300 hover:scale-[1.03] hover:shadow-2xl">
                     <p className={`font-bold text-primary text-sm md:text-base`}>{item.year}</p>
                     <h3 className="font-headline text-lg font-bold mt-1 md:text-xl">{item.event}</h3>
                     <p className="mt-2 text-foreground/70 text-sm md:text-base">{item.description}</p>
@@ -126,7 +126,7 @@ export default function AboutPage() {
             {teamMembers.map((member) => (
               <Card key={member.name} data-animate="stagger-item" className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
                 <CardContent className="p-4 md:p-6">
-                  <Avatar className="w-24 h-24 md:w-32 md:h-32 mx-auto">
+                  <Avatar className="w-24 h-24 md:w-32 md:h-32 mx-auto ring-2 ring-primary/20 p-1">
                     <AvatarImage src={member.image} data-ai-hint={member.dataAiHint} />
                     <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
                   </Avatar>
