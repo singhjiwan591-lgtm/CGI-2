@@ -50,11 +50,12 @@ export default function Home() {
 
   useEffect(() => {
     if (bgLogoRef.current) {
+      gsap.set(bgLogoRef.current, { transformPerspective: 1000 });
       gsap.to(bgLogoRef.current, {
-        rotation: 360,
-        duration: 90, // Slower rotation for a subtle effect
-        repeat: -1,   // Infinite loop
-        ease: 'none', // Linear easing for constant speed
+        rotationY: 360,
+        duration: 45,
+        repeat: -1,
+        ease: 'none',
       });
     }
   }, []);
@@ -212,10 +213,10 @@ export default function Home() {
             </div>
           </div>
           <div
-            ref={bgLogoRef}
             className="absolute inset-0 z-0 flex items-center justify-center opacity-5"
           >
             <Image
+              ref={bgLogoRef}
               src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png"
               alt="Background Logo"
               width={400}
