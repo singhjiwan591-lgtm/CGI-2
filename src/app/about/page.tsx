@@ -41,13 +41,13 @@ export default function AboutPage() {
     {
       name: 'Ms. Sunita Patel',
       position: 'Head of Academics',
-      image: 'https://placehold.co/300x300.png',
+      image: 'https://placehold.co/400x400.png',
       dataAiHint: 'woman teacher',
     },
     {
       name: 'Mr. Amit Singh',
       position: 'Placement Officer',
-      image: 'https://placehold.co/300x300.png',
+      image: 'https://placehold.co/400x400.png',
       dataAiHint: 'man corporate',
     },
   ];
@@ -83,11 +83,11 @@ export default function AboutPage() {
             </div>
             <div className="order-1 md:order-2">
               <Image
-                src="https://placehold.co/600x400.png"
+                src="https://placehold.co/800x600.png"
                 data-ai-hint="modern computer lab"
                 alt="Modern computer lab"
-                width={600}
-                height={400}
+                width={800}
+                height={600}
                 className="rounded-lg shadow-xl"
               />
             </div>

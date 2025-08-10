@@ -277,8 +277,8 @@ export default function Home() {
                 src="https://i.ibb.co/6RdhCvSg/Compress-JPEG-Online-img-800x600.jpg"
                 data-ai-hint="students coding"
                 alt="Students learning to code"
-                width={600}
-                height={400}
+                width={800}
+                height={600}
                 style={{ height: 'auto', width: '100%' }}
                 className="rounded-lg shadow-xl"
               />
