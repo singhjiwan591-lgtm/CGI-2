@@ -32,7 +32,11 @@ async function getStudent(studentId: string): Promise<Student | null> {
     return null;
 }
 
-export default async function CertificatePage({ params }: { params: { studentId: string } }) {
+type CertificatePageProps = {
+  params: { studentId: string };
+};
+
+export default async function CertificatePage({ params }: CertificatePageProps) {
   const student = await getStudent(params.studentId);
   const currentDate = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
