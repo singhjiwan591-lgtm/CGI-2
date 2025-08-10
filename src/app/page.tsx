@@ -41,10 +41,23 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import React from 'react';
 import { DynamicScrollingText } from '@/components/dynamic-components';
 import { usePageAnimations } from '@/hooks/usePageAnimations';
+import { gsap } from 'gsap';
 
 export default function Home() {
   const pageRef = useRef<HTMLDivElement>(null);
+  const bgLogoRef = useRef<HTMLImageElement>(null);
   usePageAnimations(pageRef);
+
+  useEffect(() => {
+    if (bgLogoRef.current) {
+      gsap.to(bgLogoRef.current, {
+        rotation: 360,
+        duration: 90, // Slower rotation for a subtle effect
+        repeat: -1,   // Infinite loop
+        ease: 'none', // Linear easing for constant speed
+      });
+    }
+  }, []);
 
   const features = [
     {
@@ -179,8 +192,8 @@ export default function Home() {
 
   return (
     <div ref={pageRef} className="flex flex-col items-center">
-       <section data-animate="fade-in" className="w-full py-20 md:py-32">
-         <div className="container mx-auto px-4 text-center">
+       <section data-animate="fade-in" className="relative w-full py-20 md:py-32 overflow-hidden">
+         <div className="container mx-auto px-4 text-center relative z-10">
             <DynamicScrollingText />
             <p className="mx-auto mt-6 max-w-3xl text-lg text-foreground/80 md:text-xl">
               Master the most in-demand tech skills with our expert-led courses. Explore our programs and find the perfect path for you.
@@ -197,6 +210,18 @@ export default function Home() {
                   </Link>
                 </Button>
             </div>
+          </div>
+          <div
+            ref={bgLogoRef}
+            className="absolute inset-0 z-0 flex items-center justify-center opacity-5"
+          >
+            <Image
+              src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png"
+              alt="Background Logo"
+              width={400}
+              height={400}
+              className="object-contain"
+            />
           </div>
       </section>
 
