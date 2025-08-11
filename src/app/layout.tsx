@@ -9,7 +9,6 @@ import Script from 'next/script';
 import { DynamicDiscountPopup } from '@/components/dynamic-components';
 import { AppCheckInitializer } from '@/components/app-check-initializer';
 import { NotificationHandler } from '@/components/notification-handler';
-import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: {
@@ -115,7 +114,6 @@ export default function RootLayout({
         <Toaster />
         <DynamicDiscountPopup />
         <NotificationHandler />
-        <Analytics />
       </body>
     </html>
   );
