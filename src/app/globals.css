@@ -13,7 +13,7 @@
     --popover: 42 100% 98%;
     --popover-foreground: 24 50% 20%;
 
-    --primary: 15 91% 50%;      /* #F43A09 (Bright Orange) */
+    --primary: 15 91% 47%;      /* #E0490B (Deep Orange) */
     --primary-foreground: 0 0% 100%; /* White text on primary */
 
     --secondary: 152 64% 85%;    /* #C2EDDA (Mint) */
@@ -30,12 +30,12 @@
 
     --border: 152 64% 80%; /* A slightly darker mint for borders */
     --input: 152 64% 80%;
-    --ring: 15 91% 50%; /* Primary color for rings/focus states */
+    --ring: 15 91% 47%; /* Primary color for rings/focus states */
 
     --radius: 0.5rem;
 
     /* Chart Colors from the Palette */
-    --chart-1: 15 91% 50%;   /* #F43A09 (Bright Orange) */
+    --chart-1: 15 91% 47%;   /* #E0490B (Deep Orange) */
     --chart-2: 145 49% 64%;  /* #68D388 (Live Green) */
     --chart-3: 34 100% 70%;  /* #FFB766 (Warm Peach) */
     --chart-4: 152 64% 85%;  /* #C2EDDA (Mint) */
@@ -52,7 +52,7 @@
     --popover: 20 12% 10%;
     --popover-foreground: 30 20% 90%;
 
-    --primary: 15 91% 55%;      /* A slightly brighter #F43A09 */
+    --primary: 15 91% 55%;      /* A slightly brighter #E0490B */
     --primary-foreground: 20 12% 5%; /* Very dark for text on primary */
 
     --secondary: 145 49% 30%;    /* #337A4B - Dark Live Green */
