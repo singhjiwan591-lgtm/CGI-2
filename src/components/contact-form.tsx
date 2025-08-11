@@ -20,8 +20,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { processContactRequest } from '@/ai/contact';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -46,11 +45,7 @@ export function ContactForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      await addDoc(collection(db, 'messages'), {
-        ...values,
-        timestamp: serverTimestamp(),
-        read: false,
-      });
+      await processContactRequest(values);
 
       toast({
         title: 'Message Sent!',
@@ -69,7 +64,7 @@ export function ContactForm() {
   }
 
   return (
-    <Card>
+    <Card className="transform transition-transform duration-300 hover:scale-[1.03] hover:shadow-2xl">
       <CardHeader>
         <CardTitle className="font-headline text-2xl">Send us a message</CardTitle>
         <CardDescription>Fill out the form below and we'll be in touch.</CardDescription>
