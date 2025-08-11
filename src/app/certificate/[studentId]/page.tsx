@@ -22,6 +22,7 @@ async function getStudent(studentId: string): Promise<Student | null> {
 
         if (studentSnap.exists) {
             const studentData = studentSnap.data();
+            // Return student data only if they have graduated
             if (studentData && studentData.status === 'Graduated') {
                 return { id: studentSnap.id, ...studentData } as Student;
             }
@@ -29,20 +30,22 @@ async function getStudent(studentId: string): Promise<Student | null> {
     } catch (err) {
         console.error('Failed to fetch student data:', err);
     }
+    // Return null if not found, not graduated, or if there's an error
     return null;
 }
 
 export default async function CertificatePage({ params }: { params: { studentId: string } }) {
   const student = await getStudent(params.studentId);
+  
+  if (!student) {
+    notFound();
+  }
+
   const currentDate = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
-
-  if (!student) {
-    notFound();
-  }
 
   // NOTE: Sharing functionality will not work in a Server Component as it requires client-side window object.
   // For a real app, this would need to be extracted into a client component.
