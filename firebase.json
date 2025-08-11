@@ -8,16 +8,37 @@
   },
   "hosting": {
     "public": "out",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
     "rewrites": [
       {
         "source": "**",
         "destination": "/index.html"
       }
     ]
+  },
+  "emulators": {
+    "auth": {
+      "host": "127.0.0.1",
+      "port": 9099
+    },
+    "firestore": {
+      "host": "127.0.0.1",
+      "port": 8080
+    },
+    "hosting": {
+      "host": "127.0.0.1",
+      "port": 5000
+    },
+    "storage": {
+      "host": "127.0.0.1",
+      "port": 9199
+    },
+    "hub": {
+      "host": "127.0.0.1",
+      "port": 4400
+    },
+    "logging": {
+      "host": "127.0.0.1",
+      "port": 4500
+    }
   }
 }
