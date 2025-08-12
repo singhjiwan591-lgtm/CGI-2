@@ -2,7 +2,7 @@
 'use client';
 
 // Import the functions you need from the SDKs you need
-import { initializeApp, getApp, getApps } from "firebase/app";
+import { initializeApp, getApp, FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getMessaging, getToken } from "firebase/messaging";
@@ -20,8 +20,14 @@ const firebaseConfig = {
   measurementId: "G-NSDVPWMS6Q"
 };
 
-// Initialize Firebase for SSR, if not already initialized
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+// Initialize Firebase
+let app: FirebaseApp;
+try {
+  app = getApp();
+} catch (error) {
+  app = initializeApp(firebaseConfig);
+}
+
 
 const auth = getAuth(app);
 const db = getFirestore(app);
