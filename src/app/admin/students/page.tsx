@@ -156,6 +156,7 @@ export default function StudentsPage() {
               photoURL: '',
               feesPaid: 0,
               attendance: { present: 0, absent: 0, late: 0 },
+              admissionDate: new Date().toISOString(),
               ...newStudentData,
             }
             await addDoc(collection(db, "students"), newStudentPayload);
