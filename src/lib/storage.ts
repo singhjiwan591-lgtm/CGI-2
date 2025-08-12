@@ -1,15 +1,17 @@
 
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "./firebase";
+'use server';
+
+import { put } from '@vercel/blob';
 import { v4 as uuidv4 } from 'uuid';
 
 export const uploadFile = async (file: File, path: string): Promise<string> => {
   const fileExtension = file.name.split('.').pop();
   const fileName = `${uuidv4()}.${fileExtension}`;
-  const storageRef = ref(storage, `${path}/${fileName}`);
-  
-  await uploadBytes(storageRef, file);
-  const downloadURL = await getDownloadURL(storageRef);
-  
-  return downloadURL;
+  const blobPath = `${path}/${fileName}`;
+
+  const { url } = await put(blobPath, file, {
+    access: 'public',
+  });
+
+  return url;
 };
