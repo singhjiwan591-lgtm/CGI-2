@@ -40,9 +40,6 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { format } from 'date-fns';
-import { db } from '@/lib/firebase';
-import { collection, onSnapshot, addDoc, query, where, orderBy, getDocs } from 'firebase/firestore';
-
 
 type Student = {
   id: string;
@@ -66,9 +63,18 @@ type DailyStatus = {
   clockedOut: string | null;
 };
 
+// Mock data
+const mockStudents: Student[] = [
+    { id: '1', name: 'Ravi Kumar', grade: 12, avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png' },
+    { id: '2', name: 'Priya Sharma', grade: 11, avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png' },
+    { id: '3', name: 'Amit Patel', grade: 12, avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png' },
+    { id: '4', name: 'Sunita Devi', grade: 10, avatarHint: 'student thinking', photoURL: 'https://placehold.co/100x100.png' },
+    { id: '5', name: 'Vijay Singh', grade: 11, avatarHint: 'student outside', photoURL: 'https://placehold.co/100x100.png' },
+];
+
 export default function AttendancePage() {
-    const [students, setStudents] = useState<Student[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [students, setStudents] = useState<Student[]>(mockStudents);
+    const [loading, setLoading] = useState(false);
     const [attendanceLogs, setAttendanceLogs] = useState<AttendanceLog[]>([]);
     const [dailyAttendance, setDailyAttendance] = useState<Record<string, DailyStatus>>({});
     const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
@@ -79,36 +85,7 @@ export default function AttendancePage() {
     const [studentHistory, setStudentHistory] = useState<AttendanceLog[]>([]);
     const { toast } = useToast();
 
-    useEffect(() => {
-        const studentsUnsub = onSnapshot(collection(db, 'students'), (snapshot) => {
-            const studentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Student));
-            setStudents(studentsData);
-            setLoading(false);
-        });
-
-        return () => studentsUnsub();
-    }, []);
-
-    useEffect(() => {
-        const startOfDay = new Date(selectedDate);
-        startOfDay.setHours(0, 0, 0, 0);
-        const endOfDay = new Date(selectedDate);
-        endOfDay.setHours(23, 59, 59, 999);
-
-        const logsQuery = query(collection(db, 'attendance'), where('timestamp', '>=', startOfDay), where('timestamp', '<=', endOfDay));
-        
-        const logsUnsub = onSnapshot(logsQuery, (snapshot) => {
-            const logsData = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-                timestamp: doc.data().timestamp.toDate(),
-            } as AttendanceLog));
-            setAttendanceLogs(logsData);
-        });
-        
-        return () => logsUnsub();
-    }, [selectedDate]);
-
+    // Mock data fetching and updates
     useEffect(() => {
         const newDailyAttendance: Record<string, DailyStatus> = {};
         
@@ -133,7 +110,7 @@ export default function AttendancePage() {
             };
         });
         setDailyAttendance(newDailyAttendance);
-    }, [students, attendanceLogs]);
+    }, [students, attendanceLogs, selectedDate]);
 
     const handleClockIn = async () => {
         if (!selectedStudent) {
@@ -144,18 +121,16 @@ export default function AttendancePage() {
         const student = students.find(s => s.id === selectedStudent);
         if (!student || dailyAttendance[selectedStudent]?.clockedIn) return;
         
-        try {
-            await addDoc(collection(db, 'attendance'), {
-                studentId: selectedStudent,
-                studentName: student.name,
-                timestamp: new Date(),
-                type: 'clock-in'
-            });
-            toast({ title: 'Clocked In', description: `${student.name} has been clocked in.` });
-            setSelectedStudent(null);
-        } catch (error) {
-             toast({ variant: 'destructive', title: 'Error', description: 'Could not clock in student.' });
-        }
+        const newLog: AttendanceLog = {
+            id: new Date().toISOString(),
+            studentId: selectedStudent,
+            studentName: student.name,
+            timestamp: new Date(),
+            type: 'clock-in'
+        };
+        setAttendanceLogs([...attendanceLogs, newLog]);
+        toast({ title: 'Clocked In', description: `${student.name} has been clocked in.` });
+        setSelectedStudent(null);
     };
 
     const handleClockOut = async () => {
@@ -167,29 +142,24 @@ export default function AttendancePage() {
         const student = students.find(s => s.id === selectedStudent);
         if (!student || !dailyAttendance[selectedStudent]?.clockedIn || dailyAttendance[selectedStudent]?.clockedOut) return;
         
-         try {
-            await addDoc(collection(db, 'attendance'), {
-                studentId: selectedStudent,
-                studentName: student.name,
-                timestamp: new Date(),
-                type: 'clock-out'
-            });
-            toast({ title: 'Clocked Out', description: `${student.name} has been clocked out.` });
-            setSelectedStudent(null);
-        } catch (error) {
-             toast({ variant: 'destructive', title: 'Error', description: 'Could not clock out student.' });
-        }
+        const newLog: AttendanceLog = {
+            id: new Date().toISOString(),
+            studentId: selectedStudent,
+            studentName: student.name,
+            timestamp: new Date(),
+            type: 'clock-out'
+        };
+        setAttendanceLogs([...attendanceLogs, newLog]);
+        toast({ title: 'Clocked Out', description: `${student.name} has been clocked out.` });
+        setSelectedStudent(null);
     };
 
     const handleViewHistory = async (student: Student) => {
         setHistoryStudent(student);
-        const historyQuery = query(collection(db, 'attendance'), where('studentId', '==', student.id), orderBy('timestamp', 'desc'));
-        const snapshot = await getDocs(historyQuery);
-        const historyData = snapshot.docs.map(doc => ({ 
-            id: doc.id,
-            ...doc.data(),
-            timestamp: doc.data().timestamp.toDate(),
-        } as AttendanceLog));
+        // In a real app, you would fetch this from a DB. Here we just filter existing logs.
+        const historyData = attendanceLogs
+            .filter(log => log.studentId === student.id)
+            .sort((a,b) => b.timestamp.getTime() - a.timestamp.getTime());
         setStudentHistory(historyData);
         setIsHistoryOpen(true);
     };
@@ -250,7 +220,7 @@ export default function AttendancePage() {
                  {filteredStudents.length === 0 ? (
                     <TableRow>
                         <TableCell colSpan={5} className="h-24 text-center">
-                            No student data available. Manage students first.
+                            No student data available.
                         </TableCell>
                     </TableRow>
                 ) : filteredStudents.map(student => {
@@ -370,5 +340,3 @@ export default function AttendancePage() {
     </>
   );
 }
-
-    

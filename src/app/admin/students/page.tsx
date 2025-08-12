@@ -65,8 +65,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot } from "firebase/firestore";
 
 type Student = {
   id: string;
@@ -86,28 +84,24 @@ type Student = {
   }
 };
 
+const mockStudents: Student[] = [
+    { id: '1', name: 'Ravi Kumar', grade: 12, status: 'Enrolled', program: 'Science', avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000, feesPaid: 25000, attendance: { present: 180, absent: 5, late: 2 } },
+    { id: '2', name: 'Priya Sharma', grade: 11, status: 'Enrolled', program: 'Arts', avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png', totalFees: 40000, feesPaid: 40000, attendance: { present: 185, absent: 2, late: 0 } },
+    { id: '3', name: 'Amit Patel', grade: 12, status: 'Graduated', program: 'Technology', avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png', totalFees: 60000, feesPaid: 60000, attendance: { present: 190, absent: 0, late: 1 } },
+    { id: '4', name: 'Sunita Devi', grade: 10, status: 'Withdrawn', program: 'Math', avatarHint: 'student thinking', photoURL: 'https://placehold.co/100x100.png', totalFees: 45000, feesPaid: 10000, attendance: { present: 50, absent: 20, late: 5 } },
+    { id: '5', name: 'Vijay Singh', grade: 11, status: 'Enrolled', program: 'Science', avatarHint: 'student outside', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000, feesPaid: 30000, attendance: { present: 170, absent: 10, late: 8 } },
+];
+
+
 export default function StudentsPage() {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [students, setStudents] = useState<Student[]>(mockStudents);
+  const [loading, setLoading] = useState(false);
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [viewingStudent, setViewingStudent] = useState<Student | null>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    const studentsCollectionRef = collection(db, 'students');
-    const unsubscribe = onSnapshot(studentsCollectionRef, (querySnapshot) => {
-        const studentsData: Student[] = [];
-        querySnapshot.forEach((doc) => {
-            studentsData.push({ id: doc.id, ...doc.data() } as Student);
-        });
-        setStudents(studentsData);
-        setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   const handleAddNew = () => {
     setEditingStudent(null);
@@ -125,18 +119,16 @@ export default function StudentsPage() {
   }
 
   const handleDelete = async (studentId: string) => {
-    try {
-        await deleteDoc(doc(db, "students", studentId));
-        toast({ title: 'Success', description: 'Student has been deleted.' });
-    } catch (error) {
-        toast({ variant: 'destructive', title: 'Error', description: 'Could not delete student.' });
-    }
+    // This is a mock delete, it just removes from local state
+    setStudents(students.filter(s => s.id !== studentId));
+    toast({ title: 'Success', description: 'Student has been deleted.' });
   };
   
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
     const formData = new FormData(event.currentTarget);
-    const newStudentData = {
+    const studentData = {
         name: formData.get('name') as string,
         email: formData.get('email') as string,
         grade: Number(formData.get('grade')),
@@ -144,33 +136,31 @@ export default function StudentsPage() {
         totalFees: Number(formData.get('totalFees')),
     };
 
-    try {
+    // Mock saving logic
+    setTimeout(() => {
         if (editingStudent) {
-            const studentDocRef = doc(db, 'students', editingStudent.id);
-            await updateDoc(studentDocRef, newStudentData);
+            setStudents(students.map(s => s.id === editingStudent.id ? { ...s, ...studentData } : s));
             toast({ title: 'Success', description: 'Student information has been updated.' });
         } else {
-            const newStudentPayload = {
+            const newStudent: Student = {
+              id: (students.length + 1).toString(),
               status: 'Enrolled',
               avatarHint: 'student portrait',
               photoURL: '',
               feesPaid: 0,
               attendance: { present: 0, absent: 0, late: 0 },
-              admissionDate: new Date().toISOString(),
-              ...newStudentData,
+              ...studentData,
             }
-            await addDoc(collection(db, "students"), newStudentPayload);
+            setStudents([newStudent, ...students]);
             toast({ title: 'Success', description: 'New student has been added.' });
         }
         setIsFormDialogOpen(false);
         setEditingStudent(null);
-    } catch (error) {
-        console.error("Error saving student:", error);
-        toast({ variant: 'destructive', title: 'Error', description: 'Could not save student data.' });
-    }
+        setLoading(false);
+    }, 500);
   };
 
-  if (loading) {
+  if (loading && !isFormDialogOpen) { // Only show page loader when not in dialog
     return (
         <div className="flex items-center justify-center h-full">
             <Loader2 className="h-8 w-8 animate-spin" />
@@ -256,7 +246,7 @@ export default function StudentsPage() {
                                 <AlertDialogHeader>
                                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the student's record from the servers.
+                                    This action cannot be undone. This will permanently delete the student's record.
                                 </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -297,40 +287,43 @@ export default function StudentsPage() {
                 <Label htmlFor="name" className="text-right">
                   Name
                 </Label>
-                <Input id="name" name="name" defaultValue={editingStudent?.name || ''} className="col-span-3" required />
+                <Input id="name" name="name" defaultValue={editingStudent?.name || ''} className="col-span-3" required disabled={loading} />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="email" className="text-right">
                   Email
                 </Label>
-                <Input id="email" name="email" type="email" defaultValue={editingStudent?.email || ''} className="col-span-3" required />
+                <Input id="email" name="email" type="email" defaultValue={editingStudent?.email || ''} className="col-span-3" required disabled={loading} />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="grade" className="text-right">
                   Grade
                 </Label>
-                <Input id="grade" name="grade" type="number" defaultValue={editingStudent?.grade || ''} className="col-span-3" required />
+                <Input id="grade" name="grade" type="number" defaultValue={editingStudent?.grade || ''} className="col-span-3" required disabled={loading} />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="program" className="text-right">
                   Program
                 </Label>
-                <Input id="program" name="program" defaultValue={editingStudent?.program || ''} className="col-span-3" required />
+                <Input id="program" name="program" defaultValue={editingStudent?.program || ''} className="col-span-3" required disabled={loading} />
               </div>
                <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="totalFees" className="text-right">
                   Total Fees (₹)
                 </Label>
-                <Input id="totalFees" name="totalFees" type="number" defaultValue={editingStudent?.totalFees || ''} className="col-span-3" required />
+                <Input id="totalFees" name="totalFees" type="number" defaultValue={editingStudent?.totalFees || ''} className="col-span-3" required disabled={loading} />
               </div>
             </div>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button type="button" variant="secondary">
+                    <Button type="button" variant="secondary" disabled={loading}>
                         Cancel
                     </Button>
                 </DialogClose>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" disabled={loading}>
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Save changes
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>

@@ -22,9 +22,6 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from './ui/checkbox';
 
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from '@/lib/firebase';
-
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
@@ -35,7 +32,6 @@ export function LoginForm() {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const auth = getAuth(app);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,25 +45,23 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
+    // Mock login for localhost
+    if (values.email === 'admin@webandapp.edu' && values.password === 'admin123') {
       toast({
         title: 'Login Successful',
         description: 'Redirecting to your dashboard...',
       });
-      // Redirect to admin dashboard if admin logs in, otherwise to a general user page
-      if (values.email.startsWith('admin')) {
-        router.push('/admin/dashboard');
-      } else {
-        router.push('/');
+      // Store a mock session state
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('user', JSON.stringify({ email: values.email, isLoggedIn: true }));
       }
-    } catch (error: any) {
-      toast({
+      router.push('/admin/dashboard');
+    } else {
+       toast({
         variant: 'destructive',
         title: 'Login Failed',
         description: 'Invalid email or password. Please try again.',
       });
-    } finally {
       setLoading(false);
     }
   }

@@ -9,8 +9,6 @@ import { Label } from '@/components/ui/label';
 import { Search, Award, BadgeCheck, XCircle, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { db } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
 
 type Student = {
   id: string;
@@ -22,6 +20,14 @@ type Student = {
   avatarHint: string;
   photoURL?: string;
 };
+
+// Mock Data
+const mockStudents: Student[] = [
+    { id: '1', name: 'Ravi Kumar', grade: 12, status: 'Enrolled', program: 'Science', email: 'ravi@example.com', avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png' },
+    { id: '2', name: 'Priya Sharma', grade: 11, status: 'Enrolled', program: 'Arts', email: 'priya@example.com', avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png' },
+    { id: '3', name: 'Amit Patel', grade: 12, status: 'Graduated', program: 'Technology', email: 'amit@example.com', avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png' },
+];
+
 
 type VerificationResult = 'pending' | 'verified' | 'not_found' | 'not_graduated';
 
@@ -39,28 +45,21 @@ export default function VerifyCertificatePage() {
     setVerificationStatus('pending');
     setVerifiedStudent(null);
 
-    try {
-        const studentDocRef = doc(db, 'students', certificateId);
-        const studentSnap = await getDoc(studentDocRef);
-
-        if (studentSnap.exists()) {
-            const studentData = studentSnap.data() as Omit<Student, 'id'>;
-            if (studentData.status === 'Graduated') {
-                setVerifiedStudent({ id: studentSnap.id, ...studentData });
+    setTimeout(() => {
+        const student = mockStudents.find(s => s.id === certificateId);
+        if (student) {
+            if (student.status === 'Graduated') {
+                setVerifiedStudent(student);
                 setVerificationStatus('verified');
             } else {
-                 setVerifiedStudent({ id: studentSnap.id, ...studentData });
+                 setVerifiedStudent(student);
                  setVerificationStatus('not_graduated');
             }
         } else {
             setVerificationStatus('not_found');
         }
-    } catch (error) {
-        console.error("Verification failed:", error);
-        setVerificationStatus('not_found');
-    } finally {
         setLoading(false);
-    }
+    }, 500);
   };
 
   const VerificationResultCard = () => {

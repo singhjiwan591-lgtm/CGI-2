@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { BookOpen, Download, Twitter, Linkedin, Facebook } from 'lucide-react';
-import { adminDb } from '@/lib/firebase-admin';
 import { CertificateStyler } from '@/components/certificate-styler';
 
 type Student = {
@@ -13,25 +12,18 @@ type Student = {
   status: 'Graduated' | 'Enrolled' | 'Withdrawn';
 };
 
+// Mock data since Firebase is removed
+const mockStudents: Student[] = [
+    { id: '3', name: 'Amit Patel', program: 'Technology', status: 'Graduated' },
+    { id: '6', name: 'Geeta Kumari', program: 'Data Science', status: 'Graduated' },
+];
+
 async function getStudent(studentId: string): Promise<Student | null> {
     if (!studentId) return null;
-
-    try {
-        const studentRef = adminDb.collection('students').doc(studentId);
-        const studentSnap = await studentRef.get();
-
-        if (studentSnap.exists) {
-            const studentData = studentSnap.data();
-            // Return student data only if they have graduated
-            if (studentData && studentData.status === 'Graduated') {
-                return { id: studentSnap.id, ...studentData } as Student;
-            }
-        }
-    } catch (err) {
-        console.error('Failed to fetch student data:', err);
-    }
-    // Return null if not found, not graduated, or if there's an error
-    return null;
+    
+    // Find the student in the mock data
+    const student = mockStudents.find(s => s.id === studentId && s.status === 'Graduated');
+    return student || null;
 }
 
 export default async function CertificatePage({ params }: { params: { studentId: string } }) {

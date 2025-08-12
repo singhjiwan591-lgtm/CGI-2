@@ -41,8 +41,6 @@ import {
   ChartLegendContent
 } from '@/components/ui/chart';
 import { Pie, PieChart, Cell } from 'recharts';
-import { db } from '@/lib/firebase';
-import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 import { format } from 'date-fns';
 
 type Student = {
@@ -57,6 +55,15 @@ type Student = {
   totalFees: number;
   feesPaid: number;
 };
+
+// Mock Data since Firebase is removed
+const mockStudents: Student[] = [
+    { id: '1', name: 'Ravi Kumar', grade: 12, status: 'Enrolled', program: 'Science', avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png', admissionDate: format(new Date('2023-04-10'), 'PPP'), totalFees: 50000, feesPaid: 25000 },
+    { id: '2', name: 'Priya Sharma', grade: 11, status: 'Enrolled', program: 'Arts', avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png', admissionDate: format(new Date('2023-05-15'), 'PPP'), totalFees: 40000, feesPaid: 40000 },
+    { id: '3', name: 'Amit Patel', grade: 12, status: 'Graduated', program: 'Technology', avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png', admissionDate: format(new Date('2022-06-20'), 'PPP'), totalFees: 60000, feesPaid: 60000 },
+    { id: '4', name: 'Sunita Devi', grade: 10, status: 'Withdrawn', program: 'Math', avatarHint: 'student thinking', photoURL: 'https://placehold.co/100x100.png', admissionDate: format(new Date('2023-07-01'), 'PPP'), totalFees: 45000, feesPaid: 10000 },
+    { id: '5', name: 'Vijay Singh', grade: 11, status: 'Enrolled', program: 'Science', avatarHint: 'student outside', photoURL: 'https://placehold.co/100x100.png', admissionDate: format(new Date('2023-08-05'), 'PPP'), totalFees: 50000, feesPaid: 30000 },
+];
 
 const teachers = [
     { name: 'Dr. Evelyn Reed', subject: 'Principal', avatarHint: 'woman teacher', photoURL: 'https://placehold.co/100x100.png'},
@@ -73,35 +80,12 @@ const chartConfig = {
   Arts: { label: 'Arts', color: 'hsl(var(--chart-2))' },
   Technology: { label: 'Technology', color: 'hsl(var(--chart-3))' },
   Math: { label: 'Math', color: 'hsl(var(--chart-4))' },
-  // Add other programs here as needed
 };
 
 
 export default function DashboardPage() {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const studentsCollectionRef = collection(db, 'students');
-    const q = query(studentsCollectionRef, orderBy('admissionDate', 'desc'));
-    
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const studentsData: Student[] = [];
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            studentsData.push({ 
-                id: doc.id, 
-                ...data,
-                // Ensure admissionDate is a string for consistent handling
-                admissionDate: data.admissionDate ? format(new Date(data.admissionDate), 'PPP') : 'N/A'
-            } as Student);
-        });
-        setStudents(studentsData);
-        setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const [students, setStudents] = useState<Student[]>(mockStudents);
+  const [loading, setLoading] = useState(false); // No loading from Firebase
 
   const recentAdmissions = students.slice(0, 5);
 
@@ -121,7 +105,6 @@ export default function DashboardPage() {
       fill: `hsl(var(--chart-${(index % 5) + 1}))`
   }));
   
-
   if (loading) {
       return (
           <div className="flex items-center justify-center h-full">

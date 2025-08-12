@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Menu, User } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -18,24 +18,29 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import Image from 'next/image';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/lib/firebase';
-import { signOut } from 'firebase/auth';
-
 
 export function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [user, loading] = useAuthState(auth);
+  const [user, setUser] = useState<{ email: string; isLoggedIn: boolean } | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+    if (typeof window !== 'undefined') {
+      const storedUser = sessionStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    }
+  }, [pathname]); // Rerun on route change to update login status
 
-  const handleLogout = async () => {
-    await signOut(auth);
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('user');
+    }
+    setUser(null);
     router.push('/login');
   };
 
@@ -68,24 +73,20 @@ export function SiteHeader() {
   );
 
   const AuthButton = () => {
-    if (loading) {
-      return <Button variant="outline" size="sm" disabled>Loading...</Button>
-    }
-
-    if (user) {
+    if (user && user.isLoggedIn) {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="secondary" size="icon" className="rounded-full">
               <Avatar>
-                <AvatarImage src={user.photoURL ?? "https://placehold.co/100x100.png"} data-ai-hint="admin user" />
+                <AvatarImage src={"https://placehold.co/100x100.png"} data-ai-hint="admin user" />
                 <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
               <span className="sr-only">Toggle user menu</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>{user.displayName || user.email}</DropdownMenuLabel>
+            <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>Dashboard</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
@@ -156,8 +157,8 @@ export function SiteHeader() {
                  <div className="mt-auto flex flex-col gap-2 border-t pt-4">
                     {user ? (
                       <>
-                        <Button variant="ghost" asChild onClick={() => setIsMobileMenuOpen(false)}>
-                          <Link href="/admin/dashboard">Dashboard</Link>
+                        <Button variant="ghost" asChild onClick={() => { router.push('/admin/dashboard'); setIsMobileMenuOpen(false); }}>
+                          <span>Dashboard</span>
                         </Button>
                         <Button variant="outline" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}>Logout</Button>
                       </>

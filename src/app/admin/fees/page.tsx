@@ -48,8 +48,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
-import { db } from '@/lib/firebase';
-import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 
 type StudentFee = {
   id: string;
@@ -61,27 +59,22 @@ type StudentFee = {
   feesPaid: number;
 };
 
+// Mock data
+const mockStudents: StudentFee[] = [
+    { id: '1', name: 'Ravi Kumar', grade: 12, avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000, feesPaid: 25000 },
+    { id: '2', name: 'Priya Sharma', grade: 11, avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png', totalFees: 40000, feesPaid: 40000 },
+    { id: '3', name: 'Amit Patel', grade: 12, avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png', totalFees: 60000, feesPaid: 60000 },
+    { id: '4', name: 'Sunita Devi', grade: 10, avatarHint: 'student thinking', photoURL: 'https://placehold.co/100x100.png', totalFees: 45000, feesPaid: 10000 },
+    { id: '5', name: 'Vijay Singh', grade: 11, avatarHint: 'student outside', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000, feesPaid: 30000 },
+];
+
 export default function FeesPage() {
-  const [students, setStudents] = useState<StudentFee[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [students, setStudents] = useState<StudentFee[]>(mockStudents);
+  const [loading, setLoading] = useState(false);
   const [isCollectFeeDialogOpen, setIsCollectFeeDialogOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentFee | null>(null);
   const [paymentAmount, setPaymentAmount] = useState('');
   const { toast } = useToast();
-
-  useEffect(() => {
-    const studentsCollectionRef = collection(db, 'students');
-    const unsubscribe = onSnapshot(studentsCollectionRef, (querySnapshot) => {
-        const studentsData: StudentFee[] = [];
-        querySnapshot.forEach((doc) => {
-            studentsData.push({ id: doc.id, ...doc.data() } as StudentFee);
-        });
-        setStudents(studentsData);
-        setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   const handleCollectFeeClick = (student: StudentFee) => {
     setSelectedStudent(student);
@@ -91,38 +84,39 @@ export default function FeesPage() {
 
   const handleProcessPayment = async () => {
     if (!selectedStudent || !paymentAmount) return;
+    setLoading(true);
 
     const amount = parseFloat(paymentAmount);
     if (isNaN(amount) || amount <= 0) {
       toast({ variant: 'destructive', title: 'Invalid Amount', description: 'Please enter a valid payment amount.' });
+      setLoading(false);
       return;
     }
 
     const remainingFees = selectedStudent.totalFees - selectedStudent.feesPaid;
     if (amount > remainingFees) {
       toast({ variant: 'destructive', title: 'Overpayment Error', description: `Payment cannot exceed the remaining balance of ₹${remainingFees}.` });
+      setLoading(false);
       return;
     }
 
-    try {
-        const studentDocRef = doc(db, 'students', selectedStudent.id);
-        await updateDoc(studentDocRef, {
-            feesPaid: selectedStudent.feesPaid + amount
-        });
-        
+    // Mock payment processing
+    setTimeout(() => {
+        setStudents(students.map(s => 
+            s.id === selectedStudent.id ? { ...s, feesPaid: s.feesPaid + amount } : s
+        ));
         toast({ title: 'Payment Successful', description: `₹${amount} collected from ${selectedStudent.name}.` });
         setIsCollectFeeDialogOpen(false);
         setSelectedStudent(null);
-    } catch (error) {
-        toast({ variant: 'destructive', title: 'Error', description: 'Could not process payment.' });
-    }
+        setLoading(false);
+    }, 500);
   };
 
   const totalCollected = students.reduce((acc, s) => acc + s.feesPaid, 0);
   const totalFees = students.reduce((acc, s) => acc + s.totalFees, 0);
   const totalRemaining = totalFees - totalCollected;
 
-  if (loading) {
+  if (loading && !isCollectFeeDialogOpen) {
       return (
         <div className="flex items-center justify-center h-full">
             <Loader2 className="h-8 w-8 animate-spin" />
@@ -194,7 +188,7 @@ export default function FeesPage() {
               {students.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="h-24 text-center">
-                    No student data available. Manage students to see fee details.
+                    No student data available.
                   </TableCell>
                 </TableRow>
               ) : students.map((student) => {
@@ -267,21 +261,24 @@ export default function FeesPage() {
                     value={paymentAmount}
                     onChange={(e) => setPaymentAmount(e.target.value)}
                     placeholder="Enter amount" 
-                    className="col-span-3" />
+                    className="col-span-3"
+                    disabled={loading}
+                 />
               </div>
             </div>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button type="button" variant="secondary">
+                    <Button type="button" variant="secondary" disabled={loading}>
                         Cancel
                     </Button>
                 </DialogClose>
-              <Button type="button" onClick={handleProcessPayment}>Process Payment</Button>
+              <Button type="button" onClick={handleProcessPayment} disabled={loading}>
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Process Payment
+              </Button>
             </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
   );
 }
-
-    

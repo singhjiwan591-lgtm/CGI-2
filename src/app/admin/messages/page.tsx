@@ -7,8 +7,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Loader2, Inbox, Mail, MailOpen } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
-import { db } from '@/lib/firebase';
-import { collection, onSnapshot, orderBy, query, doc, updateDoc } from 'firebase/firestore';
 
 type Message = {
   id: string;
@@ -20,32 +18,19 @@ type Message = {
   read: boolean;
 };
 
+// Mock data
+const mockMessages: Message[] = [
+    { id: '1', name: 'Anjali Gupta', email: 'anjali@example.com', subject: 'Inquiry about Web Development course', message: 'Hello, I would like to know more about the full-stack web development course. What is the duration and fee structure? Thanks.', timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), read: false },
+    { id: '2', name: 'Sandeep Singh', email: 'sandeep@example.com', subject: 'Placement Assistance', message: 'I am a final year student. Can you please provide details about the placement support provided by your institute?', timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), read: true },
+    { id: '3', name: 'Kavita Reddy', email: 'kavita@example.com', subject: 'Question about DIFA course', message: 'Is the Diploma in Financial Accounting course suitable for someone with a non-commerce background?', timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), read: true },
+];
+
 export default function MessagesPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const messagesQuery = query(collection(db, 'messages'), orderBy('timestamp', 'desc'));
-    const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
-      const messagesData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        timestamp: doc.data().timestamp.toDate(),
-      } as Message));
-      setMessages(messagesData);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const [messages, setMessages] = useState<Message[]>(mockMessages);
+  const [loading, setLoading] = useState(false);
 
   const handleMarkAsRead = async (id: string) => {
-    const messageRef = doc(db, 'messages', id);
-    try {
-      await updateDoc(messageRef, { read: true });
-    } catch (error) {
-      console.error("Error marking message as read: ", error);
-    }
+    setMessages(messages.map(msg => msg.id === id ? { ...msg, read: true } : msg));
   };
 
   if (loading) {

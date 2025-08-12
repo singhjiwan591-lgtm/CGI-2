@@ -13,7 +13,7 @@ import {
   MessageSquare,
   Loader2,
 } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -36,10 +36,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Image from 'next/image';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/lib/firebase';
-import { signOut } from 'firebase/auth';
-
 
 export default function DashboardLayout({
   children,
@@ -48,7 +44,8 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, loading, error] = useAuthState(auth);
+  const [user, setUser] = useState<{ email: string; isLoggedIn: boolean } | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const navLinks = [
     { href: '/admin/dashboard', label: 'Dashboard', icon: Home },
@@ -60,13 +57,23 @@ export default function DashboardLayout({
   ];
 
   useEffect(() => {
-    if (!loading && !user) {
+    const storedUser = sessionStorage.getItem('user');
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      if (parsedUser.isLoggedIn) {
+        setUser(parsedUser);
+      } else {
+         router.push('/login');
+      }
+    } else {
       router.push('/login');
     }
-  }, [user, loading, router]);
+    setLoading(false);
+  }, [router]);
   
-  const handleLogout = async () => {
-    await signOut(auth);
+  const handleLogout = () => {
+    sessionStorage.removeItem('user');
+    setUser(null);
     router.push('/login');
   };
 
@@ -74,7 +81,7 @@ export default function DashboardLayout({
     return (
         <div className="flex h-screen items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin" />
-            <p className="ml-2">Authenticating...</p>
+            <p className="ml-2">Loading...</p>
         </div>
     )
   }
@@ -196,14 +203,14 @@ export default function DashboardLayout({
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
                 <Avatar>
-                  <AvatarImage src={user.photoURL ?? "https://placehold.co/100x100.png"} data-ai-hint="admin user" />
+                  <AvatarImage src={"https://placehold.co/100x100.png"} data-ai-hint="admin user" />
                   <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>{user.displayName || user.email}</DropdownMenuLabel>
+              <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>

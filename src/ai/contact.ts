@@ -5,13 +5,7 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-} from 'firebase/firestore';
 import {z} from 'zod';
-import {db} from '@/lib/firebase';
 
 const ContactFormInputSchema = z.object({
   name: z.string().min(2).describe('The name of the person.'),
@@ -54,12 +48,12 @@ const contactFlow = ai.defineFlow(
     outputSchema: z.void(),
   },
   async (input) => {
-    // 1. Save the message to Firestore
-    await addDoc(collection(db, 'messages'), {
-      ...input,
-      timestamp: serverTimestamp(),
-      read: false,
-    });
+    // 1. Log the message to the console (since Firestore is removed)
+    console.log('--- NEW CONTACT MESSAGE ---');
+    console.log(`From: ${input.name} (${input.email})`);
+    console.log(`Subject: ${input.subject}`);
+    console.log(`Message: ${input.message}`);
+    console.log('---------------------------');
 
     // 2. Send a notification email to the admin
     await sendEmailTool({

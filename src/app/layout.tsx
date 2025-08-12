@@ -7,7 +7,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { Preloader } from '@/components/preloader';
 import Script from 'next/script';
 import { DynamicDiscountPopup } from '@/components/dynamic-components';
-import { AppCheckInitializer } from '@/components/app-check-initializer';
 
 export const metadata: Metadata = {
   title: {
@@ -75,35 +74,8 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
-        <Script id="google-consent-mode" strategy="beforeInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('consent', 'default', {
-              'ad_storage': 'denied',
-              'ad_user_data': 'denied',
-              'ad_personalization': 'denied',
-              'analytics_storage': 'denied'
-            });
-          `}
-        </Script>
-        
-        {/* PASTE YOUR COOKIEHUB CMP CODE SNIPPET HERE */}
-
-        <Script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`} strategy="beforeInteractive" />
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-B8YMN5JCXM"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            gtag('js', new Date());
-            gtag('config', 'G-B8YMN5JCXM');
-          `}
-        </Script>
       </head>
       <body suppressHydrationWarning={true} className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
-        <AppCheckInitializer />
         <Preloader />
         <div className="relative flex flex-col items-center flex-1 w-full">
           <SiteHeader />
