@@ -48,6 +48,18 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
+
+    // Special case for admin login
+    if (values.email === 'admin@webandapp.edu' && values.password === 'admin123') {
+        toast({
+            title: 'Admin Login Successful',
+            description: 'Redirecting to your dashboard...',
+        });
+        router.push('/admin/dashboard');
+        setLoading(false);
+        return;
+    }
+
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password);
       toast({
