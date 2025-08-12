@@ -1,23 +1,21 @@
 
 'use client';
 
-// Import the functions you need from the SDKs you need
 import { initializeApp, getApp, FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getMessaging, getToken } from "firebase/messaging";
 import { getStorage } from "firebase/storage";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Your web app's Firebase configuration pulled from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyDyqOae7f0T4HducBU37pD1maDmmc_9nDM",
-  authDomain: "jbd-31.firebaseapp.com",
-  projectId: "jbd-31",
-  storageBucket: "jbd-31.appspot.com",
-  messagingSenderId: "452056696306",
-  appId: "1:452056696306:web:0fe259d22fa8531890176b",
-  measurementId: "G-NSDVPWMS6Q"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
@@ -28,16 +26,15 @@ try {
   app = initializeApp(firebaseConfig);
 }
 
-
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const messaging = (typeof window !== 'undefined') ? getMessaging(app) : null;
 
-const VAPID_KEY = 'BFvFzlUy4XcVX1Epvkhrm7tOG4wKju9y9x6VPhhb0SOiEMzZoKX_enFG-2FteaqISyWSqb1hN20zyvvV92nDeRA';
+const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
 
 const requestNotificationPermission = async () => {
-  if (!messaging) return;
+  if (!messaging || !VAPID_KEY) return;
   try {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
