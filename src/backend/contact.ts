@@ -1,10 +1,9 @@
-
 'use server';
 /**
  * @fileoverview A contact form submission flow.
  */
 
-import {ai} from '@/ai/genkit';
+import {ai} from '@/backend/genkit';
 import {z} from 'zod';
 
 const ContactFormInputSchema = z.object({
