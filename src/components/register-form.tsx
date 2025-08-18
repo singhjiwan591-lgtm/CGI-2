@@ -25,7 +25,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
-  photo: z.any().optional(),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
   fatherName: z.string().min(2, { message: "Father's name must be at least 2 characters." }),
@@ -46,6 +45,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -74,11 +74,15 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     // Mock registration logic
     setTimeout(() => {
         console.log("New user registered (mock):", values);
+        if(photoFile) {
+          console.log("Photo file:", photoFile.name);
+        }
         toast({
             title: 'Registration Submitted!',
             description: "Your application has been received. You will be contacted shortly.",
         });
         form.reset();
+        setPhotoFile(null);
         router.push('/login');
         setLoading(false);
     }, 1000);
@@ -106,19 +110,13 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                 </FormItem>
               )}
             />
-             <FormField
-              control={form.control}
-              name="photo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Your Passport-size Photo</FormLabel>
-                  <FormControl>
-                    <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+             <FormItem>
+              <FormLabel>Your Passport-size Photo</FormLabel>
+              <FormControl>
+                <Input type="file" accept="image/*" onChange={(e) => setPhotoFile(e.target.files ? e.target.files[0] : null)} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
              <FormField
               control={form.control}
               name="fatherName"
