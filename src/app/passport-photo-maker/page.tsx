@@ -32,10 +32,55 @@ export default function PassportPhotoMakerPage() {
       const reader = new FileReader();
       reader.onload = (e) => {
         setOriginalImage(e.target?.result as string);
-        setProcessedImage(null); // Clear previous result when new image is selected
+        setProcessedImage(null);
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const resizeImage = (dataUrl: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const img = document.createElement('img');
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                return reject(new Error('Could not get canvas context'));
+            }
+
+            const targetWidth = 350;
+            const targetHeight = 450;
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, targetWidth, targetHeight);
+
+            const imgAspectRatio = img.width / img.height;
+            const targetAspectRatio = targetWidth / targetHeight;
+
+            let drawWidth = targetWidth;
+            let drawHeight = targetHeight;
+            let x = 0;
+            let y = 0;
+
+            if (imgAspectRatio > targetAspectRatio) {
+                drawHeight = targetWidth / imgAspectRatio;
+                y = (targetHeight - drawHeight) / 2;
+            } else {
+                drawWidth = targetHeight * imgAspectRatio;
+                x = (targetWidth - drawWidth) / 2;
+            }
+            
+            ctx.drawImage(img, x, y, drawWidth, drawHeight);
+
+            resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = (error) => {
+            reject(error);
+        };
+        img.src = dataUrl;
+    });
   };
 
   const handleRemoveBackground = async () => {
@@ -46,17 +91,19 @@ export default function PassportPhotoMakerPage() {
 
     try {
       const result = await removeBackground({ photoDataUri: originalImage });
-      setProcessedImage(result.imageDataUri);
+      const resizedImage = await resizeImage(result.imageDataUri);
+      setProcessedImage(resizedImage);
+      
       toast({
-        title: 'Background Removed!',
-        description: 'The background has been successfully removed.',
+        title: 'Success!',
+        description: 'Background removed and photo resized.',
       });
     } catch (error) {
       console.error(error);
       toast({
         variant: 'destructive',
         title: 'Something went wrong',
-        description: 'Failed to remove background. Please try again.',
+        description: 'Failed to process the image. Please try again.',
       });
     } finally {
       setIsLoading(false);
@@ -106,7 +153,7 @@ export default function PassportPhotoMakerPage() {
                 {originalImage && (
                   <Button onClick={handleRemoveBackground} disabled={isLoading || !originalImage} className="w-full">
                     {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Scissors className="mr-2 h-4 w-4" />}
-                    2. Remove Background
+                    2. Remove Background & Resize
                   </Button>
                 )}
 
