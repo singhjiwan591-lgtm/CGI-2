@@ -91,9 +91,3 @@
     user-select: none; /* Standard syntax */
   }
 }
-
-.grecaptcha-badge {
-    transform: scale(0.7) !important;
-    transform-origin: bottom right !important;
-    box-shadow: none !important;
-}

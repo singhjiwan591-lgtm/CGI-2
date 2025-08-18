@@ -86,13 +86,13 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="font-headline text-2xl">Enroll Now</CardTitle>
-        <CardDescription>Create an account to begin your application.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardHeader>
+            <CardTitle className="font-headline text-2xl">Enroll Now</CardTitle>
+            <CardDescription>Create an account to begin your application.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <FormField
               control={form.control}
               name="fullName"
@@ -248,23 +248,21 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                 </FormItem>
               )}
             />
-            <div className="space-y-2">
-                <Button type="submit" className="w-full" disabled={loading}>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-4">
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? 'Submitting...' : 'Create Account & Continue'}
+              </Button>
+              <p className="text-sm text-foreground/80">
+                Already have an account?{' '}
+                <Button variant="link" asChild className="p-0 h-auto">
+                  <Link href="/login">Login</Link>
                 </Button>
-            </div>
-          </form>
-        </Form>
-      </CardContent>
-      <CardFooter className="justify-center">
-        <p className="text-sm text-foreground/80">
-          Already have an account?{' '}
-          <Button variant="link" asChild className="p-0 h-auto">
-            <Link href="/login">Login</Link>
-          </Button>
-        </p>
-      </CardFooter>
+              </p>
+          </CardFooter>
+        </form>
+      </Form>
     </Card>
   );
 }
