@@ -52,10 +52,8 @@ export default function PassportPhotoMakerPage() {
             const targetHeight = 450;
             canvas.width = targetWidth;
             canvas.height = targetHeight;
-
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, targetWidth, targetHeight);
-
+            
+            // Draw the processed image onto the canvas, fitting it correctly
             const imgAspectRatio = img.width / img.height;
             const targetAspectRatio = targetWidth / targetHeight;
 
@@ -188,7 +186,7 @@ export default function PassportPhotoMakerPage() {
                     {!isLoading && processedImage && (
                         <Image src={processedImage} alt="Processed" width={350} height={450} className="rounded-md object-contain max-h-full" />
                     )}
-                    {!isLoading && !processedImage && !isLoading && (
+                    {!isLoading && !processedImage && (
                        <div className="text-center text-muted-foreground p-4">
                         <ImageIcon className="mx-auto h-12 w-12" />
                         <p>Your processed photo will appear here</p>
