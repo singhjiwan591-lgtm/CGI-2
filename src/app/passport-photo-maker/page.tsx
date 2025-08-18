@@ -7,15 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Upload, Scissors, Download, Image as ImageIcon, Users } from 'lucide-react';
+import { Loader2, Upload, Scissors, Download, Image as ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { removeBackground } from '@/backend/flows/remove-background-flow';
-import { createCanvas, loadImage } from 'canvas';
 
 export default function PassportPhotoMakerPage() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
-  const [finalImage, setFinalImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -35,7 +33,6 @@ export default function PassportPhotoMakerPage() {
       reader.onload = (e) => {
         setOriginalImage(e.target?.result as string);
         setProcessedImage(null);
-        setFinalImage(null);
       };
       reader.readAsDataURL(file);
     }
@@ -46,7 +43,6 @@ export default function PassportPhotoMakerPage() {
 
     setIsLoading(true);
     setProcessedImage(null);
-    setFinalImage(null);
 
     try {
       const result = await removeBackground({ photoDataUri: originalImage });
@@ -66,51 +62,6 @@ export default function PassportPhotoMakerPage() {
       setIsLoading(false);
     }
   };
-
-  const generatePassportSheet = async () => {
-    if (!processedImage) return;
-    setIsLoading(true);
-
-    try {
-        const img = await loadImage(processedImage);
-        
-        const passportWidth = 350; // 3.5cm at 100dpi
-        const passportHeight = 450; // 4.5cm at 100dpi
-        const sheetWidth = 1200; // 4x6 inch sheet at ~200 dpi approx
-        const sheetHeight = 1800;
-
-        const canvas = createCanvas(sheetWidth, sheetHeight);
-        const ctx = canvas.getContext('2d');
-
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, sheetWidth, sheetHeight);
-
-        const columns = 3;
-        const rows = 4;
-        const marginX = (sheetWidth - (columns * passportWidth)) / (columns + 1);
-        const marginY = (sheetHeight - (rows * passportHeight)) / (rows + 1);
-
-        for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < columns; col++) {
-                const x = marginX + col * (passportWidth + marginX);
-                const y = marginY + row * (passportHeight + marginY);
-                ctx.drawImage(img, x, y, passportWidth, passportHeight);
-            }
-        }
-        
-        setFinalImage(canvas.toDataURL('image/jpeg'));
-
-    } catch (error) {
-        console.error(error);
-        toast({
-            variant: 'destructive',
-            title: 'Failed to generate sheet',
-            description: 'Could not create the passport photo sheet. Please try again.'
-        });
-    } finally {
-        setIsLoading(false);
-    }
-  }
 
   return (
     <div className="flex flex-col items-center bg-secondary min-h-[calc(100vh-4rem)]">
@@ -154,23 +105,16 @@ export default function PassportPhotoMakerPage() {
 
                 {originalImage && (
                   <Button onClick={handleRemoveBackground} disabled={isLoading} className="w-full">
-                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Scissors className="mr-2 h-4 w-4" />}
+                    {isLoading && !processedImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Scissors className="mr-2 h-4 w-4" />}
                     2. Remove Background
                   </Button>
                 )}
 
                 {processedImage && (
-                  <Button onClick={generatePassportSheet} disabled={isLoading} className="w-full">
-                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Users className="mr-2 h-4 w-4" />}
-                    3. Create Photo Sheet
-                  </Button>
-                )}
-
-                {finalImage && (
                   <Button asChild className="w-full bg-green-600 hover:bg-green-700">
-                    <a href={finalImage} download="passport_photos.jpg">
+                    <a href={processedImage} download="passport_photo.png">
                         <Download className="mr-2 h-4 w-4" />
-                        4. Download Your Photos
+                        3. Download Your Photo
                     </a>
                   </Button>
                 )}
@@ -179,11 +123,11 @@ export default function PassportPhotoMakerPage() {
               <div className="flex flex-col gap-4">
                 <div className="flex-1">
                   <Label>Original</Label>
-                  <div className="mt-2 flex aspect-square w-full items-center justify-center rounded-md border border-dashed">
+                  <div className="mt-2 flex aspect-[3.5/4.5] w-full items-center justify-center rounded-md border border-dashed bg-muted/50">
                     {originalImage ? (
-                      <Image src={originalImage} alt="Original" width={400} height={400} className="rounded-md object-contain max-h-full" />
+                      <Image src={originalImage} alt="Original" width={350} height={450} className="rounded-md object-contain max-h-full" />
                     ) : (
-                      <div className="text-center text-muted-foreground">
+                      <div className="text-center text-muted-foreground p-4">
                         <ImageIcon className="mx-auto h-12 w-12" />
                         <p>Your photo will appear here</p>
                       </div>
@@ -192,16 +136,13 @@ export default function PassportPhotoMakerPage() {
                 </div>
                  <div className="flex-1">
                   <Label>Result</Label>
-                  <div className="mt-2 flex aspect-square w-full items-center justify-center rounded-md border border-dashed">
-                    {isLoading && <Loader2 className="h-8 w-8 animate-spin" />}
-                    {!isLoading && finalImage && (
-                      <Image src={finalImage} alt="Final photo sheet" width={400} height={400} className="rounded-md object-contain max-h-full" />
+                  <div className="mt-2 flex aspect-[3.5/4.5] w-full items-center justify-center rounded-md border border-dashed bg-muted/50">
+                    {isLoading && !processedImage && <Loader2 className="h-8 w-8 animate-spin" />}
+                    {!isLoading && processedImage && (
+                        <Image src={processedImage} alt="Processed" width={350} height={450} className="rounded-md object-contain max-h-full" />
                     )}
-                    {!isLoading && !finalImage && processedImage && (
-                        <Image src={processedImage} alt="Processed" width={400} height={400} className="rounded-md object-contain max-h-full" />
-                    )}
-                    {!isLoading && !processedImage && !finalImage && (
-                       <div className="text-center text-muted-foreground">
+                    {!isLoading && !processedImage && (
+                       <div className="text-center text-muted-foreground p-4">
                         <ImageIcon className="mx-auto h-12 w-12" />
                         <p>Your processed photo will appear here</p>
                       </div>
