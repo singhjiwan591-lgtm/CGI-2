@@ -49,6 +49,7 @@ export function SiteHeader() {
     { href: '/about', label: 'About' },
     { href: '/academics', label: 'Courses' },
     { href: '/admissions', label: 'Admissions' },
+    { href: '/passport-photo-maker', label: 'Passport Photo' },
     { href: '/contact', label: 'Contact' },
   ];
 

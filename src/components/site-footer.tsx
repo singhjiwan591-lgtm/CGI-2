@@ -44,6 +44,11 @@ export function SiteFooter() {
                   Verify Certificate
                 </Link>
               </li>
+               <li>
+                <Link href="/passport-photo-maker" className="hover:text-primary transition-colors">
+                  Passport Photo
+                </Link>
+              </li>
             </ul>
           </div>
           <div className="md:ml-auto md:text-right">
