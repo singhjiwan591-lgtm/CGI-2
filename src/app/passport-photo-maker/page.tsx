@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -32,7 +32,7 @@ export default function PassportPhotoMakerPage() {
       const reader = new FileReader();
       reader.onload = (e) => {
         setOriginalImage(e.target?.result as string);
-        setProcessedImage(null);
+        setProcessedImage(null); // Clear previous result when new image is selected
       };
       reader.readAsDataURL(file);
     }
@@ -104,8 +104,8 @@ export default function PassportPhotoMakerPage() {
                 </Card>
 
                 {originalImage && (
-                  <Button onClick={handleRemoveBackground} disabled={isLoading} className="w-full">
-                    {isLoading && !processedImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Scissors className="mr-2 h-4 w-4" />}
+                  <Button onClick={handleRemoveBackground} disabled={isLoading || !originalImage} className="w-full">
+                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Scissors className="mr-2 h-4 w-4" />}
                     2. Remove Background
                   </Button>
                 )}
@@ -137,11 +137,11 @@ export default function PassportPhotoMakerPage() {
                  <div className="flex-1">
                   <Label>Result</Label>
                   <div className="mt-2 flex aspect-[3.5/4.5] w-full items-center justify-center rounded-md border border-dashed bg-muted/50">
-                    {isLoading && !processedImage && <Loader2 className="h-8 w-8 animate-spin" />}
+                    {isLoading && <Loader2 className="h-8 w-8 animate-spin" />}
                     {!isLoading && processedImage && (
                         <Image src={processedImage} alt="Processed" width={350} height={450} className="rounded-md object-contain max-h-full" />
                     )}
-                    {!isLoading && !processedImage && (
+                    {!isLoading && !processedImage && !isLoading && (
                        <div className="text-center text-muted-foreground p-4">
                         <ImageIcon className="mx-auto h-12 w-12" />
                         <p>Your processed photo will appear here</p>
