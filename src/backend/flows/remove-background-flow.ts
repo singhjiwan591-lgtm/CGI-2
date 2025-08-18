@@ -33,12 +33,7 @@ export async function removeBackground(
   const {media} = await ai.generate({
     model: 'googleai/gemini-2.0-flash-preview-image-generation',
     prompt: `
-      You are an expert image editor.
-      The user has provided an image of a person for a passport photo.
-      Your task is to perfectly segment the person from the background.
-      Make the background of the resulting image completely transparent.
-      The output must be a PNG image.
-
+      Remove the background from the image and make it transparent.
       Here is the image:
       {{media url=photoDataUri}}
     `,
