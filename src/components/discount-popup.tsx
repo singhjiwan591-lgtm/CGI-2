@@ -30,6 +30,13 @@ const setLocalStorageItem = (key: string, value: string) => {
   }
 };
 
+// Helper to remove item from localStorage safely
+const removeLocalStorageItem = (key: string) => {
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem(key);
+    }
+}
+
 export function DiscountPopup() {
   const [isOpen, setIsOpen] = useState(false);
   const [discount, setDiscount] = useState(0);
@@ -39,71 +46,58 @@ export function DiscountPopup() {
     const checkDiscountStatus = () => {
       const discountDataStr = getLocalStorageItem('discountData');
       const discounts = [30, 40, 50];
-      
+      let expiryTime: number;
+
       if (discountDataStr) {
         const discountData = JSON.parse(discountDataStr);
-        const expiryTime = discountData.expiryTime;
+        expiryTime = discountData.expiryTime;
         const now = new Date().getTime();
-        const remainingTime = expiryTime - now;
 
-        if (remainingTime > 0) {
+        if (expiryTime > now) {
+          // Offer is still valid, use it
           setDiscount(discountData.discount);
           setIsOpen(true);
-
-          const interval = setInterval(() => {
-            const now = new Date().getTime();
-            const remaining = expiryTime - now;
-            if (remaining <= 0) {
-              clearInterval(interval);
-              setIsOpen(false);
-            } else {
-              setTimeLeft({
-                hours: Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                minutes: Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60)),
-                seconds: Math.floor((remaining % (1000 * 60)) / 1000),
-              });
-            }
-          }, 1000);
-
-          return () => clearInterval(interval);
         } else {
-           setIsOpen(false);
+          // Offer expired, generate a new one
+          removeLocalStorageItem('discountData');
+          const randomDiscount = discounts[Math.floor(Math.random() * discounts.length)];
+          const newExpiryTime = new Date().getTime() + 2 * 60 * 60 * 1000; // 2 hours
+          setLocalStorageItem('discountData', JSON.stringify({ discount: randomDiscount, expiryTime: newExpiryTime }));
+          setDiscount(randomDiscount);
+          expiryTime = newExpiryTime;
+          setIsOpen(true);
         }
       } else {
+        // No offer exists, generate a new one
         const randomDiscount = discounts[Math.floor(Math.random() * discounts.length)];
-        const now = new Date().getTime();
-        
-        let duration;
-        if (randomDiscount === 50) {
-          duration = 4 * 60 * 60 * 1000; // 4 hours for 50% discount
-        } else {
-          duration = 24 * 60 * 60 * 1000; // 24 hours for other discounts
-        }
-        const expiryTime = now + duration;
-
-        setLocalStorageItem('discountData', JSON.stringify({ discount: randomDiscount, expiryTime }));
+        const newExpiryTime = new Date().getTime() + 2 * 60 * 60 * 1000; // 2 hours
+        setLocalStorageItem('discountData', JSON.stringify({ discount: randomDiscount, expiryTime: newExpiryTime }));
         setDiscount(randomDiscount);
+        expiryTime = newExpiryTime;
         setIsOpen(true);
-
-         const interval = setInterval(() => {
-            const now = new Date().getTime();
-            const remaining = expiryTime - now;
-             if (remaining <= 0) {
-              clearInterval(interval);
-              setIsOpen(false);
-            } else {
-               setTimeLeft({
-                hours: Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                minutes: Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60)),
-                seconds: Math.floor((remaining % (1000 * 60)) / 1000),
-              });
-            }
-        }, 1000);
-         return () => clearInterval(interval);
       }
+
+      // Countdown timer logic
+      const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const remaining = expiryTime - now;
+        if (remaining <= 0) {
+          clearInterval(interval);
+          setIsOpen(false);
+        } else {
+          setTimeLeft({
+            hours: Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            minutes: Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60)),
+            seconds: Math.floor((remaining % (1000 * 60)) / 1000),
+          });
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
     };
     
-    const timer = setTimeout(checkDiscountStatus, 1500);
+    // Show popup after a short delay
+    const timer = setTimeout(checkDiscountStatus, 1500); 
     return () => clearTimeout(timer);
 
   }, []);
@@ -113,7 +107,6 @@ export function DiscountPopup() {
   }
 
   const formatTime = (time: number) => time.toString().padStart(2, '0');
-
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
