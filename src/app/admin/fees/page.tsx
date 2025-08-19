@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import React from 'react';
 import {
   DollarSign,
   Receipt,
