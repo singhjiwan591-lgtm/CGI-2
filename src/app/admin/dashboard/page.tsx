@@ -2,21 +2,19 @@
 'use client';
 
 import {
-  Activity,
-  ArrowUpRight,
-  BookUser,
-  GraduationCap,
   Users,
-  DollarSign,
-  CircleOff,
   Wallet,
+  Book,
+  GraduationCap,
   Loader2,
+  Calendar,
+  Percent,
+  ClipboardList
 } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -33,78 +31,60 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent
-} from '@/components/ui/chart';
-import { Pie, PieChart, Cell } from 'recharts';
-import { format } from 'date-fns';
 
-type Student = {
-  id: string;
-  name: string;
-  grade: number;
-  status: 'Enrolled' | 'Withdrawn' | 'Graduated';
-  program: string;
-  avatarHint: string;
-  photoURL?: string;
-  admissionDate: string; // Assuming this is stored as a string or timestamp
-  totalFees: number;
-  feesPaid: number;
-};
+const StudentDetailsCard = () => (
+  <Card>
+    <CardHeader>
+      <CardTitle>About Me</CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <div className="flex items-center gap-4">
+        <Avatar className="h-20 w-20">
+          <AvatarImage src="https://placehold.co/200x200.png" data-ai-hint="female student" />
+          <AvatarFallback>JR</AvatarFallback>
+        </Avatar>
+        <div>
+          <h3 className="text-xl font-bold">Jessia Rose</h3>
+          <p className="text-sm text-muted-foreground">
+            Aliquam erat volutpat. Curabiene natis massa sedde lacustiquen sodale word moun taiery.
+          </p>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+        <div className="flex justify-between"><span className="text-muted-foreground">Name:</span> <span className="font-medium">Jessia Rose</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Gender:</span> <span className="font-medium">Female</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Father Name:</span> <span className="font-medium">Fahim Rahman</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Mother Name:</span> <span className="font-medium">Jannatul Kazi</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Date Of Birth:</span> <span className="font-medium">07.08.2006</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Religion:</span> <span className="font-medium">Islam</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Father Occupation:</span> <span className="font-medium">Graphic Designer</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">E-Mail:</span> <span className="font-medium">jessiarose@gmail.com</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Admission Date:</span> <span className="font-medium">05.01.2019</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Class:</span> <span className="font-medium">2</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Section:</span> <span className="font-medium">Pink</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Roll:</span> <span className="font-medium">10005</span></div>
+        <div className="flex justify-between col-span-2"><span className="text-muted-foreground">Address:</span> <span className="font-medium text-right">House #10, Road #6, Australia</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Phone:</span> <span className="font-medium">+ 88 9856418</span></div>
+      </div>
+    </CardContent>
+  </Card>
+);
 
-// Mock Data since Firebase is removed
-const mockStudents: Student[] = [
-    { id: '1', name: 'Ravi Kumar', grade: 12, status: 'Enrolled', program: 'Science', avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png', admissionDate: format(new Date('2023-04-10'), 'PPP'), totalFees: 50000, feesPaid: 25000 },
-    { id: '2', name: 'Priya Sharma', grade: 11, status: 'Enrolled', program: 'Arts', avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png', admissionDate: format(new Date('2023-05-15'), 'PPP'), totalFees: 40000, feesPaid: 40000 },
-    { id: '3', name: 'Amit Patel', grade: 12, status: 'Graduated', program: 'Technology', avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png', admissionDate: format(new Date('2022-06-20'), 'PPP'), totalFees: 60000, feesPaid: 60000 },
-    { id: '4', name: 'Sunita Devi', grade: 10, status: 'Withdrawn', program: 'Math', avatarHint: 'student thinking', photoURL: 'https://placehold.co/100x100.png', admissionDate: format(new Date('2023-07-01'), 'PPP'), totalFees: 45000, feesPaid: 10000 },
-    { id: '5', name: 'Vijay Singh', grade: 11, status: 'Enrolled', program: 'Science', avatarHint: 'student outside', photoURL: 'https://placehold.co/100x100.png', admissionDate: format(new Date('2023-08-05'), 'PPP'), totalFees: 50000, feesPaid: 30000 },
-];
-
-const teachers = [
-    { name: 'Dr. Evelyn Reed', subject: 'Principal', avatarHint: 'woman teacher', photoURL: 'https://placehold.co/100x100.png'},
-    { name: 'Mr. David Chen', subject: 'Head of Academics', avatarHint: 'man teacher glasses', photoURL: 'https://placehold.co/100x100.png'},
-    { name: 'Ms. Sunita Patel', subject: 'Science', avatarHint: 'woman teaching', photoURL: 'https://placehold.co/100x100.png'},
-    { name: 'Mr. Amit Singh', subject: 'Mathematics', avatarHint: 'man corporate', photoURL: 'https://placehold.co/100x100.png'},
-];
-
-const chartConfig = {
-  students: {
-    label: 'Students',
-  },
-  Science: { label: 'Science', color: 'hsl(var(--chart-1))' },
-  Arts: { label: 'Arts', color: 'hsl(var(--chart-2))' },
-  Technology: { label: 'Technology', color: 'hsl(var(--chart-3))' },
-  Math: { label: 'Math', color: 'hsl(var(--chart-4))' },
-};
-
+const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.ReactNode, title: string, value: string, bgColor: string, iconColor: string }) => (
+  <Card className="flex items-center p-4 gap-4">
+    <div className={`p-3 rounded-full ${bgColor}`}>
+      {React.cloneElement(icon as React.ReactElement, { className: `h-6 w-6 ${iconColor}` })}
+    </div>
+    <div>
+      <p className="text-muted-foreground">{title}</p>
+      <p className="text-2xl font-bold">{value}</p>
+    </div>
+  </Card>
+);
 
 export default function DashboardPage() {
-  const [students, setStudents] = useState<Student[]>(mockStudents);
-  const [loading, setLoading] = useState(false); // No loading from Firebase
+  const [loading, setLoading] = useState(false);
 
-  const recentAdmissions = students.slice(0, 5);
-
-  const totalIncome = students.reduce((acc, student) => acc + (student.feesPaid || 0), 0);
-  const totalFees = students.reduce((acc, student) => acc + (student.totalFees || 0), 0);
-  const pendingFees = totalFees - totalIncome;
-  const activeStudents = students.filter(s => s.status === 'Enrolled').length;
-
-  const programCounts = students.reduce((acc, student) => {
-    acc[student.program] = (acc[student.program] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const programData = Object.entries(programCounts).map(([program, count], index) => ({
-      program,
-      students: count,
-      fill: `hsl(var(--chart-${(index % 5) + 1}))`
-  }));
-  
   if (loading) {
       return (
           <div className="flex items-center justify-center h-full">
@@ -114,195 +94,49 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <div className="flex flex-col sm:gap-4 sm:py-4">
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Income
-                </CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">₹{totalIncome.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">
-                  from all students
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Pending Fees
-                </CardTitle>
-                <CircleOff className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">₹{pendingFees.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">
-                  across all students
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  This Month's Income
-                </CardTitle>
-                <Wallet className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">₹0</div>
-                <p className="text-xs text-muted-foreground">
-                  (Functionality coming soon)
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Active Students
-                </CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">+{activeStudents}</div>
-                <p className="text-xs text-muted-foreground">
-                  currently enrolled
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-          <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-            <Card className="xl:col-span-2">
-              <CardHeader className="flex flex-row items-center">
-                <div className="grid gap-2">
-                  <CardTitle>Recent Student Admissions</CardTitle>
-                  <CardDescription>
-                    {recentAdmissions.length} of {students.length} most recent admissions.
-                  </CardDescription>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <InfoCard icon={<GraduationCap />} title="Students" value="50000" bgColor="bg-sky-100" iconColor="text-sky-500" />
+          <InfoCard icon={<Users />} title="Teachers" value="2250" bgColor="bg-blue-100" iconColor="text-blue-500" />
+          <InfoCard icon={<Users2 />} title="Parents" value="5690" bgColor="bg-fuchsia-100" iconColor="text-fuchsia-500" />
+          <InfoCard icon={<Wallet />} title="Earnings" value="$193000" bgColor="bg-orange-100" iconColor="text-orange-500" />
+        </div>
+        <StudentDetailsCard />
+      </div>
+
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Overview</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-4 rounded-md bg-purple-50 border border-purple-200">
+                <ClipboardList className="h-8 w-8 text-purple-500" />
+                <div className="text-right">
+                    <p className="text-muted-foreground">Notification</p>
+                    <p className="text-2xl font-bold">12</p>
                 </div>
-                <Button asChild size="sm" className="ml-auto gap-1">
-                  <Link href="/admin/students">
-                    Manage Students
-                    <ArrowUpRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Student</TableHead>
-                      <TableHead className="hidden xl:table-column">
-                        Grade
-                      </TableHead>
-                      <TableHead className="hidden xl:table-column">
-                        Status
-                      </TableHead>
-                      <TableHead className="hidden md:table-cell">
-                        Admission Date
-                      </TableHead>
-                      <TableHead className="text-right">Program</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {recentAdmissions.length === 0 ? (
-                        <TableRow>
-                            <TableCell colSpan={5} className="h-24 text-center">
-                                No admissions yet.
-                            </TableCell>
-                        </TableRow>
-                    ) : recentAdmissions.map((student) => (
-                      <TableRow key={student.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Avatar className="hidden h-9 w-9 sm:flex">
-                              <AvatarImage src={student.photoURL || `https://placehold.co/100x100.png`} data-ai-hint={student.avatarHint} alt="Avatar" />
-                              <AvatarFallback>{student.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
-                            </Avatar>
-                            <div className="font-medium">{student.name}</div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden xl:table-column">
-                          {student.grade}th
-                        </TableCell>
-                        <TableCell className="hidden xl:table-column">
-                          <Badge className="text-xs" variant="outline">
-                            {student.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          {student.admissionDate}
-                        </TableCell>
-                        <TableCell className="text-right">{student.program}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Class Overview</CardTitle>
-                <CardDescription>
-                  Distribution of students across different programs.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex justify-center items-center pb-0">
-                 <ChartContainer config={chartConfig} className="mx-auto aspect-square h-[200px]">
-                    <PieChart>
-                        <ChartTooltip
-                        cursor={false}
-                        content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Pie
-                            data={programData}
-                            dataKey="students"
-                            nameKey="program"
-                            innerRadius={60}
-                            strokeWidth={5}
-                        >
-                            {programData.map((entry) => (
-                                <Cell key={`cell-${entry.program}`} fill={entry.fill} name={entry.program} />
-                            ))}
-                        </Pie>
-                        <ChartLegend
-                            content={<ChartLegendContent nameKey="program" />}
-                            className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
-                        />
-                    </PieChart>
-                 </ChartContainer>
-              </CardContent>
-            </Card>
-          </div>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Our Teachers</CardTitle>
-                    <CardDescription>
-                        List of faculty members at Web and App.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                        {teachers.map((teacher) => (
-                            <div key={teacher.name} className="flex items-center gap-4">
-                                <Avatar className="h-12 w-12">
-                                    <AvatarImage src={teacher.photoURL} data-ai-hint={teacher.avatarHint} alt={teacher.name} />
-                                    <AvatarFallback>{teacher.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <p className="font-semibold">{teacher.name}</p>
-                                    <p className="text-sm text-muted-foreground">{teacher.subject}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </CardContent>
-            </Card>
-        </main>
+            </div>
+             <div className="flex items-center justify-between p-4 rounded-md bg-blue-50 border border-blue-200">
+                <Calendar className="h-8 w-8 text-blue-500" />
+                <div className="text-right">
+                    <p className="text-muted-foreground">Events</p>
+                    <p className="text-2xl font-bold">6</p>
+                </div>
+            </div>
+             <div className="flex items-center justify-between p-4 rounded-md bg-yellow-50 border border-yellow-200">
+                <Percent className="h-8 w-8 text-yellow-500" />
+                <div className="text-right">
+                    <p className="text-muted-foreground">Attendance</p>
+                    <p className="text-2xl font-bold">94%</p>
+                </div>
+            </div>
+          </CardContent>
+           <CardFooter>
+            <Button variant="outline" className="w-full">All Exam Results</Button>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );

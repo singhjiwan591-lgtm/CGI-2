@@ -126,50 +126,11 @@ export default function FeesPage() {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div>
-            <h1 className="text-2xl font-bold">Fee Management</h1>
-            <p className="text-muted-foreground">Track and manage student fee payments and installments.</p>
-        </div>
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add New Invoice
-        </Button>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 my-4">
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Fees Collected</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">₹{totalCollected.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">from {students.length} students</p>
-            </CardContent>
-        </Card>
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Pending Fees</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">₹{totalRemaining.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">outstanding from all students</p>
-            </CardContent>
-        </Card>
-         <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Collection Rate</CardTitle>
-                <Receipt className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">{totalFees > 0 ? ((totalCollected / totalFees) * 100).toFixed(1) : '0.0'}%</div>
-                <p className="text-xs text-muted-foreground">of total fee target collected</p>
-            </CardContent>
-        </Card>
-      </div>
-
       <Card>
+        <CardHeader>
+            <CardTitle>Fee Management</CardTitle>
+            <CardDescription>Track and manage student fee payments and installments.</CardDescription>
+        </CardHeader>
         <CardContent className="p-0">
           <Table>
             <TableHeader>

@@ -1,19 +1,16 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
-  FilePlus,
   MoreHorizontal,
   Pencil,
   PlusCircle,
   Trash2,
-  CalendarCheck,
-  CalendarX,
-  Clock,
   User,
-  Award,
   Loader2,
+  Search,
+  FileDown,
 } from 'lucide-react';
 import {
   Card,
@@ -33,7 +30,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,126 +37,25 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from '@/components/ui/dialog';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog"
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-type Student = {
-  id: string;
-  name: string;
-  grade: number;
-  status: 'Enrolled' | 'Withdrawn' | 'Graduated';
-  email: string;
-  program: string;
-  avatarHint: string;
-  photoURL?: string;
-  totalFees: number;
-  feesPaid: number;
-  attendance: {
-    present: number;
-    absent: number;
-    late: number;
-  }
-};
-
-const mockStudents: Student[] = [
-    { id: '1', name: 'Ravi Kumar', grade: 12, status: 'Enrolled', program: 'Science', avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000, feesPaid: 25000, attendance: { present: 180, absent: 5, late: 2 } },
-    { id: '2', name: 'Priya Sharma', grade: 11, status: 'Enrolled', program: 'Arts', avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png', totalFees: 40000, feesPaid: 40000, attendance: { present: 185, absent: 2, late: 0 } },
-    { id: '3', name: 'Amit Patel', grade: 12, status: 'Graduated', program: 'Technology', avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png', totalFees: 60000, feesPaid: 60000, attendance: { present: 190, absent: 0, late: 1 } },
-    { id: '4', name: 'Sunita Devi', grade: 10, status: 'Withdrawn', program: 'Math', avatarHint: 'student thinking', photoURL: 'https://placehold.co/100x100.png', totalFees: 45000, feesPaid: 10000, attendance: { present: 50, absent: 20, late: 5 } },
-    { id: '5', name: 'Vijay Singh', grade: 11, status: 'Enrolled', program: 'Science', avatarHint: 'student outside', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000, feesPaid: 30000, attendance: { present: 170, absent: 10, late: 8 } },
+const mockStudents = [
+    { id: '1', name: 'Ravi Kumar', roll: '1001', grade: '12', parent: 'Manoj Kumar', gender: 'Male', address: 'Mumbai, India', dob: '2006-05-15', phone: '+91 9876543210', email: 'ravi@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'male student' },
+    { id: '2', name: 'Priya Sharma', roll: '1002', grade: '11', parent: 'Sunita Sharma', gender: 'Female', address: 'Delhi, India', dob: '2007-02-20', phone: '+91 9876543211', email: 'priya@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'female student' },
+    { id: '3', name: 'Amit Patel', roll: '1003', grade: '12', parent: 'Rajesh Patel', gender: 'Male', address: 'Ahmedabad, India', dob: '2006-08-10', phone: '+91 9876543212', email: 'amit@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy student' },
+    { id: '4', name: 'Sunita Devi', roll: '1004', grade: '10', parent: 'Anil Singh', gender: 'Female', address: 'Patna, India', dob: '2008-11-25', phone: '+91 9876543213', email: 'sunita@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'girl smiling' },
+    { id: '5', name: 'Vijay Singh', roll: '1005', grade: '11', parent: 'Kiran Singh', gender: 'Male', address: 'Jaipur, India', dob: '2007-07-07', phone: '+91 9876543214', email: 'vijay@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'student glasses' },
 ];
 
 
 export default function StudentsPage() {
-  const [students, setStudents] = useState<Student[]>(mockStudents);
+  const [students, setStudents] = useState(mockStudents);
   const [loading, setLoading] = useState(false);
-  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
-  const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
-  const [editingStudent, setEditingStudent] = useState<Student | null>(null);
-  const [viewingStudent, setViewingStudent] = useState<Student | null>(null);
-  const { toast } = useToast();
+  const router = useRouter();
 
 
-  const handleAddNew = () => {
-    setEditingStudent(null);
-    setIsFormDialogOpen(true);
-  };
-
-  const handleEdit = (student: Student) => {
-    setEditingStudent(student);
-    setIsFormDialogOpen(true);
-  };
-  
-  const handleViewHistory = (student: Student) => {
-    setViewingStudent(student);
-    setIsHistoryDialogOpen(true);
-  }
-
-  const handleDelete = async (studentId: string) => {
-    // This is a mock delete, it just removes from local state
-    setStudents(students.filter(s => s.id !== studentId));
-    toast({ title: 'Success', description: 'Student has been deleted.' });
-  };
-  
-  const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    const formData = new FormData(event.currentTarget);
-    const studentData = {
-        name: formData.get('name') as string,
-        email: formData.get('email') as string,
-        grade: Number(formData.get('grade')),
-        program: formData.get('program') as string,
-        totalFees: Number(formData.get('totalFees')),
-    };
-
-    // Mock saving logic
-    setTimeout(() => {
-        if (editingStudent) {
-            setStudents(students.map(s => s.id === editingStudent.id ? { ...s, ...studentData } : s));
-            toast({ title: 'Success', description: 'Student information has been updated.' });
-        } else {
-            const newStudent: Student = {
-              id: (students.length + 1).toString(),
-              status: 'Enrolled',
-              avatarHint: 'student portrait',
-              photoURL: '',
-              feesPaid: 0,
-              attendance: { present: 0, absent: 0, late: 0 },
-              ...studentData,
-            }
-            setStudents([newStudent, ...students]);
-            toast({ title: 'Success', description: 'New student has been added.' });
-        }
-        setIsFormDialogOpen(false);
-        setEditingStudent(null);
-        setLoading(false);
-    }, 500);
-  };
-
-  if (loading && !isFormDialogOpen) { // Only show page loader when not in dialog
+  if (loading) {
     return (
         <div className="flex items-center justify-center h-full">
             <Loader2 className="h-8 w-8 animate-spin" />
@@ -168,30 +63,39 @@ export default function StudentsPage() {
     )
   }
 
+  const handleViewDetails = (studentId: string) => {
+    router.push(`/admin/students/${studentId}`);
+  };
+
   return (
-    <>
-      <div className="flex items-center justify-between">
-        <div>
-            <h1 className="text-2xl font-bold">Student Management</h1>
-            <p className="text-muted-foreground">Manage all student records in one place.</p>
-        </div>
-        <Button onClick={handleAddNew}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add New Student
-        </Button>
-      </div>
       <Card>
+        <CardHeader>
+          <CardTitle>All Students Data</CardTitle>
+          <div className="flex flex-col md:flex-row justify-between md:items-center gap-2">
+            <CardDescription>A list of all students in the institute.</CardDescription>
+            <div className="flex items-center gap-2">
+                <div className="relative w-full md:w-auto">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Search by name..." className="pl-8 w-full md:w-[250px]" />
+                </div>
+                 <Button variant="outline"><FileDown className="mr-2 h-4 w-4"/>Download</Button>
+                 <Button><PlusCircle className="mr-2 h-4 w-4"/>Add New Student</Button>
+            </div>
+          </div>
+        </CardHeader>
         <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="hidden w-[100px] sm:table-cell">
-                  <span className="sr-only">Image</span>
-                </TableHead>
+                <TableHead>Photo</TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="hidden md:table-cell">Program</TableHead>
+                <TableHead className="hidden md:table-cell">Gender</TableHead>
                 <TableHead className="hidden md:table-cell">Grade</TableHead>
-                <TableHead className="hidden md:table-cell text-right">Total Fees</TableHead>
+                <TableHead className="hidden md:table-cell">Parent's Name</TableHead>
+                <TableHead className="hidden lg:table-cell">Address</TableHead>
+                <TableHead className="hidden lg:table-cell">Date of Birth</TableHead>
+                <TableHead className="hidden xl:table-cell">Phone</TableHead>
+                <TableHead className="hidden xl:table-cell">E-mail</TableHead>
                 <TableHead>
                   <span className="sr-only">Actions</span>
                 </TableHead>
@@ -200,26 +104,24 @@ export default function StudentsPage() {
             <TableBody>
               {students.map((student) => (
                 <TableRow key={student.id}>
-                  <TableCell className="hidden sm:table-cell">
+                  <TableCell>
                     <Avatar className="h-10 w-10">
                         <AvatarImage src={student.photoURL || `https://placehold.co/100x100.png`} data-ai-hint={student.avatarHint} />
                         <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                     </Avatar>
                   </TableCell>
                   <TableCell className="font-medium">
-                    <Button variant="link" className="p-0 h-auto" onClick={() => handleViewHistory(student)}>
+                     <Button variant="link" className="p-0 h-auto" onClick={() => handleViewDetails(student.id)}>
                         {student.name}
                     </Button>
-                    <div className="text-sm text-muted-foreground md:hidden">{student.grade}th Grade</div>
                   </TableCell>
-                  <TableCell>
-                    <Badge variant={student.status === 'Enrolled' ? 'default' : student.status === 'Graduated' ? 'secondary' : 'outline'}>
-                      {student.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">{student.program}</TableCell>
-                  <TableCell className="hidden md:table-cell">{student.grade}th Grade</TableCell>
-                  <TableCell className="hidden md:table-cell text-right">₹{student.totalFees.toLocaleString()}</TableCell>
+                  <TableCell className="hidden md:table-cell">{student.gender}</TableCell>
+                  <TableCell className="hidden md:table-cell">{student.grade}</TableCell>
+                  <TableCell className="hidden md:table-cell">{student.parent}</TableCell>
+                  <TableCell className="hidden lg:table-cell">{student.address}</TableCell>
+                  <TableCell className="hidden lg:table-cell">{student.dob}</TableCell>
+                  <TableCell className="hidden xl:table-cell">{student.phone}</TableCell>
+                  <TableCell className="hidden xl:table-cell">{student.email}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -230,34 +132,15 @@ export default function StudentsPage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onSelect={() => handleViewHistory(student)}>
-                          <User className="mr-2 h-4 w-4" /> View History
+                        <DropdownMenuItem onSelect={() => handleViewDetails(student.id)}>
+                          <User className="mr-2 h-4 w-4" /> View Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => handleEdit(student)}>
+                        <DropdownMenuItem>
                           <Pencil className="mr-2 h-4 w-4" /> Edit
                         </DropdownMenuItem>
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 font-normal relative select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-                                    <Trash2 className="mr-2 h-4 w-4" /> Delete
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the student's record.
-                                </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDelete(student.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                    Yes, delete student
-                                </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-
+                        <DropdownMenuItem className="text-red-500">
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -272,142 +155,5 @@ export default function StudentsPage() {
             </div>
         </CardFooter>
       </Card>
-      
-      <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <form onSubmit={handleSave}>
-            <DialogHeader>
-              <DialogTitle>{editingStudent ? 'Edit Student' : 'Add New Student'}</DialogTitle>
-              <DialogDescription>
-                {editingStudent ? 'Update the details for this student.' : 'Fill out the form to add a new student.'}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input id="name" name="name" defaultValue={editingStudent?.name || ''} className="col-span-3" required disabled={loading} />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="email" className="text-right">
-                  Email
-                </Label>
-                <Input id="email" name="email" type="email" defaultValue={editingStudent?.email || ''} className="col-span-3" required disabled={loading} />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="grade" className="text-right">
-                  Grade
-                </Label>
-                <Input id="grade" name="grade" type="number" defaultValue={editingStudent?.grade || ''} className="col-span-3" required disabled={loading} />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="program" className="text-right">
-                  Program
-                </Label>
-                <Input id="program" name="program" defaultValue={editingStudent?.program || ''} className="col-span-3" required disabled={loading} />
-              </div>
-               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="totalFees" className="text-right">
-                  Total Fees (₹)
-                </Label>
-                <Input id="totalFees" name="totalFees" type="number" defaultValue={editingStudent?.totalFees || ''} className="col-span-3" required disabled={loading} />
-              </div>
-            </div>
-            <DialogFooter>
-                <DialogClose asChild>
-                    <Button type="button" variant="secondary" disabled={loading}>
-                        Cancel
-                    </Button>
-                </DialogClose>
-              <Button type="submit" disabled={loading}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Save changes
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={isHistoryDialogOpen} onOpenChange={setIsHistoryDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-           {viewingStudent && (
-             <>
-                <DialogHeader>
-                    <DialogTitle>Student History</DialogTitle>
-                    <DialogDescription>
-                        A complete overview of {viewingStudent.name}'s record.
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-6">
-                    <Card>
-                        <CardContent className="pt-6 flex flex-col items-center text-center">
-                            <Avatar className="h-20 w-20">
-                                <AvatarImage src={viewingStudent.photoURL || `https://placehold.co/100x100.png`} data-ai-hint={viewingStudent.avatarHint} />
-                                <AvatarFallback>{viewingStudent.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                            </Avatar>
-                            <h3 className="mt-4 text-xl font-bold">{viewingStudent.name}</h3>
-                            <p className="text-sm text-muted-foreground">{viewingStudent.program} - {viewingStudent.grade}th Grade</p>
-                            <p className="text-sm text-muted-foreground">{viewingStudent.email}</p>
-                            <Badge className="mt-2">{viewingStudent.status}</Badge>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-lg">Fee Status</CardTitle>
-                        </CardHeader>
-                        <CardContent className="grid grid-cols-3 gap-2 text-center">
-                             <div>
-                                <p className="text-xs text-muted-foreground">Total Fees</p>
-                                <p className="font-bold text-lg">₹{viewingStudent.totalFees.toLocaleString()}</p>
-                             </div>
-                             <div>
-                                <p className="text-xs text-muted-foreground">Fees Paid</p>
-                                <p className="font-bold text-lg text-green-600">₹{viewingStudent.feesPaid.toLocaleString()}</p>
-                             </div>
-                             <div>
-                                <p className="text-xs text-muted-foreground">Remaining</p>
-                                <p className="font-bold text-lg text-red-600">₹{(viewingStudent.totalFees - viewingStudent.feesPaid).toLocaleString()}</p>
-                             </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-lg">Attendance Summary</CardTitle>
-                        </CardHeader>
-                         <CardContent className="grid grid-cols-3 gap-2 text-center">
-                             <div className="flex items-center justify-center flex-col">
-                                <CalendarCheck className="h-6 w-6 text-green-500 mb-1" />
-                                <p className="font-bold text-lg">{viewingStudent.attendance.present}</p>
-                                <p className="text-xs text-muted-foreground">Present</p>
-                             </div>
-                             <div className="flex items-center justify-center flex-col">
-                                <CalendarX className="h-6 w-6 text-red-500 mb-1" />
-                                <p className="font-bold text-lg">{viewingStudent.attendance.absent}</p>
-                                <p className="text-xs text-muted-foreground">Absent</p>
-                             </div>
-                             <div className="flex items-center justify-center flex-col">
-                                <Clock className="h-6 w-6 text-yellow-500 mb-1" />
-                                <p className="font-bold text-lg">{viewingStudent.attendance.late}</p>
-                                <p className="text-xs text-muted-foreground">Late</p>
-                             </div>
-                        </CardContent>
-                    </Card>
-                    {viewingStudent.status === 'Graduated' && (
-                        <Button asChild className="w-full">
-                            <Link href={`/certificate/${viewingStudent.id}`}>
-                                <Award className="mr-2 h-4 w-4" />
-                                View Certificate
-                            </Link>
-                        </Button>
-                    )}
-                </div>
-             </>
-           )}
-        </DialogContent>
-      </Dialog>
-    </>
   );
 }

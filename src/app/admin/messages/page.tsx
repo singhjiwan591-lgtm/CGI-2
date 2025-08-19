@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Loader2, Inbox, Mail, MailOpen } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -43,24 +43,18 @@ export default function MessagesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-2xl font-bold">Inbox</h1>
-          <p className="text-muted-foreground">Messages from the website contact form.</p>
-        </div>
-      </div>
-      
-      {messages.length === 0 ? (
-         <Card className="mt-8">
-            <CardContent className="p-12 flex flex-col items-center justify-center text-center">
+      <Card>
+        <CardHeader>
+          <CardTitle>Messages</CardTitle>
+        </CardHeader>
+        <CardContent>
+            {messages.length === 0 ? (
+            <div className="p-12 flex flex-col items-center justify-center text-center">
                 <Inbox className="h-20 w-20 text-muted-foreground mb-4" />
                 <h2 className="text-2xl font-semibold">Your inbox is empty</h2>
                 <p className="text-muted-foreground mt-2">New messages from your website will appear here.</p>
-            </CardContent>
-         </Card>
-      ) : (
-        <Card>
-            <CardContent className="p-0">
+            </div>
+            ) : (
                 <Accordion type="single" collapsible className="w-full">
                 {messages.map((msg) => (
                     <AccordionItem value={msg.id} key={msg.id} className="border-b">
@@ -82,16 +76,16 @@ export default function MessagesPage() {
                                 </div>
                             </div>
                         </AccordionTrigger>
-                        <AccordionContent className="p-6 bg-secondary/20">
+                        <AccordionContent className="p-6 bg-secondary">
                             <h4 className="font-semibold text-sm mb-1">From: <a href={`mailto:${msg.email}`} className="text-primary underline">{msg.email}</a></h4>
                             <p className="text-base whitespace-pre-wrap">{msg.message}</p>
                         </AccordionContent>
                     </AccordionItem>
                 ))}
                 </Accordion>
-            </CardContent>
-        </Card>
-      )}
+            )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -4,79 +4,79 @@
 
 @layer base {
   :root {
-    --background: 42 100% 96%; /* #FFF9F0 - A very light, warm peach as a base */
-    --foreground: 24 50% 20%; /* #4D3830 - A dark, warm brown for text */
+    --background: 222 84% 97%; /* #F0F4FF - Very light blue for the main background */
+    --foreground: 222 47% 11%; /* #111827 - Dark blue for text */
     
-    --card: 42 100% 98%; /* #FFFCF7 - Almost white peach for cards */
-    --card-foreground: 24 50% 20%;
+    --card: 0 0% 100%; /* #FFFFFF - White for cards */
+    --card-foreground: 222 47% 11%;
     
-    --popover: 42 100% 98%;
-    --popover-foreground: 24 50% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 15 91% 47%;      /* #E0490B (Deep Orange) */
+    --primary: 217 91% 60%;      /* #3B82F6 (Blue) */
     --primary-foreground: 0 0% 100%; /* White text on primary */
 
-    --secondary: 152 64% 85%;    /* #C2EDDA (Mint) */
-    --secondary-foreground: 148 40% 30%; /* Darker green for text on mint */
+    --secondary: 222 84% 97%; /* Same as background for secondary elements */
+    --secondary-foreground: 222 47% 11%; /* Dark blue text on secondary */
 
-    --muted: 152 64% 92%; /* Lighter mint for muted backgrounds */
-    --muted-foreground: 148 40% 40%; /* Subtly darker green for muted text */
+    --muted: 222 84% 92%; /* #E0E7FF - A slightly darker light blue for muted backgrounds */
+    --muted-foreground: 222 47% 44%; /* #4B5563 - A softer dark blue for muted text */
 
-    --accent: 34 100% 70%;       /* #FFB766 (Warm Peach) */
-    --accent-foreground: 24 50% 20%; /* Dark brown text on accent */
+    --accent: 45 93% 58%;       /* #FBBF24 (Amber/Yellow) */
+    --accent-foreground: 222 47% 11%; /* Dark blue text on accent */
 
-    --destructive: 0 63% 31%;
+    --destructive: 0 84% 60%; /* #EF4444 (Red) */
     --destructive-foreground: 0 0% 98%;
 
-    --border: 152 64% 80%; /* A slightly darker mint for borders */
-    --input: 152 64% 80%;
-    --ring: 15 91% 47%; /* Primary color for rings/focus states */
+    --border: 222 84% 90%; /* #D9E2FF - A light blue for borders */
+    --input: 222 84% 90%;
+    --ring: 217 91% 60%; /* Primary color for rings/focus states */
 
     --radius: 0.5rem;
 
-    /* Chart Colors from the Palette */
-    --chart-1: 15 91% 47%;   /* #E0490B (Deep Orange) */
-    --chart-2: 145 49% 64%;  /* #68D388 (Live Green) */
-    --chart-3: 34 100% 70%;  /* #FFB766 (Warm Peach) */
-    --chart-4: 152 64% 85%;  /* #C2EDDA (Mint) */
-    --chart-5: 24 50% 30%;   /* Dark brown for contrast */
+    /* Chart Colors */
+    --chart-1: 217 91% 60%;   /* Blue */
+    --chart-2: 45 93% 58%;    /* Amber/Yellow */
+    --chart-3: 160 84% 39%;   /* Green */
+    --chart-4: 0 84% 60%;     /* Red */
+    --chart-5: 262 84% 59%;   /* Purple */
   }
 
   .dark {
-    --background: 20 12% 10%; /* Dark warm gray */
-    --foreground: 30 20% 90%; /* Light grayish peach */
+    --background: 222 47% 11%; /* #111827 - Dark blue */
+    --foreground: 222 84% 97%; /* #F0F4FF - Light blue text */
 
-    --card: 20 12% 15%; /* Slightly lighter dark gray */
-    --card-foreground: 30 20% 90%;
+    --card: 222 47% 16%; /* #1F2937 - Lighter dark blue for cards */
+    --card-foreground: 222 84% 97%;
 
-    --popover: 20 12% 10%;
-    --popover-foreground: 30 20% 90%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 222 84% 97%;
 
-    --primary: 15 91% 55%;      /* A slightly brighter #E0490B */
-    --primary-foreground: 20 12% 5%; /* Very dark for text on primary */
+    --primary: 45 93% 58%;      /* #FBBF24 (Amber/Yellow) */
+    --primary-foreground: 222 47% 11%; /* Dark blue text on primary */
 
-    --secondary: 145 49% 30%;    /* #337A4B - Dark Live Green */
-    --secondary-foreground: 150 50% 85%; /* Light minty text */
+    --secondary: 222 47% 16%;    /* Lighter dark blue */
+    --secondary-foreground: 222 84% 97%; /* Light blue text */
 
-    --muted: 145 49% 20%; /* Darker green for muted */
-    --muted-foreground: 150 50% 65%; /* Muted minty text */
+    --muted: 222 47% 22%; /* #2B3748 - Even lighter dark blue */
+    --muted-foreground: 222 84% 80%; /* #BCCCDC - Muted light blue text */
 
-    --accent: 34 100% 60%;       /* #FFAB4D - A slightly more vivid Warm Peach */
-    --accent-foreground: 20 12% 5%;
+    --accent: 45 93% 58%;       /* Amber/Yellow */
+    --accent-foreground: 222 47% 11%;
 
-    --destructive: 0 63% 40%;
+    --destructive: 0 72% 51%; /* #D9463D */
     --destructive-foreground: 0 0% 98%;
 
-    --border: 145 49% 25%;
-    --input: 145 49% 25%;
-    --ring: 15 91% 55%;
+    --border: 222 47% 22%;
+    --input: 222 47% 22%;
+    --ring: 45 93% 58%;
 
-    /* Chart Colors from the Palette (Dark Mode) */
-    --chart-1: 15 91% 55%;
-    --chart-2: 145 49% 55%;
-    --chart-3: 34 100% 60%;
-    --chart-4: 152 64% 40%;
-    --chart-5: 30 20% 80%;
+    /* Chart Colors (Dark Mode) */
+    --chart-1: 45 93% 58%;
+    --chart-2: 217 91% 60%;
+    --chart-3: 160 84% 39%;
+    --chart-4: 0 72% 51%;
+    --chart-5: 262 84% 59%;
   }
 }
 

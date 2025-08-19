@@ -85,7 +85,6 @@ export default function AttendancePage() {
     const [studentHistory, setStudentHistory] = useState<AttendanceLog[]>([]);
     const { toast } = useToast();
 
-    // Mock data fetching and updates
     useEffect(() => {
         const newDailyAttendance: Record<string, DailyStatus> = {};
         
@@ -156,7 +155,6 @@ export default function AttendancePage() {
 
     const handleViewHistory = async (student: Student) => {
         setHistoryStudent(student);
-        // In a real app, you would fetch this from a DB. Here we just filter existing logs.
         const historyData = attendanceLogs
             .filter(log => log.studentId === student.id)
             .sort((a,b) => b.timestamp.getTime() - a.timestamp.getTime());
@@ -176,7 +174,7 @@ export default function AttendancePage() {
 
   return (
     <>
-    <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+    <div className="grid flex-1 items-start gap-4 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
         <Card>
           <CardHeader>
