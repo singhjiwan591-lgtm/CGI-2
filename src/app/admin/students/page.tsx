@@ -39,8 +39,34 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 
-const mockStudents = [
+type Student = {
+    id: string;
+    name: string;
+    roll: string;
+    grade: string;
+    parent: string;
+    gender: string;
+    address: string;
+    dob: string;
+    phone: string;
+    email: string;
+    photoURL?: string;
+    avatarHint: string;
+};
+
+const mockStudents: Student[] = [
     { id: '1', name: 'Ravi Kumar', roll: '1001', grade: '12', parent: 'Manoj Kumar', gender: 'Male', address: 'Mumbai, India', dob: '2006-05-15', phone: '+91 9876543210', email: 'ravi@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'male student' },
     { id: '2', name: 'Priya Sharma', roll: '1002', grade: '11', parent: 'Sunita Sharma', gender: 'Female', address: 'Delhi, India', dob: '2007-02-20', phone: '+91 9876543211', email: 'priya@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'female student' },
     { id: '3', name: 'Amit Patel', roll: '1003', grade: '12', parent: 'Rajesh Patel', gender: 'Male', address: 'Ahmedabad, India', dob: '2006-08-10', phone: '+91 9876543212', email: 'amit@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy student' },
@@ -48,12 +74,61 @@ const mockStudents = [
     { id: '5', name: 'Vijay Singh', roll: '1005', grade: '11', parent: 'Kiran Singh', gender: 'Male', address: 'Jaipur, India', dob: '2007-07-07', phone: '+91 9876543214', email: 'vijay@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'student glasses' },
 ];
 
+const newStudentInitialState = {
+    name: '', roll: '', grade: '', parent: '', gender: '', address: '', dob: '', phone: '', email: ''
+};
+
 
 export default function StudentsPage() {
   const [students, setStudents] = useState(mockStudents);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  const [newStudent, setNewStudent] = useState(newStudentInitialState);
   const router = useRouter();
+  const { toast } = useToast();
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewStudent(prev => ({...prev, [name]: value}));
+  }
+
+  const handleAddStudent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // Basic validation
+    if (!newStudent.name || !newStudent.roll || !newStudent.grade || !newStudent.email) {
+        toast({ variant: 'destructive', title: 'Validation Error', description: 'Please fill all required fields.'});
+        return;
+    }
+
+    const newId = (students.length + 1).toString();
+    const studentToAdd: Student = { ...newStudent, id: newId, avatarHint: 'student' };
+    setStudents(prev => [studentToAdd, ...prev]);
+    toast({ title: 'Success', description: 'Student added successfully.' });
+    setIsAddDialogOpen(false);
+    setNewStudent(newStudentInitialState);
+  };
+  
+  const openDeleteDialog = (student: Student) => {
+    setStudentToDelete(student);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteStudent = () => {
+    if (!studentToDelete) return;
+    setStudents(students.filter(s => s.id !== studentToDelete.id));
+    toast({ title: 'Success', description: `${studentToDelete.name} has been deleted.` });
+    setIsDeleteDialogOpen(false);
+    setStudentToDelete(null);
+  }
+
+  const filteredStudents = students.filter(student =>
+    student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.roll.includes(searchTerm)
+  );
 
   if (loading) {
     return (
@@ -68,6 +143,7 @@ export default function StudentsPage() {
   };
 
   return (
+    <>
       <Card>
         <CardHeader>
           <CardTitle>All Students Data</CardTitle>
@@ -76,10 +152,15 @@ export default function StudentsPage() {
             <div className="flex items-center gap-2">
                 <div className="relative w-full md:w-auto">
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search by name..." className="pl-8 w-full md:w-[250px]" />
+                    <Input 
+                        placeholder="Search by name, roll, email..." 
+                        className="pl-8 w-full md:w-[250px]"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 </div>
                  <Button variant="outline"><FileDown className="mr-2 h-4 w-4"/>Download</Button>
-                 <Button><PlusCircle className="mr-2 h-4 w-4"/>Add New Student</Button>
+                 <Button onClick={() => setIsAddDialogOpen(true)}><PlusCircle className="mr-2 h-4 w-4"/>Add New Student</Button>
             </div>
           </div>
         </CardHeader>
@@ -102,7 +183,13 @@ export default function StudentsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {students.map((student) => (
+              {filteredStudents.length === 0 ? (
+                  <TableRow>
+                      <TableCell colSpan={10} className="h-24 text-center">
+                          No students found.
+                      </TableCell>
+                  </TableRow>
+              ) : filteredStudents.map((student) => (
                 <TableRow key={student.id}>
                   <TableCell>
                     <Avatar className="h-10 w-10">
@@ -114,6 +201,7 @@ export default function StudentsPage() {
                      <Button variant="link" className="p-0 h-auto" onClick={() => handleViewDetails(student.id)}>
                         {student.name}
                     </Button>
+                    <div className="text-sm text-muted-foreground md:hidden">Roll: {student.roll}</div>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">{student.gender}</TableCell>
                   <TableCell className="hidden md:table-cell">{student.grade}</TableCell>
@@ -138,7 +226,7 @@ export default function StudentsPage() {
                         <DropdownMenuItem>
                           <Pencil className="mr-2 h-4 w-4" /> Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-500">
+                        <DropdownMenuItem className="text-red-500" onSelect={() => openDeleteDialog(student)}>
                           <Trash2 className="mr-2 h-4 w-4" /> Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -151,9 +239,88 @@ export default function StudentsPage() {
         </CardContent>
         <CardFooter>
             <div className="text-xs text-muted-foreground">
-                Showing <strong>1-{students.length}</strong> of <strong>{students.length}</strong> students
+                Showing <strong>1-{filteredStudents.length}</strong> of <strong>{students.length}</strong> students
             </div>
         </CardFooter>
       </Card>
+
+      {/* Add Student Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <form onSubmit={handleAddStudent}>
+            <DialogHeader>
+              <DialogTitle>Add New Student</DialogTitle>
+              <DialogDescription>
+                Fill in the details below to add a new student record.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">Name</Label>
+                <Input id="name" name="name" value={newStudent.name} onChange={handleInputChange} className="col-span-3" />
+              </div>
+               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="roll" className="text-right">Roll No.</Label>
+                <Input id="roll" name="roll" value={newStudent.roll} onChange={handleInputChange} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="grade" className="text-right">Grade</Label>
+                <Input id="grade" name="grade" value={newStudent.grade} onChange={handleInputChange} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="parent" className="text-right">Parent's Name</Label>
+                <Input id="parent" name="parent" value={newStudent.parent} onChange={handleInputChange} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="gender" className="text-right">Gender</Label>
+                <Input id="gender" name="gender" value={newStudent.gender} onChange={handleInputChange} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="address" className="text-right">Address</Label>
+                <Input id="address" name="address" value={newStudent.address} onChange={handleInputChange} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="dob" className="text-right">D.O.B</Label>
+                <Input id="dob" name="dob" type="date" value={newStudent.dob} onChange={handleInputChange} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="phone" className="text-right">Phone</Label>
+                <Input id="phone" name="phone" type="tel" value={newStudent.phone} onChange={handleInputChange} className="col-span-3" />
+              </div>
+               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="email" className="text-right">Email</Label>
+                <Input id="email" name="email" type="email" value={newStudent.email} onChange={handleInputChange} className="col-span-3" />
+              </div>
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">Cancel</Button>
+              </DialogClose>
+              <Button type="submit">Add Student</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+                <DialogTitle>Are you sure?</DialogTitle>
+                <DialogDescription>
+                    This action cannot be undone. This will permanently delete the record for <span className="font-semibold">{studentToDelete?.name}</span>.
+                </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button variant="secondary">Cancel</Button>
+                </DialogClose>
+                <Button variant="destructive" onClick={handleDeleteStudent}>
+                    Yes, delete student
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

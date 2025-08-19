@@ -5,9 +5,12 @@ import { useState, useEffect } from 'react';
 import {
   DollarSign,
   Receipt,
-  MoreHorizontal,
+  Search,
   PlusCircle,
-  Loader2
+  Loader2,
+  Banknote,
+  TrendingUp,
+  TrendingDown
 } from 'lucide-react';
 import {
   Card,
@@ -29,13 +32,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -48,6 +44,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
+import { formatNumber } from '@/lib/utils';
 
 type StudentFee = {
   id: string;
@@ -68,12 +65,25 @@ const mockStudents: StudentFee[] = [
     { id: '5', name: 'Vijay Singh', grade: 11, avatarHint: 'student outside', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000, feesPaid: 30000 },
 ];
 
+const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.ReactNode, title: string, value: string, bgColor: string, iconColor: string }) => (
+  <Card className="flex items-center p-4 gap-4">
+    <div className={`p-3 rounded-full ${bgColor}`}>
+      {React.cloneElement(icon as React.ReactElement, { className: `h-6 w-6 ${iconColor}` })}
+    </div>
+    <div>
+      <p className="text-muted-foreground">{title}</p>
+      <p className="text-2xl font-bold">{value}</p>
+    </div>
+  </Card>
+);
+
 export default function FeesPage() {
   const [students, setStudents] = useState<StudentFee[]>(mockStudents);
   const [loading, setLoading] = useState(false);
   const [isCollectFeeDialogOpen, setIsCollectFeeDialogOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentFee | null>(null);
   const [paymentAmount, setPaymentAmount] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
 
   const handleCollectFeeClick = (student: StudentFee) => {
@@ -116,6 +126,10 @@ export default function FeesPage() {
   const totalFees = students.reduce((acc, s) => acc + s.totalFees, 0);
   const totalRemaining = totalFees - totalCollected;
 
+  const filteredStudents = students.filter(s =>
+    s.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (loading && !isCollectFeeDialogOpen) {
       return (
         <div className="flex items-center justify-center h-full">
@@ -125,11 +139,27 @@ export default function FeesPage() {
   }
 
   return (
-    <>
+    <div className="space-y-6">
+       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <InfoCard icon={<Banknote />} title="Total Fees" value={`₹${formatNumber(totalFees)}`} bgColor="bg-blue-100" iconColor="text-blue-500" />
+          <InfoCard icon={<TrendingUp />} title="Total Collected" value={`₹${formatNumber(totalCollected)}`} bgColor="bg-green-100" iconColor="text-green-500" />
+          <InfoCard icon={<TrendingDown />} title="Total Due" value={`₹${formatNumber(totalRemaining)}`} bgColor="bg-red-100" iconColor="text-red-500" />
+        </div>
       <Card>
         <CardHeader>
             <CardTitle>Fee Management</CardTitle>
-            <CardDescription>Track and manage student fee payments and installments.</CardDescription>
+            <div className="flex flex-col md:flex-row justify-between md:items-center gap-2">
+                <CardDescription>Track and manage student fee payments and installments.</CardDescription>
+                <div className="relative w-full md:w-auto">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                        placeholder="Search student..." 
+                        className="pl-8 w-full md:w-[250px]"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+            </div>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
@@ -146,13 +176,13 @@ export default function FeesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {students.length === 0 ? (
+              {filteredStudents.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="h-24 text-center">
                     No student data available.
                   </TableCell>
                 </TableRow>
-              ) : students.map((student) => {
+              ) : filteredStudents.map((student) => {
                 const remaining = student.totalFees - student.feesPaid;
                 const paidPercentage = student.totalFees > 0 ? (student.feesPaid / student.totalFees) * 100 : 0;
                 const isPaid = remaining <= 0;
@@ -197,7 +227,7 @@ export default function FeesPage() {
         </CardContent>
         <CardFooter>
             <div className="text-xs text-muted-foreground">
-                Showing <strong>1-{students.length}</strong> of <strong>{students.length}</strong> students
+                Showing <strong>1-{filteredStudents.length}</strong> of <strong>{students.length}</strong> students
             </div>
         </CardFooter>
       </Card>
@@ -240,6 +270,6 @@ export default function FeesPage() {
             </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }
