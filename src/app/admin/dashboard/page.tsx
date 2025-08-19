@@ -10,7 +10,7 @@ import {
   Calendar,
   Percent,
   ClipboardList,
-  Users2
+  Users2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -74,16 +74,16 @@ const StudentDetailsCard = () => (
 );
 
 const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.ReactNode, title: string, value: string, bgColor: string, iconColor: string }) => (
-  <Card className="flex items-center p-4 gap-4">
-    <div className={`p-3 rounded-full ${bgColor}`}>
-      {React.cloneElement(icon as React.ReactElement, { className: `h-6 w-6 ${iconColor}` })}
-    </div>
-    <div>
-      <p className="text-muted-foreground">{title}</p>
-      <p className="text-2xl font-bold">{value}</p>
-    </div>
-  </Card>
-);
+    <Card className="flex items-center p-4 gap-4">
+      <div className={`p-3 rounded-full ${bgColor}`}>
+        {React.cloneElement(icon as React.ReactElement, { className: `h-6 w-6 ${iconColor}` })}
+      </div>
+      <div>
+        <p className="text-muted-foreground">{title}</p>
+        <p className="text-2xl font-bold">{value}</p>
+      </div>
+    </Card>
+  );
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
