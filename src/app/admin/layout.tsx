@@ -72,6 +72,7 @@ const navLinks = [
     ]
   },
   { href: '/admin/attendance', label: 'Attendance', icon: Fingerprint },
+  { href: '/admin/fees', label: 'Fees', icon: DollarSign },
   { href: '/admin/exam', label: 'Exam', icon: PencilRuler },
   { href: '/admin/transport', label: 'Transport', icon: Bus },
   { href: '/admin/hostel', label: 'Hostel', icon: Bed },
