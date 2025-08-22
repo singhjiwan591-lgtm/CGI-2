@@ -40,7 +40,7 @@ export default function AboutPage() {
     },
     {
       name: 'Jeevan Singh',
-      position: 'Senior Faculty',
+      position: 'Web Developer',
       image: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
       dataAiHint: 'man developer',
     },
