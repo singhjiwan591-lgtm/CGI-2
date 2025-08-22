@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   MoreHorizontal,
   Pencil,
@@ -50,6 +50,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { getAllStudents, addStudent, updateAllStudents } from '@/lib/student-data-service';
 
 type Student = {
     id: string;
@@ -66,29 +67,26 @@ type Student = {
     avatarHint: string;
 };
 
-const mockStudents: Student[] = [
-    { id: '1', name: 'Ravi Kumar', roll: '1001', grade: '12', parent: 'Manoj Kumar', gender: 'Male', address: 'Mumbai, India', dob: '2006-05-15', phone: '+91 9876543210', email: 'ravi@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'male student' },
-    { id: '2', name: 'Priya Sharma', roll: '1002', grade: '11', parent: 'Sunita Sharma', gender: 'Female', address: 'Delhi, India', dob: '2007-02-20', phone: '+91 9876543211', email: 'priya@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'female student' },
-    { id: '3', name: 'Amit Patel', roll: '1003', grade: '12', parent: 'Rajesh Patel', gender: 'Male', address: 'Ahmedabad, India', dob: '2006-08-10', phone: '+91 9876543212', email: 'amit@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy student' },
-    { id: '4', name: 'Sunita Devi', roll: '1004', grade: '10', parent: 'Anil Singh', gender: 'Female', address: 'Patna, India', dob: '2008-11-25', phone: '+91 9876543213', email: 'sunita@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'girl smiling' },
-    { id: '5', name: 'Vijay Singh', roll: '1005', grade: '11', parent: 'Kiran Singh', gender: 'Male', address: 'Jaipur, India', dob: '2007-07-07', phone: '+91 9876543214', email: 'vijay@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'student glasses' },
-];
-
 const newStudentInitialState = {
-    name: '', roll: '', grade: '', parent: '', gender: '', address: '', dob: '', phone: '', email: ''
+    name: '', grade: '', parent: '', gender: '', address: '', dob: '', phone: '', email: ''
 };
 
 
 export default function StudentsPage() {
-  const [students, setStudents] = useState(mockStudents);
-  const [loading, setLoading] = useState(false);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
-  const [newStudent, setNewStudent] = useState(newStudentInitialState);
+  const [newStudent, setNewStudent] = useState<Omit<Student, 'id'|'roll'|'photoURL'|'avatarHint'>>(newStudentInitialState);
   const router = useRouter();
   const { toast } = useToast();
+
+  useEffect(() => {
+    setStudents(getAllStudents());
+    setLoading(false);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -97,15 +95,14 @@ export default function StudentsPage() {
 
   const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Basic validation
-    if (!newStudent.name || !newStudent.roll || !newStudent.grade || !newStudent.email) {
+    if (!newStudent.name || !newStudent.grade || !newStudent.email) {
         toast({ variant: 'destructive', title: 'Validation Error', description: 'Please fill all required fields.'});
         return;
     }
 
-    const newId = (students.length + 1).toString();
-    const studentToAdd: Student = { ...newStudent, id: newId, avatarHint: 'student' };
-    setStudents(prev => [studentToAdd, ...prev]);
+    const addedStudent = addStudent(newStudent);
+    setStudents(prev => [addedStudent, ...prev]);
+    
     toast({ title: 'Success', description: 'Student added successfully.' });
     setIsAddDialogOpen(false);
     setNewStudent(newStudentInitialState);
@@ -118,7 +115,9 @@ export default function StudentsPage() {
 
   const handleDeleteStudent = () => {
     if (!studentToDelete) return;
-    setStudents(students.filter(s => s.id !== studentToDelete.id));
+    const updatedStudents = students.filter(s => s.id !== studentToDelete.id);
+    setStudents(updatedStudents);
+    updateAllStudents(updatedStudents); // Persist change
     toast({ title: 'Success', description: `${studentToDelete.name} has been deleted.` });
     setIsDeleteDialogOpen(false);
     setStudentToDelete(null);
@@ -258,10 +257,6 @@ export default function StudentsPage() {
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">Name</Label>
                 <Input id="name" name="name" value={newStudent.name} onChange={handleInputChange} className="col-span-3" />
-              </div>
-               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="roll" className="text-right">Roll No.</Label>
-                <Input id="roll" name="roll" value={newStudent.roll} onChange={handleInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="grade" className="text-right">Grade</Label>

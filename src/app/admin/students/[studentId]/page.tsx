@@ -20,12 +20,7 @@ import {
   CardFooter
 } from '@/components/ui/card';
 import { notFound, useParams } from 'next/navigation';
-
-const mockStudents = [
-    { id: '1', name: 'Ravi Kumar', roll: '1001', grade: '12', parent: 'Manoj Kumar', gender: 'Male', address: 'Mumbai, India', dob: '2006-05-15', phone: '+91 9876543210', email: 'ravi@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'male student', section: 'A', admissionDate: '2020-04-10', religion: 'Hindu', fatherOccupation: 'Engineer' },
-    { id: '2', name: 'Priya Sharma', roll: '1002', grade: '11', parent: 'Sunita Sharma', gender: 'Female', address: 'Delhi, India', dob: '2007-02-20', phone: '+91 9876543211', email: 'priya@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'female student', section: 'B', admissionDate: '2021-05-15', religion: 'Hindu', fatherOccupation: 'Doctor' },
-    { id: '3', name: 'Amit Patel', roll: '1003', grade: '12', parent: 'Rajesh Patel', gender: 'Male', address: 'Ahmedabad, India', dob: '2006-08-10', phone: '+91 9876543212', email: 'amit@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy student', section: 'A', admissionDate: '2020-06-20', religion: 'Hindu', fatherOccupation: 'Businessman' },
-];
+import { getStudentById } from '@/lib/student-data-service';
 
 const StudentDetailsCard = ({ student }: { student: any }) => (
   <Card>
@@ -51,12 +46,12 @@ const StudentDetailsCard = ({ student }: { student: any }) => (
         <div className="flex justify-between"><span className="text-muted-foreground">Father Name:</span> <span className="font-medium">{student.parent}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Mother Name:</span> <span className="font-medium">Jannatul Kazi</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Date Of Birth:</span> <span className="font-medium">{student.dob}</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Religion:</span> <span className="font-medium">{student.religion}</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Father Occupation:</span> <span className="font-medium">{student.fatherOccupation}</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Religion:</span> <span className="font-medium">{student.religion || 'Not Specified'}</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Father Occupation:</span> <span className="font-medium">{student.fatherOccupation || 'Not Specified'}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">E-Mail:</span> <span className="font-medium">{student.email}</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Admission Date:</span> <span className="font-medium">{student.admissionDate}</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Admission Date:</span> <span className="font-medium">{student.admissionDate || new Date().toISOString().split('T')[0]}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Class:</span> <span className="font-medium">{student.grade}</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Section:</span> <span className="font-medium">{student.section}</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Section:</span> <span className="font-medium">{student.section || 'A'}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Roll:</span> <span className="font-medium">{student.roll}</span></div>
         <div className="flex justify-between col-span-2"><span className="text-muted-foreground">Address:</span> <span className="font-medium text-right">{student.address}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Phone:</span> <span className="font-medium">{student.phone}</span></div>
@@ -72,7 +67,7 @@ export default function StudentProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const foundStudent = mockStudents.find(s => s.id === studentId);
+    const foundStudent = getStudentById(studentId);
     if (foundStudent) {
       setStudent(foundStudent);
     }

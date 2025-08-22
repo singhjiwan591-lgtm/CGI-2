@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
 import { Loader2, CreditCard } from 'lucide-react';
+import { addStudent } from '@/lib/student-data-service';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -32,6 +33,9 @@ const formSchema = z.object({
   fatherName: z.string().min(2, { message: "Father's name must be at least 2 characters." }),
   motherName: z.string().min(2, { message: "Mother's name must be at least 2 characters." }),
   village: z.string().min(2, { message: 'Village must be at least 2 characters.' }),
+  grade: z.string().min(1, { message: 'Grade is required.' }),
+  gender: z.string().min(1, { message: 'Gender is required.' }),
+  dob: z.string().min(1, { message: 'Date of Birth is required.' }),
   password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
   confirmPassword: z.string(),
   course: z.string().optional(),
@@ -62,6 +66,9 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
       fatherName: '',
       motherName: '',
       village: '',
+      grade: '',
+      gender: '',
+      dob: '',
       password: '',
       confirmPassword: '',
       course: selectedCourse || '',
@@ -99,21 +106,38 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
       return;
     }
     setLoading(true);
-    // Mock registration logic
-    setTimeout(() => {
-        console.log("New user registered (mock):", values);
-        if(photoFile) {
-          console.log("Photo file:", photoFile.name);
-        }
+
+    try {
+        const studentData = {
+            name: values.fullName,
+            email: values.email,
+            phone: values.phoneNumber,
+            parent: values.fatherName,
+            grade: values.grade,
+            gender: values.gender,
+            address: values.village,
+            dob: values.dob,
+        };
+        addStudent(studentData);
+        
         toast({
             title: 'Registration Submitted!',
-            description: "Your application has been received. You will be contacted shortly.",
+            description: "Your application has been received. You will be redirected to login.",
         });
         form.reset();
         setPhotoFile(null);
-        router.push('/login');
+        setPaymentStatus('pending'); // Reset for next user
+        setTimeout(() => router.push('/login'), 1500);
+
+    } catch (error) {
+         toast({
+            variant: 'destructive',
+            title: 'Registration Failed',
+            description: 'There was a problem saving your data. Please try again.',
+        });
+    } finally {
         setLoading(false);
-    }, 1000);
+    }
   }
   
   const isFormDisabled = loading || paymentStatus !== 'paid';
@@ -131,7 +155,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                 : 'Create an account to begin your application.'}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 max-h-[60vh] overflow-y-auto pr-4">
             {paymentStatus === 'pending' ? (
               <div className="space-y-4 rounded-lg border bg-secondary/50 p-6 text-center">
                 <h3 className="text-lg font-semibold">Registration Fee</h3>
@@ -192,6 +216,19 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     </FormItem>
                   )}
                 />
+                 <FormField
+                  control={form.control}
+                  name="dob"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Date of Birth</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} disabled={isFormDisabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="phoneNumber"
@@ -205,14 +242,40 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     </FormItem>
                   )}
                 />
-                 <FormField
+                <FormField
                   control={form.control}
                   name="village"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Village</FormLabel>
+                      <FormLabel>Village / Address</FormLabel>
                       <FormControl>
-                        <Input placeholder="Your Village" {...field} disabled={isFormDisabled} />
+                        <Input placeholder="Your Village / Address" {...field} disabled={isFormDisabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="grade"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Class / Grade</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., 12" {...field} disabled={isFormDisabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="gender"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Gender</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Male, Female" {...field} disabled={isFormDisabled} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -238,7 +301,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email Address</FormLabel>
+                      <FormLabel>Email Address (for Login)</FormLabel>
                       <FormControl>
                         <Input type="email" placeholder="your.email@example.com" {...field} disabled={isFormDisabled} />
                       </FormControl>

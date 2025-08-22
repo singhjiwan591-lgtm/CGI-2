@@ -51,7 +51,9 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 import { formatNumber, cn } from '@/lib/utils';
-import { format, addMonths, isPast } from 'date-fns';
+import { format } from 'date-fns';
+import { getAllStudentsWithFees, updateAllStudents } from '@/lib/student-data-service';
+
 
 type InstallmentStatus = 'Paid' | 'Due' | 'Overdue' | 'Link Sent';
 
@@ -75,34 +77,6 @@ type StudentFee = {
   installments: Installment[];
 };
 
-// --- Helper function to generate mock installments ---
-const generateInstallments = (totalFees: number): Installment[] => {
-    const installmentAmount = totalFees / 6;
-    const today = new Date();
-    return Array.from({ length: 6 }, (_, i) => {
-        const dueDate = addMonths(new Date(today.getFullYear(), today.getMonth(), 15), i);
-        let status: 'Due' | 'Overdue' = isPast(dueDate) ? 'Overdue' : 'Due';
-        
-        return {
-            id: i + 1,
-            dueDate: dueDate,
-            amount: installmentAmount,
-            status: status,
-            linkSent: false,
-        };
-    });
-};
-
-
-// --- Mock Data ---
-const mockStudents: Omit<StudentFee, 'installments' | 'feesPaid'>[] = [
-    { id: '1', name: 'Ravi Kumar', grade: 12, avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000 },
-    { id: '2', name: 'Priya Sharma', grade: 11, avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png', totalFees: 40000 },
-    { id: '3', name: 'Amit Patel', grade: 12, avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png', totalFees: 60000 },
-    { id: '4', name: 'Sunita Devi', grade: 10, avatarHint: 'student thinking', photoURL: 'https://placehold.co/100x100.png', totalFees: 45000 },
-    { id: '5', name: 'Vijay Singh', grade: 11, avatarHint: 'student outside', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000 },
-];
-
 const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.ReactNode, title: string, value: string, bgColor: string, iconColor: string }) => (
   <Card className="flex items-center p-4 gap-4">
     <div className={`p-3 rounded-full ${bgColor}`}>
@@ -124,24 +98,7 @@ export default function FeesPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Initialize students with their installments and paid amounts
-    const initialStudents = mockStudents.map(s => {
-        const installments = generateInstallments(s.totalFees);
-        // Let's mock some payments
-        if (s.id === '1') { // Ravi Kumar
-            installments[0].status = 'Paid';
-            installments[0].paymentDate = new Date();
-        }
-        if (s.id === '2') { // Priya Sharma
-            installments.forEach(i => {
-                i.status = 'Paid';
-                i.paymentDate = new Date();
-            });
-        }
-        const feesPaid = installments.filter(i => i.status === 'Paid').reduce((acc, i) => acc + i.amount, 0);
-        return { ...s, installments, feesPaid };
-    });
-    setStudents(initialStudents);
+    setStudents(getAllStudentsWithFees());
     setLoading(false);
   }, []);
 
@@ -149,50 +106,49 @@ export default function FeesPage() {
     setSelectedStudent(student);
     setIsDetailsDialogOpen(true);
   };
+  
+  const updateStudentAndPersist = (updatedStudent: StudentFee) => {
+      const updatedStudents = students.map(s => s.id === updatedStudent.id ? updatedStudent : s);
+      setStudents(updatedStudents);
+      updateAllStudents(updatedStudents); // This might need adjustment if StudentFee and Student types differ significantly
+      setSelectedStudent(updatedStudent);
+  }
 
   const handlePayInstallment = (studentId: string, installmentId: number) => {
-      setStudents(prevStudents => 
-        prevStudents.map(student => {
-            if (student.id !== studentId) return student;
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
 
-            let totalPaid = 0;
-            const updatedInstallments = student.installments.map(inst => {
-                if (inst.id === installmentId) {
-                    inst.status = 'Paid';
-                    inst.paymentDate = new Date();
-                }
-                if (inst.status === 'Paid') {
-                    totalPaid += inst.amount;
-                }
-                return inst;
-            });
-            
-            const updatedStudent = { ...student, installments: updatedInstallments, feesPaid: totalPaid };
-            setSelectedStudent(updatedStudent); // Update the student in the dialog
-            return updatedStudent;
-        })
-      );
+      let totalPaid = 0;
+      const updatedInstallments = student.installments.map(inst => {
+          if (inst.id === installmentId) {
+              inst.status = 'Paid';
+              inst.paymentDate = new Date();
+          }
+          if (inst.status === 'Paid') {
+              totalPaid += inst.amount;
+          }
+          return inst;
+      });
+      
+      const updatedStudent = { ...student, installments: updatedInstallments, feesPaid: totalPaid };
+      updateStudentAndPersist(updatedStudent);
       toast({ title: 'Success', description: 'Cash payment recorded successfully.' });
   };
   
   const handleSendPaymentLink = (studentId: string, installmentId: number) => {
-      setStudents(prevStudents => 
-        prevStudents.map(student => {
-            if (student.id !== studentId) return student;
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
 
-            const updatedInstallments = student.installments.map(inst => {
-                if (inst.id === installmentId) {
-                    inst.status = 'Link Sent';
-                    inst.linkSent = true;
-                }
-                return inst;
-            });
-            
-            const updatedStudent = { ...student, installments: updatedInstallments };
-            setSelectedStudent(updatedStudent);
-            return updatedStudent;
-        })
-      );
+      const updatedInstallments = student.installments.map(inst => {
+          if (inst.id === installmentId) {
+              inst.status = 'Link Sent';
+              inst.linkSent = true;
+          }
+          return inst;
+      });
+      
+      const updatedStudent = { ...student, installments: updatedInstallments };
+      updateStudentAndPersist(updatedStudent);
       toast({ title: 'Link Sent', description: `Payment link for Installment ${installmentId} sent to student.` });
   };
 
@@ -330,7 +286,7 @@ export default function FeesPage() {
                     {selectedStudent?.installments.map(inst => (
                         <TableRow key={inst.id}>
                             <TableCell>Installment {inst.id}</TableCell>
-                            <TableCell>{format(inst.dueDate, 'PPP')}</TableCell>
+                            <TableCell>{format(new Date(inst.dueDate), 'PPP')}</TableCell>
                             <TableCell>₹{inst.amount.toLocaleString()}</TableCell>
                             <TableCell>
                                 <Badge variant={inst.status === 'Paid' ? 'default' : 'secondary'} className={cn(
