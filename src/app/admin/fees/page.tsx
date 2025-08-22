@@ -16,6 +16,7 @@ import {
   CheckCircle,
   XCircle,
   Clock,
+  Send,
 } from 'lucide-react';
 import {
   Card,
@@ -50,14 +51,17 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 import { formatNumber, cn } from '@/lib/utils';
-import { format, addMonths } from 'date-fns';
+import { format, addMonths, isPast } from 'date-fns';
+
+type InstallmentStatus = 'Paid' | 'Due' | 'Overdue' | 'Link Sent';
 
 type Installment = {
   id: number;
   dueDate: Date;
   amount: number;
-  status: 'Paid' | 'Due' | 'Overdue';
+  status: InstallmentStatus;
   paymentDate?: Date;
+  linkSent?: boolean;
 };
 
 type StudentFee = {
@@ -77,15 +81,14 @@ const generateInstallments = (totalFees: number): Installment[] => {
     const today = new Date();
     return Array.from({ length: 6 }, (_, i) => {
         const dueDate = addMonths(new Date(today.getFullYear(), today.getMonth(), 15), i);
-        let status: 'Due' | 'Overdue' = 'Due';
-        if (dueDate < today) {
-            status = 'Overdue';
-        }
+        let status: 'Due' | 'Overdue' = isPast(dueDate) ? 'Overdue' : 'Due';
+        
         return {
             id: i + 1,
             dueDate: dueDate,
             amount: installmentAmount,
             status: status,
+            linkSent: false,
         };
     });
 };
@@ -169,26 +172,28 @@ export default function FeesPage() {
             return updatedStudent;
         })
       );
-      toast({ title: 'Success', description: 'Installment paid successfully.' });
+      toast({ title: 'Success', description: 'Cash payment recorded successfully.' });
   };
   
-  const handlePayFullFee = (studentId: string) => {
-      setStudents(prevStudents =>
-          prevStudents.map(student => {
-              if (student.id !== studentId) return student;
+  const handleSendPaymentLink = (studentId: string, installmentId: number) => {
+      setStudents(prevStudents => 
+        prevStudents.map(student => {
+            if (student.id !== studentId) return student;
 
-              const updatedInstallments = student.installments.map(inst => ({
-                  ...inst,
-                  status: 'Paid' as 'Paid',
-                  paymentDate: inst.status !== 'Paid' ? new Date() : inst.paymentDate,
-              }));
-              
-              const updatedStudent = { ...student, installments: updatedInstallments, feesPaid: student.totalFees };
-              setSelectedStudent(updatedStudent);
-              return updatedStudent;
-          })
+            const updatedInstallments = student.installments.map(inst => {
+                if (inst.id === installmentId) {
+                    inst.status = 'Link Sent';
+                    inst.linkSent = true;
+                }
+                return inst;
+            });
+            
+            const updatedStudent = { ...student, installments: updatedInstallments };
+            setSelectedStudent(updatedStudent);
+            return updatedStudent;
+        })
       );
-      toast({ title: 'Success', description: 'Full fee paid successfully.' });
+      toast({ title: 'Link Sent', description: `Payment link for Installment ${installmentId} sent to student.` });
   };
 
 
@@ -303,7 +308,7 @@ export default function FeesPage() {
       </Card>
 
     <Dialog open={isDetailsDialogOpen} onOpenChange={setIsDetailsDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-3xl">
             <DialogHeader>
               <DialogTitle>Installment Details for {selectedStudent?.name}</DialogTitle>
               <DialogDescription>
@@ -331,15 +336,19 @@ export default function FeesPage() {
                                 <Badge variant={inst.status === 'Paid' ? 'default' : 'secondary'} className={cn(
                                     inst.status === 'Paid' && 'bg-green-600 hover:bg-green-700',
                                     inst.status === 'Overdue' && 'bg-red-500 hover:bg-red-600',
-                                    inst.status === 'Due' && 'bg-yellow-500 hover:bg-yellow-600'
+                                    inst.status === 'Due' && 'bg-yellow-500 hover:bg-yellow-600',
+                                    inst.status === 'Link Sent' && 'bg-blue-500 hover:bg-blue-600',
                                 )}>
                                      {inst.status === 'Paid' ? <CheckCircle className="mr-1 h-3 w-3" /> : <Clock className="mr-1 h-3 w-3" />}
                                      {inst.status}
                                 </Badge>
                             </TableCell>
-                            <TableCell className="text-right">
-                                <Button size="sm" onClick={() => handlePayInstallment(selectedStudent.id, inst.id)} disabled={inst.status === 'Paid'}>
-                                    <Receipt className="mr-2 h-4 w-4" /> Pay
+                            <TableCell className="text-right space-x-2">
+                                <Button size="sm" variant="secondary" onClick={() => handlePayInstallment(selectedStudent.id, inst.id)} disabled={inst.status === 'Paid'}>
+                                    <Receipt className="mr-2 h-4 w-4" /> Record Cash
+                                </Button>
+                                <Button size="sm" onClick={() => handleSendPaymentLink(selectedStudent.id, inst.id)} disabled={inst.status === 'Paid' || inst.status === 'Link Sent'}>
+                                    <Send className="mr-2 h-4 w-4" /> Send Link
                                 </Button>
                             </TableCell>
                         </TableRow>
@@ -347,10 +356,7 @@ export default function FeesPage() {
                     </TableBody>
                 </Table>
             </div>
-            <DialogFooter className="sm:justify-between items-center mt-4 pt-4 border-t">
-                 <Button onClick={() => handlePayFullFee(selectedStudent!.id)} disabled={selectedStudent?.feesPaid === selectedStudent?.totalFees}>
-                    <DollarSign className="mr-2 h-4 w-4" /> Pay Full Remaining Fee
-                </Button>
+            <DialogFooter className="mt-4 pt-4 border-t">
                 <DialogClose asChild>
                     <Button type="button" variant="secondary">
                         Close
@@ -362,5 +368,3 @@ export default function FeesPage() {
     </div>
   );
 }
-
-    
