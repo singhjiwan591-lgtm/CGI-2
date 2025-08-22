@@ -22,6 +22,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -48,6 +49,8 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'paid'>('pending');
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,11 +74,13 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     }
   }, [selectedCourse, form]);
 
-  const handlePayment = () => {
+  const handleConfirmPayment = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setPaymentLoading(true);
     setTimeout(() => {
       setPaymentLoading(false);
       setPaymentStatus('paid');
+      setIsPaymentDialogOpen(false);
       toast({
         title: 'Payment Successful',
         description: 'You can now fill out the registration form.',
@@ -113,6 +118,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   const isFormDisabled = loading || paymentStatus !== 'paid';
 
   return (
+    <>
     <Card>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -132,13 +138,9 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                   A non-refundable registration fee of ₹100 is required to proceed with your application.
                 </p>
                 <p className="text-4xl font-bold">₹100</p>
-                <Button type="button" onClick={handlePayment} disabled={paymentLoading} className="w-full">
-                  {paymentLoading ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <CreditCard className="mr-2 h-4 w-4" />
-                  )}
-                  {paymentLoading ? 'Processing...' : 'Pay to Proceed'}
+                <Button type="button" onClick={() => setIsPaymentDialogOpen(true)} className="w-full">
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  Pay to Proceed
                 </Button>
               </div>
             ) : (
@@ -311,5 +313,48 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
         </form>
       </Form>
     </Card>
+
+    <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Secure Payment</DialogTitle>
+          <DialogDescription>
+            Enter your payment details to complete the registration fee payment of ₹100.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="card-number">Card Number</Label>
+              <Input id="card-number" placeholder="4242 4242 4242 4242" />
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2 col-span-2">
+                <Label htmlFor="expiry-date">Expiry Date</Label>
+                <Input id="expiry-date" placeholder="MM / YY" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="cvc">CVC</Label>
+                <Input id="cvc" placeholder="123" />
+              </div>
+            </div>
+             <div className="space-y-2">
+              <Label htmlFor="card-holder">Card Holder Name</Label>
+              <Input id="card-holder" placeholder="Your Name" />
+            </div>
+        </div>
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={() => setIsPaymentDialogOpen(false)}>Cancel</Button>
+          <Button type="button" onClick={handleConfirmPayment} disabled={paymentLoading}>
+             {paymentLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <CreditCard className="mr-2 h-4 w-4" />
+              )}
+              {paymentLoading ? 'Processing...' : 'Pay ₹100'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
