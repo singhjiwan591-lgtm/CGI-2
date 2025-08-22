@@ -9,25 +9,10 @@ import { Label } from '@/components/ui/label';
 import { Search, Award, BadgeCheck, XCircle, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import { getStudentById } from '@/lib/student-data-service';
 
-type Student = {
-  id: string;
-  name: string;
-  grade: number;
-  status: 'Enrolled' | 'Withdrawn' | 'Graduated';
-  email: string;
-  program: string;
-  avatarHint: string;
-  photoURL?: string;
-};
-
-// Mock Data
-const mockStudents: Student[] = [
-    { id: '1', name: 'Ravi Kumar', grade: 12, status: 'Enrolled', program: 'Science', email: 'ravi@example.com', avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png' },
-    { id: '2', name: 'Priya Sharma', grade: 11, status: 'Enrolled', program: 'Arts', email: 'priya@example.com', avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png' },
-    { id: '3', name: 'Amit Patel', grade: 12, status: 'Graduated', program: 'Technology', email: 'amit@example.com', avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png' },
-];
-
+type Student = ReturnType<typeof getStudentById>;
 
 type VerificationResult = 'pending' | 'verified' | 'not_found' | 'not_graduated';
 
@@ -45,21 +30,21 @@ export default function VerifyCertificatePage() {
     setVerificationStatus('pending');
     setVerifiedStudent(null);
 
-    setTimeout(() => {
-        const student = mockStudents.find(s => s.id === certificateId);
-        if (student) {
-            if (student.status === 'Graduated') {
-                setVerifiedStudent(student);
-                setVerificationStatus('verified');
-            } else {
-                 setVerifiedStudent(student);
-                 setVerificationStatus('not_graduated');
-            }
+    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
+
+    const student = getStudentById(certificateId);
+    if (student) {
+        if (student.status === 'Graduated') {
+            setVerifiedStudent(student);
+            setVerificationStatus('verified');
         } else {
-            setVerificationStatus('not_found');
+             setVerifiedStudent(student);
+             setVerificationStatus('not_graduated');
         }
-        setLoading(false);
-    }, 500);
+    } else {
+        setVerificationStatus('not_found');
+    }
+    setLoading(false);
   };
 
   const VerificationResultCard = () => {
@@ -84,13 +69,15 @@ export default function VerifyCertificatePage() {
                     <CardTitle className="text-2xl font-bold">Certificate Verified</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6 text-center">
-                    <Avatar className="mx-auto h-24 w-24 border-4 border-green-200">
-                        <AvatarImage src={verifiedStudent.photoURL || `https://placehold.co/100x100.png`} data-ai-hint={verifiedStudent.avatarHint} />
-                        <AvatarFallback>{verifiedStudent.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                    <h3 className="mt-4 text-2xl font-bold">{verifiedStudent.name}</h3>
-                    <p className="text-muted-foreground">Student ID: {verifiedStudent.id}</p>
+                <CardContent className="p-6">
+                    <div className="text-center">
+                        <Avatar className="mx-auto h-24 w-24 border-4 border-green-200">
+                            <AvatarImage src={verifiedStudent.photoURL || `https://placehold.co/100x100.png`} data-ai-hint={verifiedStudent.avatarHint} />
+                            <AvatarFallback>{verifiedStudent.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        </Avatar>
+                        <h3 className="mt-4 text-2xl font-bold">{verifiedStudent.name}</h3>
+                        <p className="text-muted-foreground">Student ID: {verifiedStudent.id}</p>
+                    </div>
                     <div className="mt-6 grid grid-cols-2 gap-4 text-left">
                         <div className="space-y-1">
                             <p className="text-sm font-medium text-muted-foreground">Grade</p>
@@ -111,6 +98,9 @@ export default function VerifyCertificatePage() {
                             </Badge>
                         </div>
                     </div>
+                     <Button asChild className="w-full mt-6">
+                        <Link href={`/certificate/${verifiedStudent.id}`}>View Certificate</Link>
+                    </Button>
                 </CardContent>
               </Card>
             );
@@ -125,7 +115,7 @@ export default function VerifyCertificatePage() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-6 text-center">
-                    <p className="text-lg">A record was found for student <span className="font-bold">{verifiedStudent?.name}</span>, but they have not graduated yet.</p>
+                    <p className="text-lg">A record was found for student <span className="font-bold">{verifiedStudent?.name}</span>, but they have not graduated yet. A certificate is only available upon graduation.</p>
                 </CardContent>
               </Card>
             );

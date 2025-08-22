@@ -4,32 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { BookOpen, Download, Twitter, Linkedin, Facebook } from 'lucide-react';
 import { CertificateStyler } from '@/components/certificate-styler';
-
-type Student = {
-  id: string;
-  name: string;
-  program: string;
-  status: 'Graduated' | 'Enrolled' | 'Withdrawn';
-};
-
-// Mock data since Firebase is removed
-const mockStudents: Student[] = [
-    { id: '3', name: 'Amit Patel', program: 'Technology', status: 'Graduated' },
-    { id: '6', name: 'Geeta Kumari', program: 'Data Science', status: 'Graduated' },
-];
-
-async function getStudent(studentId: string): Promise<Student | null> {
-    if (!studentId) return null;
-    
-    // Find the student in the mock data
-    const student = mockStudents.find(s => s.id === studentId && s.status === 'Graduated');
-    return student || null;
-}
+import { getStudentById } from '@/lib/student-data-service';
 
 export default async function CertificatePage({ params }: { params: { studentId: string } }) {
-  const student = await getStudent(params.studentId);
+  const student = getStudentById(params.studentId);
   
-  if (!student) {
+  // A certificate should only be visible if the student exists AND has graduated.
+  if (!student || student.status !== 'Graduated') {
     notFound();
   }
 
