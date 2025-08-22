@@ -30,7 +30,8 @@ import {
   Component,
   Map,
   Settings,
-  ChevronDown
+  ChevronDown,
+  LogOut
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -60,8 +61,6 @@ const navLinks = [
       { href: '/admin/teachers', label: 'Teachers', icon: Briefcase },
     ]
   },
-  { href: '/admin/library', label: 'Library', icon: Library },
-  { href: '/admin/account', label: 'Account', icon: Banknote },
   { 
     label: 'Class', 
     icon: Book,
@@ -71,19 +70,25 @@ const navLinks = [
        { href: '/admin/class-routine', label: 'Class Routine', icon: CalendarClock },
     ]
   },
+   { 
+    label: 'Accounting', 
+    icon: Banknote,
+    subLinks: [
+       { href: '/admin/fees', label: 'Collect Fees', icon: DollarSign },
+       { href: '/admin/account', label: 'Expense', icon: Banknote },
+    ]
+  },
   { href: '/admin/attendance', label: 'Attendance', icon: Fingerprint },
-  { href: '/admin/fees', label: 'Fees', icon: DollarSign },
   { href: '/admin/exam', label: 'Exam', icon: PencilRuler },
+  { href: '/admin/library', label: 'Library', icon: Library },
   { href: '/admin/transport', label: 'Transport', icon: Bus },
   { href: '/admin/hostel', label: 'Hostel', icon: Bed },
   { href: '/admin/notice', label: 'Notice', icon: Megaphone },
   { href: '/admin/messages', label: 'Message', icon: Mail },
-  { href: '/admin/ui-elements', label: 'UI Elements', icon: Component },
-  { href: '/admin/map', label: 'Map', icon: Map },
-  { href: '/admin/account-settings', label: 'Account', icon: Settings },
+  { href: '/admin/account-settings', label: 'Settings', icon: Settings },
 ];
 
-const NavItem = ({ link, pathname }: { link: any, pathname: string }) => {
+const NavItem = ({ link, pathname, closeSheet }: { link: any, pathname: string, closeSheet?: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const isSubActive = link.subLinks?.some((sub: any) => pathname.startsWith(sub.href));
 
@@ -93,14 +98,22 @@ const NavItem = ({ link, pathname }: { link: any, pathname: string }) => {
     }
   }, [isSubActive]);
 
+  const handleClick = () => {
+    if(link.subLinks) {
+        setIsOpen(!isOpen);
+    } else {
+        if (closeSheet) closeSheet();
+    }
+  }
+
   if (link.subLinks) {
     return (
       <div>
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={handleClick}
           className={cn(
-            "w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-gray-200 transition-all hover:text-white hover:bg-white/10",
-            (isOpen || isSubActive) && "bg-white/10 text-white"
+            "w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+            (isOpen || isSubActive) && "text-primary bg-primary/10"
           )}
         >
           <div className="flex items-center gap-3">
@@ -115,9 +128,10 @@ const NavItem = ({ link, pathname }: { link: any, pathname: string }) => {
               <Link
                 key={subLink.href}
                 href={subLink.href}
+                onClick={closeSheet}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-400 transition-all hover:text-white text-sm",
-                  pathname.startsWith(subLink.href) && "text-white bg-accent/20"
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary text-sm",
+                  pathname.startsWith(subLink.href) && "text-primary bg-primary/10"
                 )}
               >
                 <subLink.icon className="h-4 w-4" />
@@ -133,9 +147,10 @@ const NavItem = ({ link, pathname }: { link: any, pathname: string }) => {
   return (
     <Link
       href={link.href}
+      onClick={closeSheet}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-200 transition-all hover:text-white hover:bg-white/10",
-        pathname === link.href && "bg-white/10 text-white"
+        "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+        pathname === link.href && "text-primary bg-primary/10"
       )}
     >
       <link.icon className="h-4 w-4" />
@@ -154,6 +169,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const [user, setUser] = useState<{ email: string; isLoggedIn: boolean } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   useEffect(() => {
     const storedUser = sessionStorage.getItem('user');
@@ -191,14 +207,16 @@ export default function DashboardLayout({
   
   const pageTitle = navLinks.flatMap(l => l.subLinks || l).find(l => pathname.startsWith(l.href))?.label || 'Admin';
   
+  const closeSheet = () => setIsSheetOpen(false);
+
   return (
       <div className="grid min-h-screen w-full md:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-[#042954] text-white md:block">
+      <div className="hidden border-r bg-card md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-14 items-center justify-center border-b border-white/10 px-4 lg:h-[60px] lg:px-6">
-            <Link href="/" className="flex items-center gap-2 font-semibold text-accent">
+          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+            <Link href="/" className="flex items-center gap-2 font-semibold text-primary">
               <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Logo" width={32} height={32} />
-              <span className="text-xl">AKKHOR</span>
+              <span className="text-xl font-headline text-foreground">GCI Admin</span>
             </Link>
           </div>
           <div className="flex-1 overflow-y-auto">
@@ -210,9 +228,9 @@ export default function DashboardLayout({
           </div>
         </div>
       </div>
-      <div className="flex flex-col bg-background">
+      <div className="flex flex-col bg-muted/40">
         <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="outline"
@@ -223,30 +241,30 @@ export default function DashboardLayout({
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col bg-[#042954] text-white p-0 border-r-0">
-               <SheetHeader className="border-b border-white/10 p-4">
+            <SheetContent side="left" className="flex flex-col bg-card p-0">
+               <SheetHeader className="border-b p-4">
                   <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
-                  <Link href="/" className="flex items-center gap-2 font-semibold text-accent">
+                  <Link href="/" className="flex items-center gap-2 font-semibold text-primary">
                     <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Logo" width={32} height={32} />
-                    <span className="text-xl">AKKHOR</span>
+                    <span className="text-xl font-headline text-foreground">GCI Admin</span>
                   </Link>
               </SheetHeader>
               <div className="flex-1 overflow-y-auto">
-                <nav className="grid gap-2 text-lg font-medium p-2">
+                <nav className="grid gap-2 text-base font-medium p-2">
                   {navLinks.map((link, index) => (
-                    <NavItem key={index} link={link} pathname={pathname} />
+                    <NavItem key={index} link={link} pathname={pathname} closeSheet={closeSheet} />
                   ))}
                 </nav>
               </div>
             </SheetContent>
           </Sheet>
           <div className="w-full flex-1">
-             <h1 className="text-lg font-semibold">Admin Dashboard</h1>
-             <p className="text-sm text-muted-foreground">Home &gt; {pageTitle}</p>
+             <h1 className="text-lg font-semibold hidden md:block">Welcome, Admin!</h1>
+             <p className="text-sm text-muted-foreground hidden md:block">Home &gt; {pageTitle}</p>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div className="flex items-center gap-3 cursor-pointer">
                 <Button variant="secondary" size="icon" className="rounded-full">
                   <Avatar>
                     <AvatarImage src={"https://placehold.co/100x100.png"} data-ai-hint="admin user" />
@@ -255,18 +273,31 @@ export default function DashboardLayout({
                   <span className="sr-only">Toggle user menu</span>
                 </Button>
                 <div className="hidden sm:block">
-                  <p className="font-semibold text-sm">Stevne Zone</p>
-                  <p className="text-xs text-muted-foreground">Admin</p>
+                  <p className="font-semibold text-sm">Admin</p>
+                  <p className="text-xs text-muted-foreground">{user.email}</p>
                 </div>
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/admin/dashboard')}>
+                <Home className="mr-2 h-4 w-4" />
+                <span>Dashboard</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/admin/account-settings')}>
+                 <Settings className="mr-2 h-4 w-4" />
+                 <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <MessageSquare className="mr-2 h-4 w-4" />
+                <span>Support</span>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout} className="text-red-500 focus:text-red-500">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
@@ -277,5 +308,3 @@ export default function DashboardLayout({
     </div>
   );
 }
-
-    

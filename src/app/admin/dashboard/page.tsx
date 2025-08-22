@@ -11,20 +11,19 @@ import {
   Percent,
   ClipboardList,
   Users2,
+  Banknote,
+  TrendingUp,
+  TrendingDown
 } from 'lucide-react';
-import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from '@/components/ui/card';
 import {
   Table,
@@ -34,59 +33,40 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { formatNumber } from '@/lib/utils';
+import Link from 'next/link';
 
-const StudentDetailsCard = () => (
-  <Card>
-    <CardHeader>
-      <CardTitle>About Me</CardTitle>
-    </CardHeader>
-    <CardContent className="space-y-4">
-      <div className="flex items-center gap-4">
-        <Avatar className="h-20 w-20">
-          <AvatarImage src="https://placehold.co/200x200.png" data-ai-hint="female student" />
-          <AvatarFallback>JR</AvatarFallback>
-        </Avatar>
-        <div>
-          <h3 className="text-xl font-bold">Jessia Rose</h3>
-          <p className="text-sm text-muted-foreground">
-            Aliquam erat volutpat. Curabiene natis massa sedde lacustiquen sodale word moun taiery.
-          </p>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
-        <div className="flex justify-between"><span className="text-muted-foreground">Name:</span> <span className="font-medium">Jessia Rose</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Gender:</span> <span className="font-medium">Female</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Father Name:</span> <span className="font-medium">Fahim Rahman</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Mother Name:</span> <span className="font-medium">Jannatul Kazi</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Date Of Birth:</span> <span className="font-medium">07.08.2006</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Religion:</span> <span className="font-medium">Islam</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Father Occupation:</span> <span className="font-medium">Graphic Designer</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">E-Mail:</span> <span className="font-medium">jessiarose@gmail.com</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Admission Date:</span> <span className="font-medium">05.01.2019</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Class:</span> <span className="font-medium">2</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Section:</span> <span className="font-medium">Pink</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Roll:</span> <span className="font-medium">10005</span></div>
-        <div className="flex justify-between col-span-2"><span className="text-muted-foreground">Address:</span> <span className="font-medium text-right">House #10, Road #6, Australia</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Phone:</span> <span className="font-medium">+ 88 9856418</span></div>
-      </div>
-    </CardContent>
-  </Card>
+const InfoCard = ({ icon, title, value, description, iconBgColor }: { icon: React.ReactNode, title: string, value: string, description: string, iconBgColor: string }) => (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        {React.cloneElement(icon as React.ReactElement, { className: "h-4 w-4 text-muted-foreground" })}
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+        <p className="text-xs text-muted-foreground">{description}</p>
+      </CardContent>
+    </Card>
 );
 
-const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.ReactNode, title: string, value: string, bgColor: string, iconColor: string }) => (
-    <Card className="flex items-center p-4 gap-4">
-      <div className={`p-3 rounded-full ${bgColor}`}>
-        {React.cloneElement(icon as React.ReactElement, { className: `h-6 w-6 ${iconColor}` })}
-      </div>
-      <div>
-        <p className="text-muted-foreground">{title}</p>
-        <p className="text-2xl font-bold">{value}</p>
-      </div>
-    </Card>
-  );
+const recentStudents = [
+    { name: 'Ravi Kumar', email: 'ravi.k@example.com', course: 'ADCA', avatar: 'https://placehold.co/100x100.png', hint: 'student portrait' },
+    { name: 'Priya Sharma', email: 'priya.s@example.com', course: 'Web Development', avatar: 'https://placehold.co/100x100.png', hint: 'student smiling' },
+    { name: 'Amit Patel', email: 'amit.p@example.com', course: 'DCA', avatar: 'https://placehold.co/100x100.png', hint: 'student happy' },
+    { name: 'Sunita Devi', email: 'sunita.d@example.com', course: 'Graphic Design', avatar: 'https://placehold.co/100x100.png', hint: 'student thinking' },
+];
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
+
+  // Mock data for dashboard
+  const totalRevenue = 1250000;
+  const totalStudents = 350;
+  const newStudentsThisMonth = 22;
+  const overallAttendance = 92.5;
 
   if (loading) {
       return (
@@ -97,50 +77,111 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2 space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          <InfoCard icon={<GraduationCap />} title="Students" value="50000" bgColor="bg-sky-100" iconColor="text-sky-500" />
-          <InfoCard icon={<Users />} title="Teachers" value="2250" bgColor="bg-blue-100" iconColor="text-blue-500" />
-          <InfoCard icon={<Users2 />} title="Parents" value="5690" bgColor="bg-fuchsia-100" iconColor="text-fuchsia-500" />
-          <InfoCard icon={<Wallet />} title="Earnings" value="$193000" bgColor="bg-orange-100" iconColor="text-orange-500" />
+    <div className="flex flex-col gap-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <InfoCard 
+                title="Total Revenue"
+                value={`₹${formatNumber(totalRevenue)}`}
+                description="+20.1% from last month"
+                icon={<Banknote />}
+                iconBgColor="bg-blue-100"
+            />
+            <InfoCard 
+                title="Total Students"
+                value={`+${totalStudents}`}
+                description="All active students"
+                icon={<Users />}
+                iconBgColor="bg-green-100"
+            />
+            <InfoCard 
+                title="New Enrollments"
+                value={`+${newStudentsThisMonth}`}
+                description="In this month"
+                icon={<GraduationCap />}
+                iconBgColor="bg-purple-100"
+            />
+            <InfoCard 
+                title="Attendance"
+                value={`${overallAttendance}%`}
+                description="This week's average"
+                icon={<Percent />}
+                iconBgColor="bg-yellow-100"
+            />
         </div>
-        <StudentDetailsCard />
-      </div>
-
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Overview</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-4 rounded-md bg-purple-50 border border-purple-200">
-                <ClipboardList className="h-8 w-8 text-purple-500" />
-                <div className="text-right">
-                    <p className="text-muted-foreground">Notification</p>
-                    <p className="text-2xl font-bold">12</p>
-                </div>
-            </div>
-             <div className="flex items-center justify-between p-4 rounded-md bg-blue-50 border border-blue-200">
-                <Calendar className="h-8 w-8 text-blue-500" />
-                <div className="text-right">
-                    <p className="text-muted-foreground">Events</p>
-                    <p className="text-2xl font-bold">6</p>
-                </div>
-            </div>
-             <div className="flex items-center justify-between p-4 rounded-md bg-yellow-50 border border-yellow-200">
-                <Percent className="h-8 w-8 text-yellow-500" />
-                <div className="text-right">
-                    <p className="text-muted-foreground">Attendance</p>
-                    <p className="text-2xl font-bold">94%</p>
-                </div>
-            </div>
-          </CardContent>
-           <CardFooter>
-            <Button variant="outline" className="w-full">All Exam Results</Button>
-          </CardFooter>
-        </Card>
-      </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <Card className="lg:col-span-4">
+                <CardHeader>
+                    <CardTitle>Recent Enrollments</CardTitle>
+                    <CardDescription>
+                        New students who joined this month.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                     <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Student</TableHead>
+                                <TableHead className="hidden sm:table-cell">Course</TableHead>
+                                <TableHead className="text-right">Action</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {recentStudents.map(student => (
+                            <TableRow key={student.email}>
+                                <TableCell>
+                                    <div className="flex items-center gap-3">
+                                        <Avatar className="h-9 w-9">
+                                            <AvatarImage src={student.avatar} data-ai-hint={student.hint} />
+                                            <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
+                                        </Avatar>
+                                        <div className="font-medium">{student.name}</div>
+                                    </div>
+                                </TableCell>
+                                <TableCell className="hidden sm:table-cell">
+                                    <Badge variant="outline">{student.course}</Badge>
+                                </TableCell>
+                                <TableCell className="text-right">
+                                    <Button asChild size="sm" variant="outline">
+                                        <Link href="/admin/students">View</Link>
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
+            <Card className="lg:col-span-3">
+                <CardHeader>
+                    <CardTitle>Quick Actions</CardTitle>
+                    <CardDescription>
+                        Frequently used admin tasks.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-4">
+                    <Link href="/admin/students" className="w-full">
+                       <Button className="w-full justify-start" variant="outline">
+                           <Users2 className="mr-2 h-4 w-4"/> Manage Students
+                       </Button>
+                    </Link>
+                     <Link href="/admin/fees" className="w-full">
+                       <Button className="w-full justify-start" variant="outline">
+                           <DollarSign className="mr-2 h-4 w-4"/> Collect Fees
+                       </Button>
+                    </Link>
+                     <Link href="/admin/attendance" className="w-full">
+                       <Button className="w-full justify-start" variant="outline">
+                           <ClipboardList className="mr-2 h-4 w-4"/> Mark Attendance
+                       </Button>
+                    </Link>
+                     <Link href="/admin/notice" className="w-full">
+                       <Button className="w-full justify-start" variant="outline">
+                           <Megaphone className="mr-2 h-4 w-4"/> Post a Notice
+                       </Button>
+                    </Link>
+                </CardContent>
+            </Card>
+        </div>
     </div>
   );
 }
