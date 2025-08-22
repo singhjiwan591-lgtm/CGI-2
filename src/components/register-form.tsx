@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CreditCard } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -46,6 +46,8 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'paid'>('pending');
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,7 +71,27 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     }
   }, [selectedCourse, form]);
 
+  const handlePayment = () => {
+    setPaymentLoading(true);
+    setTimeout(() => {
+      setPaymentLoading(false);
+      setPaymentStatus('paid');
+      toast({
+        title: 'Payment Successful',
+        description: 'You can now fill out the registration form.',
+      });
+    }, 1500);
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (paymentStatus !== 'paid') {
+      toast({
+        variant: 'destructive',
+        title: 'Payment Required',
+        description: 'Please pay the registration fee to continue.',
+      });
+      return;
+    }
     setLoading(true);
     // Mock registration logic
     setTimeout(() => {
@@ -87,6 +109,8 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
         setLoading(false);
     }, 1000);
   }
+  
+  const isFormDisabled = loading || paymentStatus !== 'paid';
 
   return (
     <Card>
@@ -94,161 +118,186 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
             <CardTitle className="font-headline text-2xl">Enroll Now</CardTitle>
-            <CardDescription>Create an account to begin your application.</CardDescription>
+            <CardDescription>
+              {paymentStatus === 'pending'
+                ? 'Pay the registration fee to unlock the form.'
+                : 'Create an account to begin your application.'}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+            {paymentStatus === 'pending' ? (
+              <div className="space-y-4 rounded-lg border bg-secondary/50 p-6 text-center">
+                <h3 className="text-lg font-semibold">Registration Fee</h3>
+                <p className="text-sm text-muted-foreground">
+                  A non-refundable registration fee of ₹100 is required to proceed with your application.
+                </p>
+                <p className="text-4xl font-bold">₹100</p>
+                <Button type="button" onClick={handlePayment} disabled={paymentLoading} className="w-full">
+                  {paymentLoading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <CreditCard className="mr-2 h-4 w-4" />
+                  )}
+                  {paymentLoading ? 'Processing...' : 'Pay to Proceed'}
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4 animate-in fade-in-50">
+                <FormField
+                  control={form.control}
+                  name="fullName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Your Full Name" {...field} disabled={isFormDisabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormItem>
+                  <FormLabel>Your Passport-size Photo</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your Full Name" {...field} />
+                    <Input type="file" accept="image/*" onChange={(e) => setPhotoFile(e.target.files ? e.target.files[0] : null)} disabled={isFormDisabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
-             <FormItem>
-              <FormLabel>Your Passport-size Photo</FormLabel>
-              <FormControl>
-                <Input type="file" accept="image/*" onChange={(e) => setPhotoFile(e.target.files ? e.target.files[0] : null)} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-             <FormField
-              control={form.control}
-              name="fatherName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Father's Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Father's Full Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-             <FormField
-              control={form.control}
-              name="motherName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Mother's Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Mother's Full Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input type="tel" placeholder="Your Phone Number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-             <FormField
-              control={form.control}
-              name="village"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Village</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your Village" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {selectedCourse && (
-               <FormField
-                control={form.control}
-                name="course"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Selected Course</FormLabel>
-                    <FormControl>
-                      <Input readOnly disabled {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                 <FormField
+                  control={form.control}
+                  name="fatherName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Father's Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Father's Full Name" {...field} disabled={isFormDisabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="motherName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Mother's Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Mother's Full Name" {...field} disabled={isFormDisabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input type="tel" placeholder="Your Phone Number" {...field} disabled={isFormDisabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="village"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Village</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Your Village" {...field} disabled={isFormDisabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {selectedCourse && (
+                   <FormField
+                    control={form.control}
+                    name="course"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Selected Course</FormLabel>
+                        <FormControl>
+                          <Input readOnly disabled {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 )}
-              />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="your.email@example.com" {...field} disabled={isFormDisabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Create a Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" placeholder="••••••••" {...field} disabled={isFormDisabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" placeholder="••••••••" {...field} disabled={isFormDisabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="terms"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md py-2">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={isFormDisabled}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>
+                          I agree to the admissions{' '}
+                          <Link href="#" className="underline hover:text-primary">
+                            Terms & Conditions
+                          </Link>
+                        </FormLabel>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
             )}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="your.email@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Create a Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="••••••••" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="••••••••" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="terms"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md py-2">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>
-                      I agree to the admissions{' '}
-                      <Link href="#" className="underline hover:text-primary">
-                        Terms & Conditions
-                      </Link>
-                    </FormLabel>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="w-full" disabled={isFormDisabled}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? 'Submitting...' : 'Create Account & Continue'}
               </Button>
