@@ -74,6 +74,10 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        <Script
+          src="https://www.google.com/recaptcha/enterprise.js?render=6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7"
+          strategy="beforeInteractive"
+        />
       </head>
       <body suppressHydrationWarning={true} className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
         <Preloader />

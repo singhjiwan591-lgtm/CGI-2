@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
-import { Loader2, CreditCard } from 'lucide-react';
+import { Loader2, ShieldCheck } from 'lucide-react';
 import { addStudent } from '@/lib/student-data-service';
 
 import { Button } from '@/components/ui/button';
@@ -24,7 +24,6 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -89,7 +88,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     setPaymentLoading(true);
 
     try {
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay for payment processing
         
         const studentData = {
             name: pendingRegistrationData.fullName,
@@ -129,6 +128,10 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   async function onSubmit(values: FormValues) {
     setLoading(true);
     setPendingRegistrationData(values);
+    
+    // Simulate reCAPTCHA verification before showing payment dialog
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     setIsPaymentDialogOpen(true);
   }
 
@@ -339,7 +342,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
           <CardFooter className="flex flex-col gap-4">
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {loading ? 'Processing...' : 'Create Account & Continue'}
+                {loading ? 'Verifying...' : 'Proceed to Payment'}
               </Button>
               <p className="text-sm text-foreground/80">
                 Already have an account?{' '}
@@ -361,40 +364,22 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     }}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Secure Payment</DialogTitle>
+          <DialogTitle>Final Step: Registration Fee</DialogTitle>
           <DialogDescription>
-            A non-refundable registration fee of ₹100 is required to complete your application.
+            A non-refundable registration fee of ₹100 is required to complete your application. This payment is processed securely.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="card-number">Card Number</Label>
-              <Input id="card-number" placeholder="4242 4242 4242 4242" disabled={paymentLoading}/>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2 col-span-2">
-                <Label htmlFor="expiry-date">Expiry Date</Label>
-                <Input id="expiry-date" placeholder="MM / YY" disabled={paymentLoading}/>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="cvc">CVC</Label>
-                <Input id="cvc" placeholder="123" disabled={paymentLoading}/>
-              </div>
-            </div>
-             <div className="space-y-2">
-              <Label htmlFor="card-holder">Card Holder Name</Label>
-              <Input id="card-holder" placeholder="Your Name" disabled={paymentLoading}/>
-            </div>
+        <div className="flex flex-col items-center justify-center space-y-4 py-4">
+            <ShieldCheck className="h-16 w-16 text-green-500" />
+            <p className="text-center text-muted-foreground">You are about to make a secure payment. We do not store your card details.</p>
         </div>
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => setIsPaymentDialogOpen(false)} disabled={paymentLoading}>Cancel</Button>
           <Button type="button" onClick={handleConfirmPayment} disabled={paymentLoading}>
              {paymentLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <CreditCard className="mr-2 h-4 w-4" />
-              )}
-              {paymentLoading ? 'Processing...' : 'Pay ₹100'}
+              ) : null}
+              {paymentLoading ? 'Processing...' : 'Pay ₹100 Securely'}
           </Button>
         </DialogFooter>
       </DialogContent>
