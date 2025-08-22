@@ -42,7 +42,7 @@ export default function Home() {
 
   useEffect(() => {
     if (bgLogoRef.current) {
-      gsap.fromTo(bgLogo-Ref.current, 
+      gsap.fromTo(bgLogoRef.current, 
         { scale: 0, opacity: 0 }, 
         { scale: 1, opacity: 0.05, duration: 1.5, ease: 'power3.out' }
       );
