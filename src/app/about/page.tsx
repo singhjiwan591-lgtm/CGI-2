@@ -39,10 +39,10 @@ export default function AboutPage() {
       dataAiHint: 'institute owner',
     },
     {
-      name: 'Ms. Sunita Patel',
-      position: 'Head of Academics',
-      image: 'https://placehold.co/400x400.png',
-      dataAiHint: 'woman teacher',
+      name: 'Jeevan Singh',
+      position: 'Senior Faculty',
+      image: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
+      dataAiHint: 'man developer',
     },
     {
       name: 'Mr. Amit Singh',
