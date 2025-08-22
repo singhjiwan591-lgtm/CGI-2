@@ -26,21 +26,44 @@ export function SiteHeader() {
   const [isMounted, setIsMounted] = useState(false);
   const [user, setUser] = useState<{ email: string; isLoggedIn: boolean } | null>(null);
 
-  useEffect(() => {
-    setIsMounted(true);
-    if (typeof window !== 'undefined') {
+  const checkUserStatus = () => {
+     if (typeof window !== 'undefined') {
       const storedUser = sessionStorage.getItem('user');
       if (storedUser) {
         setUser(JSON.parse(storedUser));
+      } else {
+        setUser(null);
       }
     }
-  }, [pathname]); // Rerun on route change to update login status
+  }
+
+  useEffect(() => {
+    setIsMounted(true);
+    checkUserStatus();
+
+    // Listen for storage changes to update header in real-time
+    const handleStorageChange = () => {
+      checkUserStatus();
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+
+  }, []);
+  
+  // Also check on path change, e.g. when navigating back/forward
+  useEffect(() => {
+    checkUserStatus();
+  }, [pathname]);
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
       sessionStorage.removeItem('user');
+      // Dispatch a custom event to notify other components (like this header) immediately
+      window.dispatchEvent(new Event('storage'));
     }
-    setUser(null);
     router.push('/login');
   };
 

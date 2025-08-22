@@ -14,6 +14,7 @@ type Student = {
   email: string;
   photoURL?: string;
   avatarHint: string;
+  fees?: StudentFee; // Optional fee data can be attached
 };
 
 type InstallmentStatus = 'Paid' | 'Due' | 'Overdue' | 'Link Sent';
@@ -28,8 +29,8 @@ type Installment = {
 };
 
 type StudentFee = {
-  id: string;
-  name: string;
+  id: string; // Should match student id
+  name: string; // Should match student name
   grade: number;
   avatarHint: string;
   photoURL?: string;
@@ -68,8 +69,8 @@ export function getAllStudents(): Student[] {
     return data ? JSON.parse(data) : [];
 }
 
-export function addStudent(studentData: Omit<Student, 'id' | 'avatarHint' | 'photoURL'>): Student {
-    if (typeof window === 'undefined') return { ...studentData, id: 'server-id', avatarHint: 'student' };
+export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint' | 'photoURL'>): Student | null {
+    if (typeof window === 'undefined') return null;
 
     const students = getAllStudents();
     const newId = (Math.max(...students.map(s => parseInt(s.id, 10)), 0) + 1).toString();
@@ -93,9 +94,26 @@ export function getStudentById(id: string): Student | undefined {
     return students.find(s => s.id === id);
 }
 
-export function updateAllStudents(updatedStudents: Student[] | StudentFee[]) {
+export function updateStudentData(studentId: string, dataToUpdate: Partial<{ student: Student, fees: StudentFee }>) {
     if (typeof window !== 'undefined') {
-        sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(updatedStudents));
+        const students = getAllStudents();
+        const studentIndex = students.findIndex(s => s.id === studentId);
+        if (studentIndex > -1) {
+            const currentStudent = students[studentIndex];
+            
+            // Update base student details if provided
+            if (dataToUpdate.student) {
+                Object.assign(currentStudent, dataToUpdate.student);
+            }
+
+            // Update fee details if provided
+            if (dataToUpdate.fees) {
+                currentStudent.fees = dataToUpdate.fees;
+            }
+
+            students[studentIndex] = currentStudent;
+            sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(students));
+        }
     }
 }
 
@@ -103,7 +121,7 @@ export function updateAllStudents(updatedStudents: Student[] | StudentFee[]) {
 import { addMonths, isPast } from 'date-fns';
 
 const generateInstallments = (totalFees: number): Installment[] => {
-    const installmentAmount = totalFees / 6;
+    const installmentAmount = Math.round(totalFees / 6); // Round to avoid decimals
     const today = new Date();
     return Array.from({ length: 6 }, (_, i) => {
         const dueDate = addMonths(new Date(today.getFullYear(), today.getMonth(), 15), i - 1); // Start from last month for some overdue
@@ -122,6 +140,11 @@ const generateInstallments = (totalFees: number): Installment[] => {
 export function getAllStudentsWithFees(): StudentFee[] {
     const students = getAllStudents();
     return students.map(s => {
+        if (s.fees) {
+            // If fee data already exists, return it to preserve payment status
+            return s.fees;
+        }
+
         // This is a simplified fee structure. Could be more complex in a real app.
         const totalFees = s.grade === '12' ? 60000 : s.grade === '11' ? 50000 : 45000;
         const installments = generateInstallments(totalFees);
@@ -139,7 +162,7 @@ export function getAllStudentsWithFees(): StudentFee[] {
         }
         const feesPaid = installments.filter(i => i.status === 'Paid').reduce((acc, i) => acc + i.amount, 0);
 
-        return {
+        const feeData: StudentFee = {
             id: s.id,
             name: s.name,
             grade: parseInt(s.grade, 10),
@@ -149,5 +172,10 @@ export function getAllStudentsWithFees(): StudentFee[] {
             feesPaid,
             installments,
         };
+
+        // Attach the new fee data to the student record for persistence
+        updateStudentData(s.id, { fees: feeData });
+
+        return feeData;
     });
 }

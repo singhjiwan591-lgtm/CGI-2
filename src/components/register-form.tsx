@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -100,7 +101,11 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
             address: pendingRegistrationData.village,
             dob: pendingRegistrationData.dob,
         };
-        addStudent(studentData);
+        const newStudent = addStudent(studentData);
+
+        if (!newStudent) {
+            throw new Error('Could not save student data.');
+        }
         
         toast({
             title: 'Registration Successful!',
@@ -129,7 +134,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     setLoading(true);
     setPendingRegistrationData(values);
     
-    // Simulate reCAPTCHA verification before showing payment dialog
+    // Simulate reCAPTCHA verification or other checks before showing payment dialog
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     setIsPaymentDialogOpen(true);
@@ -342,7 +347,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
           <CardFooter className="flex flex-col gap-4">
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {loading ? 'Verifying...' : 'Proceed to Payment'}
+                {loading ? 'Verifying...' : 'Create Account & Continue'}
               </Button>
               <p className="text-sm text-foreground/80">
                 Already have an account?{' '}

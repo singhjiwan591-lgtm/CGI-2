@@ -52,7 +52,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 import { formatNumber, cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { getAllStudentsWithFees, updateAllStudents } from '@/lib/student-data-service';
+import { getAllStudentsWithFees, updateStudentData } from '@/lib/student-data-service';
 
 
 type InstallmentStatus = 'Paid' | 'Due' | 'Overdue' | 'Link Sent';
@@ -110,7 +110,7 @@ export default function FeesPage() {
   const updateStudentAndPersist = (updatedStudent: StudentFee) => {
       const updatedStudents = students.map(s => s.id === updatedStudent.id ? updatedStudent : s);
       setStudents(updatedStudents);
-      updateAllStudents(updatedStudents); // This might need adjustment if StudentFee and Student types differ significantly
+      updateStudentData(updatedStudent.id, { fees: updatedStudent });
       setSelectedStudent(updatedStudent);
   }
 
@@ -121,16 +121,19 @@ export default function FeesPage() {
       let totalPaid = 0;
       const updatedInstallments = student.installments.map(inst => {
           if (inst.id === installmentId) {
-              inst.status = 'Paid';
-              inst.paymentDate = new Date();
+             return { ...inst, status: 'Paid' as InstallmentStatus, paymentDate: new Date() };
           }
+          return inst;
+      });
+      
+      const newlyPaidInstallments = updatedInstallments.map(inst => {
           if (inst.status === 'Paid') {
               totalPaid += inst.amount;
           }
           return inst;
       });
-      
-      const updatedStudent = { ...student, installments: updatedInstallments, feesPaid: totalPaid };
+
+      const updatedStudent = { ...student, installments: newlyPaidInstallments, feesPaid: totalPaid };
       updateStudentAndPersist(updatedStudent);
       toast({ title: 'Success', description: 'Cash payment recorded successfully.' });
   };
@@ -141,8 +144,7 @@ export default function FeesPage() {
 
       const updatedInstallments = student.installments.map(inst => {
           if (inst.id === installmentId) {
-              inst.status = 'Link Sent';
-              inst.linkSent = true;
+              return { ...inst, status: 'Link Sent' as InstallmentStatus, linkSent: true };
           }
           return inst;
       });
