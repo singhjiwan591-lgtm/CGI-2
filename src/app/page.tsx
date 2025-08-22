@@ -31,9 +31,9 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import React from 'react';
 import { usePageAnimations } from '@/hooks/usePageAnimations';
 import { gsap } from 'gsap';
+import { ScrollingText } from '@/components/scrolling-text';
 
 export default function Home() {
   const pageRef = useRef<HTMLDivElement>(null);
@@ -42,7 +42,7 @@ export default function Home() {
 
   useEffect(() => {
     if (bgLogoRef.current) {
-      gsap.fromTo(bgLogoRef.current, 
+      gsap.fromTo(bgLogo-Ref.current, 
         { scale: 0, opacity: 0 }, 
         { scale: 1, opacity: 0.05, duration: 1.5, ease: 'power3.out' }
       );
@@ -135,9 +135,7 @@ export default function Home() {
     <div ref={pageRef} className="flex flex-col items-center">
        <section data-animate="fade-in" className="relative w-full py-20 md:py-32 overflow-hidden bg-secondary">
          <div className="container mx-auto px-4 text-center relative z-10">
-            <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-                Global Computer Institute
-            </h1>
+            <ScrollingText />
             <p className="mx-auto mt-6 max-w-3xl text-lg text-foreground/80 md:text-xl">
               Your gateway to a successful career in technology. We provide expert-led training in the most in-demand skills to shape your future.
             </p>
