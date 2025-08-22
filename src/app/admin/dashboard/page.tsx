@@ -13,7 +13,9 @@ import {
   Users2,
   Banknote,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  DollarSign,
+  Megaphone
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import React from 'react';
