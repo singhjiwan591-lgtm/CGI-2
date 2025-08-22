@@ -23,20 +23,22 @@ export function usePageAnimations(pageRef: RefObject<HTMLElement>) {
       { opacity: 1, duration: 1, ease: 'power2.out', stagger: 0.2 }
     );
 
-    gsap.fromTo(fadeInUpElements,
-      { opacity: 0, y: 50 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.3, scrollTrigger: {
-        trigger: fadeInUpElements[0] || page,
-        start: 'top 80%',
-        toggleActions: 'play none none none',
-      } }
-    );
-
+    fadeInUpElements.forEach((el) => {
+        gsap.fromTo(el,
+            { opacity: 0, y: 50 },
+            { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: {
+                trigger: el,
+                start: 'top 85%',
+                toggleActions: 'play none none none',
+            } }
+        );
+    });
+    
     if (staggerItems.length > 0) {
       gsap.fromTo(staggerItems,
         { opacity: 0, y: 30 },
         { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', stagger: 0.15, scrollTrigger: {
-          trigger: staggerItems[0],
+          trigger: staggerItems[0].parentElement || page,
           start: 'top 85%',
           toggleActions: 'play none none none',
         } }
@@ -47,7 +49,7 @@ export function usePageAnimations(pageRef: RefObject<HTMLElement>) {
       gsap.fromTo(staggerItems2,
         { opacity: 0, x: -30 },
         { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out', stagger: 0.15, scrollTrigger: {
-          trigger: staggerItems2[0],
+          trigger: staggerItems2[0].parentElement || page,
           start: 'top 85%',
           toggleActions: 'play none none none',
         } }
@@ -55,8 +57,11 @@ export function usePageAnimations(pageRef: RefObject<HTMLElement>) {
     }
 
     timelineItems.forEach((item, index) => {
+      // Simplified check for alternating timeline items
+      const isOdd = (item.parentElement?.children ? Array.from(item.parentElement.children).indexOf(item) : index) % 2 !== 0;
+
       gsap.fromTo(item,
-        { opacity: 0, x: index % 2 === 0 ? -50 : 50 },
+        { opacity: 0, x: isOdd ? 50 : -50 },
         {
           opacity: 1, x: 0, duration: 0.7, ease: 'power3.out',
           scrollTrigger: {

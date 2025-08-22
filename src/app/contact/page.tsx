@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
 import { Mail, MapPin, Phone, Facebook, Instagram, Linkedin } from 'lucide-react';
 import { ContactForm } from '@/components/contact-form';

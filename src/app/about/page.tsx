@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CheckCircle2, Facebook, Linkedin, Twitter } from 'lucide-react';
