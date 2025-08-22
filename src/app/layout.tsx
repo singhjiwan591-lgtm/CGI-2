@@ -8,6 +8,7 @@ import { Preloader } from '@/components/preloader';
 import Script from 'next/script';
 import { DynamicDiscountPopup } from '@/components/dynamic-components';
 import { TamperProtector } from '@/components/tamper-protector';
+import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: {
@@ -80,7 +81,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
       </head>
-      <body suppressHydrationWarning={true} className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
+      <body suppressHydrationWarning={true} className={cn("font-body bg-background text-foreground antialiased min-h-screen flex flex-col", "screenshot-hidden")}>
         <TamperProtector />
         <Preloader />
         <div className="relative flex flex-col items-center flex-1 w-full">
