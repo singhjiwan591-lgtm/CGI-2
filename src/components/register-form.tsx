@@ -47,17 +47,18 @@ const formSchema = z.object({
   path: ['confirmPassword'],
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'paid'>('pending');
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
+  const [pendingRegistrationData, setPendingRegistrationData] = useState<FormValues | null>(null);
 
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullName: '',
@@ -82,51 +83,35 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     }
   }, [selectedCourse, form]);
 
-  const handleConfirmPayment = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setPaymentLoading(true);
-    setTimeout(() => {
-      setPaymentLoading(false);
-      setPaymentStatus('paid');
-      setIsPaymentDialogOpen(false);
-      toast({
-        title: 'Payment Successful',
-        description: 'You can now fill out the registration form.',
-      });
-    }, 1500);
-  };
+  const handleConfirmPayment = async () => {
+    if (!pendingRegistrationData) return;
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (paymentStatus !== 'paid') {
-      toast({
-        variant: 'destructive',
-        title: 'Payment Required',
-        description: 'Please pay the registration fee to continue.',
-      });
-      return;
-    }
-    setLoading(true);
+    setPaymentLoading(true);
 
     try {
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
+        
         const studentData = {
-            name: values.fullName,
-            email: values.email,
-            phone: values.phoneNumber,
-            parent: values.fatherName,
-            grade: values.grade,
-            gender: values.gender,
-            address: values.village,
-            dob: values.dob,
+            name: pendingRegistrationData.fullName,
+            email: pendingRegistrationData.email,
+            phone: pendingRegistrationData.phoneNumber,
+            parent: pendingRegistrationData.fatherName,
+            grade: pendingRegistrationData.grade,
+            gender: pendingRegistrationData.gender,
+            address: pendingRegistrationData.village,
+            dob: pendingRegistrationData.dob,
         };
         addStudent(studentData);
         
         toast({
-            title: 'Registration Submitted!',
+            title: 'Registration Successful!',
             description: "Your application has been received. You will be redirected to login.",
         });
+
+        setIsPaymentDialogOpen(false);
         form.reset();
-        setPhotoFile(null);
-        setPaymentStatus('pending'); // Reset for next user
+        setPendingRegistrationData(null);
+
         setTimeout(() => router.push('/login'), 1500);
 
     } catch (error) {
@@ -136,11 +121,16 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
             description: 'There was a problem saving your data. Please try again.',
         });
     } finally {
+        setPaymentLoading(false);
         setLoading(false);
     }
+  };
+
+  async function onSubmit(values: FormValues) {
+    setLoading(true);
+    setPendingRegistrationData(values);
+    setIsPaymentDialogOpen(true);
   }
-  
-  const isFormDisabled = loading || paymentStatus !== 'paid';
 
   return (
     <>
@@ -150,25 +140,10 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
           <CardHeader>
             <CardTitle className="font-headline text-2xl">Enroll Now</CardTitle>
             <CardDescription>
-              {paymentStatus === 'pending'
-                ? 'Pay the registration fee to unlock the form.'
-                : 'Create an account to begin your application.'}
+              Create an account to begin your application.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 max-h-[60vh] overflow-y-auto pr-4">
-            {paymentStatus === 'pending' ? (
-              <div className="space-y-4 rounded-lg border bg-secondary/50 p-6 text-center">
-                <h3 className="text-lg font-semibold">Registration Fee</h3>
-                <p className="text-sm text-muted-foreground">
-                  A non-refundable registration fee of ₹100 is required to proceed with your application.
-                </p>
-                <p className="text-4xl font-bold">₹100</p>
-                <Button type="button" onClick={() => setIsPaymentDialogOpen(true)} className="w-full">
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  Pay to Proceed
-                </Button>
-              </div>
-            ) : (
               <div className="space-y-4 animate-in fade-in-50">
                 <FormField
                   control={form.control}
@@ -177,7 +152,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     <FormItem>
                       <FormLabel>Full Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Your Full Name" {...field} disabled={isFormDisabled} />
+                        <Input placeholder="Your Full Name" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -186,7 +161,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                  <FormItem>
                   <FormLabel>Your Passport-size Photo</FormLabel>
                   <FormControl>
-                    <Input type="file" accept="image/*" onChange={(e) => setPhotoFile(e.target.files ? e.target.files[0] : null)} disabled={isFormDisabled} />
+                    <Input type="file" accept="image/*" disabled={loading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -197,7 +172,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     <FormItem>
                       <FormLabel>Father's Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Father's Full Name" {...field} disabled={isFormDisabled} />
+                        <Input placeholder="Father's Full Name" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -210,7 +185,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     <FormItem>
                       <FormLabel>Mother's Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Mother's Full Name" {...field} disabled={isFormDisabled} />
+                        <Input placeholder="Mother's Full Name" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -223,7 +198,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     <FormItem>
                       <FormLabel>Date of Birth</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} disabled={isFormDisabled} />
+                        <Input type="date" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -236,7 +211,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     <FormItem>
                       <FormLabel>Phone Number</FormLabel>
                       <FormControl>
-                        <Input type="tel" placeholder="Your Phone Number" {...field} disabled={isFormDisabled} />
+                        <Input type="tel" placeholder="Your Phone Number" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -249,7 +224,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     <FormItem>
                       <FormLabel>Village / Address</FormLabel>
                       <FormControl>
-                        <Input placeholder="Your Village / Address" {...field} disabled={isFormDisabled} />
+                        <Input placeholder="Your Village / Address" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -262,7 +237,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     <FormItem>
                       <FormLabel>Class / Grade</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., 12" {...field} disabled={isFormDisabled} />
+                        <Input placeholder="e.g., 12" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -275,7 +250,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     <FormItem>
                       <FormLabel>Gender</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Male, Female" {...field} disabled={isFormDisabled} />
+                        <Input placeholder="e.g., Male, Female" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -303,7 +278,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     <FormItem>
                       <FormLabel>Email Address (for Login)</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="your.email@example.com" {...field} disabled={isFormDisabled} />
+                        <Input type="email" placeholder="your.email@example.com" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -316,7 +291,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     <FormItem>
                       <FormLabel>Create a Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="••••••••" {...field} disabled={isFormDisabled} />
+                        <Input type="password" placeholder="••••••••" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -329,7 +304,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                     <FormItem>
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="••••••••" {...field} disabled={isFormDisabled} />
+                        <Input type="password" placeholder="••••••••" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -344,7 +319,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          disabled={isFormDisabled}
+                          disabled={loading}
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
@@ -360,12 +335,11 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                   )}
                 />
               </div>
-            )}
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full" disabled={isFormDisabled}>
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {loading ? 'Submitting...' : 'Create Account & Continue'}
+                {loading ? 'Processing...' : 'Create Account & Continue'}
               </Button>
               <p className="text-sm text-foreground/80">
                 Already have an account?{' '}
@@ -378,36 +352,42 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
       </Form>
     </Card>
 
-    <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
+    <Dialog open={isPaymentDialogOpen} onOpenChange={ (isOpen) => {
+        setIsPaymentDialogOpen(isOpen);
+        if (!isOpen) {
+          setLoading(false); // Reset loading state if dialog is closed manually
+          setPendingRegistrationData(null);
+        }
+    }}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Secure Payment</DialogTitle>
           <DialogDescription>
-            Enter your payment details to complete the registration fee payment of ₹100.
+            A non-refundable registration fee of ₹100 is required to complete your application.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="card-number">Card Number</Label>
-              <Input id="card-number" placeholder="4242 4242 4242 4242" />
+              <Input id="card-number" placeholder="4242 4242 4242 4242" disabled={paymentLoading}/>
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2 col-span-2">
                 <Label htmlFor="expiry-date">Expiry Date</Label>
-                <Input id="expiry-date" placeholder="MM / YY" />
+                <Input id="expiry-date" placeholder="MM / YY" disabled={paymentLoading}/>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="cvc">CVC</Label>
-                <Input id="cvc" placeholder="123" />
+                <Input id="cvc" placeholder="123" disabled={paymentLoading}/>
               </div>
             </div>
              <div className="space-y-2">
               <Label htmlFor="card-holder">Card Holder Name</Label>
-              <Input id="card-holder" placeholder="Your Name" />
+              <Input id="card-holder" placeholder="Your Name" disabled={paymentLoading}/>
             </div>
         </div>
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={() => setIsPaymentDialogOpen(false)}>Cancel</Button>
+          <Button type="button" variant="outline" onClick={() => setIsPaymentDialogOpen(false)} disabled={paymentLoading}>Cancel</Button>
           <Button type="button" onClick={handleConfirmPayment} disabled={paymentLoading}>
              {paymentLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
