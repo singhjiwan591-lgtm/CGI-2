@@ -42,13 +42,10 @@ export default function Home() {
 
   useEffect(() => {
     if (bgLogoRef.current) {
-      gsap.set(bgLogoRef.current, { transformPerspective: 1000 });
-      gsap.to(bgLogoRef.current, {
-        rotationY: 360,
-        duration: 45,
-        repeat: -1,
-        ease: 'none',
-      });
+      gsap.fromTo(bgLogoRef.current, 
+        { scale: 0, opacity: 0 }, 
+        { scale: 1, opacity: 0.05, duration: 1.5, ease: 'power3.out' }
+      );
     }
   }, []);
 
@@ -158,7 +155,7 @@ export default function Home() {
             </div>
           </div>
           <div
-            className="absolute inset-0 z-0 flex items-center justify-center opacity-5"
+            className="absolute inset-0 z-0 flex items-center justify-center"
           >
             <Image
               ref={bgLogoRef}
@@ -166,7 +163,7 @@ export default function Home() {
               alt="Background Logo"
               width={400}
               height={400}
-              className="object-contain"
+              className="object-contain opacity-5"
               priority
             />
           </div>
