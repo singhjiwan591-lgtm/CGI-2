@@ -32,11 +32,8 @@ import {
 } from '@/components/ui/carousel';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import React from 'react';
-import { DynamicScrollingText } from '@/components/dynamic-components';
 import { usePageAnimations } from '@/hooks/usePageAnimations';
 import { gsap } from 'gsap';
-import { cn } from '@/lib/utils';
-
 
 export default function Home() {
   const pageRef = useRef<HTMLDivElement>(null);
@@ -45,8 +42,8 @@ export default function Home() {
 
   useEffect(() => {
     if (bgLogoRef.current) {
-      gsap.set(bgLogo_logoRef.current, { transformPerspective: 1000 });
-      gsap.to(bgLogo_logoRef.current, {
+      gsap.set(bgLogoRef.current, { transformPerspective: 1000 });
+      gsap.to(bgLogoRef.current, {
         rotationY: 360,
         duration: 45,
         repeat: -1,
