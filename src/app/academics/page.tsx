@@ -1,42 +1,110 @@
 
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Codepen, Database, Layers, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 import { usePageAnimations } from '@/hooks/usePageAnimations';
+import {
+  Card,
+  CardDescription,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  FileText,
+  Book,
+  Keyboard,
+  Globe,
+  HardDrive,
+  Calculator,
+  Codepen,
+} from 'lucide-react';
 
 export default function AcademicsPage() {
   const pageRef = useRef<HTMLDivElement>(null);
   usePageAnimations(pageRef);
-  
-  const academicPrograms = [
-    {
-      icon: <Codepen className="h-10 w-10 text-primary" />,
-      name: 'Web Development',
-      description: 'Master front-end and back-end technologies to build modern websites and applications.',
-    },
-    {
-      icon: <Database className="h-10 w-10 text-primary" />,
-      name: 'Data Science & Analytics',
-      description: 'Learn to analyze data, build machine learning models, and derive valuable insights.',
-    },
-    {
-      icon: <Layers className="h-10 w-10 text-primary" />,
-      name: 'UI/UX Design',
-      description: 'Create intuitive, user-friendly, and visually appealing digital product interfaces.',
-    },
-  ];
 
-  const curriculumHighlights = [
-    'Full-Stack Development with MERN/MEAN stack',
-    'Advanced Python for Data Science',
-    'Machine Learning and AI Fundamentals',
-    'Responsive Web Design with Figma and React',
-    'Cloud Computing with AWS and Azure',
-    'Cybersecurity Essentials and Ethical Hacking',
+  const courseCards = [
+    {
+      title: 'ADCA',
+      description: 'Advanced Diploma in Computer Applications',
+      icon: <FileText className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/0VXPWLDb/IMG-20250803-WA0010.jpg',
+      dataAiHint: 'advanced diploma computer',
+      color: 'from-blue-500 to-blue-700',
+    },
+    {
+      title: 'CCA',
+      description: 'Certificate in Computer Applications',
+      icon: <FileText className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/HfQqCY6P/IMG-20250803-WA0011.jpg',
+      dataAiHint: 'certificate computer',
+      color: 'from-fuchsia-500 to-fuchsia-700',
+    },
+    {
+      title: 'DCA',
+      description: 'Diploma in Computer Applications',
+      icon: <FileText className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/tPXj64KV/IMG-20250803-WA0007.jpg',
+      dataAiHint: 'computer diploma',
+      color: 'from-orange-500 to-orange-700',
+    },
+    {
+      title: 'DIFA',
+      description: 'Diploma in Financial Accounting',
+      icon: <Calculator className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/67kgqFp4/IMG-20250803-WA0009-1.jpg',
+      dataAiHint: 'financial accounting',
+      color: 'from-green-500 to-green-700',
+    },
+     {
+      title: 'Basic',
+      description: 'Fundamentals of computer operations.',
+      icon: <Book className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/kj7RqXt/IMG-20250803-WA0003.jpg',
+      dataAiHint: 'computer basics',
+      color: 'from-sky-500 to-sky-700',
+    },
+    {
+      title: 'Accounts',
+      description: 'Learn financial accounting software.',
+      icon: <Calculator className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/ymSwrtxx/IMG-20250803-WA0005.jpg',
+      dataAiHint: 'accounting calculator',
+      color: 'from-red-500 to-red-700',
+    },
+     {
+      title: 'Typing (Eng/Pbi)',
+      description: 'Master English & Punjabi typing skills.',
+      icon: <Keyboard className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/3Yr8MjcT/touch-typing-keyboard.webp',
+      dataAiHint: 'typing keyboard',
+      color: 'from-yellow-500 to-yellow-700',
+    },
+     {
+      title: 'HTML',
+      description: 'Learn the language of the web.',
+      icon: <Codepen className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/rJp1PDZ/IMG-20250803-WA0004.jpg',
+      dataAiHint: 'html code',
+      color: 'from-indigo-500 to-indigo-700',
+    },
+      {
+      title: 'Internet',
+      description: 'Explore the world of the internet.',
+      icon: <Globe className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/LXfSf8xs/IMG-20250803-WA0006.jpg',
+      dataAiHint: 'internet globe',
+      color: 'from-pink-500 to-pink-700',
+    },
+    {
+      title: 'Hardware & Software',
+      description: 'Understand computer components.',
+      icon: <HardDrive className="h-8 w-8" />,
+      imageUrl: 'https://i.ibb.co/5hdDZj7D/IMG-20250803-WA0008.jpg',
+      dataAiHint: 'computer hardware',
+      color: 'from-teal-500 to-teal-700',
+    },
   ];
 
   return (
@@ -45,62 +113,35 @@ export default function AcademicsPage() {
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">Our Courses</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base md:text-lg text-foreground/80">
-            Explore our comprehensive courses designed to make you a job-ready tech professional.
+            Explore our comprehensive courses designed to make you a job-ready tech professional. Choose from a wide range of programs designed to get you job-ready.
           </p>
         </div>
       </section>
 
-      <section data-animate="fade-in-up" className="w-full py-12 md:py-20">
+      <section id="courses" data-animate="fade-in-up" className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-center font-headline text-2xl font-bold md:text-4xl mb-10">Flagship Programs</h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
-            {academicPrograms.map((program) => (
-              <Card key={program.name} data-animate="stagger-item" className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
-                <CardHeader>
-                  <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
-                    {program.icon}
+           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+            {courseCards.map((card) => (
+              <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block group">
+                <Card 
+                  data-animate="stagger-item"
+                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/30 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
+                >
+                  {card.imageUrl ? (
+                    <>
+                      <Image src={card.imageUrl} alt={card.title} fill sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw" className="z-0 transition-transform duration-300 group-hover:scale-110 object-cover" data-ai-hint={card.dataAiHint} />
+                      <div className="absolute inset-0 bg-black/50 z-10"></div>
+                    </>
+                  ) : null}
+                  <div className="z-20 flex flex-col items-center justify-center">
+                    <div className="mb-3">{card.icon}</div>
+                    <CardTitle className="text-base md:text-lg font-bold">{card.title}</CardTitle>
+                    <CardDescription className="text-white/80 text-xs hidden sm:block mt-1">{card.description}</CardDescription>
                   </div>
-                  <CardTitle className="mt-4 font-headline text-xl md:text-2xl">{program.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-foreground/80">{program.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section data-animate="fade-in-up" className="w-full bg-secondary py-12 md:py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="font-headline text-2xl font-bold md:text-4xl">Curriculum Highlights</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg text-foreground/80">
-              Our curriculum is practical, up-to-date, and aligned with industry needs.
-            </p>
-          </div>
-          <div className="mx-auto mt-10 max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-            {curriculumHighlights.map((highlight) => (
-              <div key={highlight} data-animate="stagger-item-2" className="flex items-start">
-                <ArrowRight className={`h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0`} />
-                <p className="text-base md:text-lg">{highlight}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      
-      <section data-animate="fade-in-up" className="w-full py-12 md:py-20">
-        <div className="container mx-auto px-4 text-center">
-            <h2 className="font-headline text-2xl font-bold md:text-3xl">Ready to Start Your Tech Journey?</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg text-foreground/80">
-                Take the first step towards a rewarding career in technology.
-            </p>
-            <Button asChild size="lg" className="mt-6 transform transition-transform hover:scale-105">
-              <Link href="/admissions">
-                Enroll Now <ArrowRight className="ml-2 h-5 w-5" />
+                </Card>
               </Link>
-            </Button>
+            ))}
+           </div>
         </div>
       </section>
     </div>
