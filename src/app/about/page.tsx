@@ -45,10 +45,10 @@ export default function AboutPage() {
       dataAiHint: 'man developer',
     },
     {
-      name: 'Mr. Amit Singh',
-      position: 'Placement Officer',
-      image: 'https://placehold.co/400x400.png',
-      dataAiHint: 'man corporate',
+      name: 'Jeevan Singh',
+      position: 'Mobile Application Development',
+      image: 'https://i.ibb.co/Pv1xJFLX/Whats-App-Image-2025-06-29-at-1-03-58-PM.jpg',
+      dataAiHint: 'man developer',
     },
   ];
 
