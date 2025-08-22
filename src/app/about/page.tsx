@@ -83,7 +83,7 @@ export default function AboutPage() {
             </div>
             <div className="order-1 md:order-2">
               <Image
-                src="https://placehold.co/800x600.png"
+                src="https://i.ibb.co/jv8gNqNH/Compress-JPEG-Online-img-800x600.jpg"
                 data-ai-hint="modern computer lab"
                 alt="Modern computer lab"
                 width={800}
