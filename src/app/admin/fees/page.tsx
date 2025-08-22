@@ -11,7 +11,11 @@ import {
   Loader2,
   Banknote,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  Eye,
+  CheckCircle,
+  XCircle,
+  Clock,
 } from 'lucide-react';
 import {
   Card,
@@ -45,7 +49,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber, cn } from '@/lib/utils';
+import { format, addMonths } from 'date-fns';
+
+type Installment = {
+  id: number;
+  dueDate: Date;
+  amount: number;
+  status: 'Paid' | 'Due' | 'Overdue';
+  paymentDate?: Date;
+};
 
 type StudentFee = {
   id: string;
@@ -55,15 +68,36 @@ type StudentFee = {
   photoURL?: string;
   totalFees: number;
   feesPaid: number;
+  installments: Installment[];
 };
 
-// Mock data
-const mockStudents: StudentFee[] = [
-    { id: '1', name: 'Ravi Kumar', grade: 12, avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000, feesPaid: 25000 },
-    { id: '2', name: 'Priya Sharma', grade: 11, avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png', totalFees: 40000, feesPaid: 40000 },
-    { id: '3', name: 'Amit Patel', grade: 12, avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png', totalFees: 60000, feesPaid: 60000 },
-    { id: '4', name: 'Sunita Devi', grade: 10, avatarHint: 'student thinking', photoURL: 'https://placehold.co/100x100.png', totalFees: 45000, feesPaid: 10000 },
-    { id: '5', name: 'Vijay Singh', grade: 11, avatarHint: 'student outside', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000, feesPaid: 30000 },
+// --- Helper function to generate mock installments ---
+const generateInstallments = (totalFees: number): Installment[] => {
+    const installmentAmount = totalFees / 6;
+    const today = new Date();
+    return Array.from({ length: 6 }, (_, i) => {
+        const dueDate = addMonths(new Date(today.getFullYear(), today.getMonth(), 15), i);
+        let status: 'Due' | 'Overdue' = 'Due';
+        if (dueDate < today) {
+            status = 'Overdue';
+        }
+        return {
+            id: i + 1,
+            dueDate: dueDate,
+            amount: installmentAmount,
+            status: status,
+        };
+    });
+};
+
+
+// --- Mock Data ---
+const mockStudents: Omit<StudentFee, 'installments' | 'feesPaid'>[] = [
+    { id: '1', name: 'Ravi Kumar', grade: 12, avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000 },
+    { id: '2', name: 'Priya Sharma', grade: 11, avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png', totalFees: 40000 },
+    { id: '3', name: 'Amit Patel', grade: 12, avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png', totalFees: 60000 },
+    { id: '4', name: 'Sunita Devi', grade: 10, avatarHint: 'student thinking', photoURL: 'https://placehold.co/100x100.png', totalFees: 45000 },
+    { id: '5', name: 'Vijay Singh', grade: 11, avatarHint: 'student outside', photoURL: 'https://placehold.co/100x100.png', totalFees: 50000 },
 ];
 
 const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.ReactNode, title: string, value: string, bgColor: string, iconColor: string }) => (
@@ -79,49 +113,84 @@ const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.Reac
 );
 
 export default function FeesPage() {
-  const [students, setStudents] = useState<StudentFee[]>(mockStudents);
-  const [loading, setLoading] = useState(false);
-  const [isCollectFeeDialogOpen, setIsCollectFeeDialogOpen] = useState(false);
+  const [students, setStudents] = useState<StudentFee[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentFee | null>(null);
-  const [paymentAmount, setPaymentAmount] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
 
-  const handleCollectFeeClick = (student: StudentFee) => {
+  useEffect(() => {
+    // Initialize students with their installments and paid amounts
+    const initialStudents = mockStudents.map(s => {
+        const installments = generateInstallments(s.totalFees);
+        // Let's mock some payments
+        if (s.id === '1') { // Ravi Kumar
+            installments[0].status = 'Paid';
+            installments[0].paymentDate = new Date();
+        }
+        if (s.id === '2') { // Priya Sharma
+            installments.forEach(i => {
+                i.status = 'Paid';
+                i.paymentDate = new Date();
+            });
+        }
+        const feesPaid = installments.filter(i => i.status === 'Paid').reduce((acc, i) => acc + i.amount, 0);
+        return { ...s, installments, feesPaid };
+    });
+    setStudents(initialStudents);
+    setLoading(false);
+  }, []);
+
+  const handleViewDetails = (student: StudentFee) => {
     setSelectedStudent(student);
-    setPaymentAmount('');
-    setIsCollectFeeDialogOpen(true);
+    setIsDetailsDialogOpen(true);
   };
 
-  const handleProcessPayment = async () => {
-    if (!selectedStudent || !paymentAmount) return;
-    setLoading(true);
+  const handlePayInstallment = (studentId: string, installmentId: number) => {
+      setStudents(prevStudents => 
+        prevStudents.map(student => {
+            if (student.id !== studentId) return student;
 
-    const amount = parseFloat(paymentAmount);
-    if (isNaN(amount) || amount <= 0) {
-      toast({ variant: 'destructive', title: 'Invalid Amount', description: 'Please enter a valid payment amount.' });
-      setLoading(false);
-      return;
-    }
-
-    const remainingFees = selectedStudent.totalFees - selectedStudent.feesPaid;
-    if (amount > remainingFees) {
-      toast({ variant: 'destructive', title: 'Overpayment Error', description: `Payment cannot exceed the remaining balance of ₹${remainingFees}.` });
-      setLoading(false);
-      return;
-    }
-
-    // Mock payment processing
-    setTimeout(() => {
-        setStudents(students.map(s => 
-            s.id === selectedStudent.id ? { ...s, feesPaid: s.feesPaid + amount } : s
-        ));
-        toast({ title: 'Payment Successful', description: `₹${amount} collected from ${selectedStudent.name}.` });
-        setIsCollectFeeDialogOpen(false);
-        setSelectedStudent(null);
-        setLoading(false);
-    }, 500);
+            let totalPaid = 0;
+            const updatedInstallments = student.installments.map(inst => {
+                if (inst.id === installmentId) {
+                    inst.status = 'Paid';
+                    inst.paymentDate = new Date();
+                }
+                if (inst.status === 'Paid') {
+                    totalPaid += inst.amount;
+                }
+                return inst;
+            });
+            
+            const updatedStudent = { ...student, installments: updatedInstallments, feesPaid: totalPaid };
+            setSelectedStudent(updatedStudent); // Update the student in the dialog
+            return updatedStudent;
+        })
+      );
+      toast({ title: 'Success', description: 'Installment paid successfully.' });
   };
+  
+  const handlePayFullFee = (studentId: string) => {
+      setStudents(prevStudents =>
+          prevStudents.map(student => {
+              if (student.id !== studentId) return student;
+
+              const updatedInstallments = student.installments.map(inst => ({
+                  ...inst,
+                  status: 'Paid' as 'Paid',
+                  paymentDate: inst.status !== 'Paid' ? new Date() : inst.paymentDate,
+              }));
+              
+              const updatedStudent = { ...student, installments: updatedInstallments, feesPaid: student.totalFees };
+              setSelectedStudent(updatedStudent);
+              return updatedStudent;
+          })
+      );
+      toast({ title: 'Success', description: 'Full fee paid successfully.' });
+  };
+
 
   const totalCollected = students.reduce((acc, s) => acc + s.feesPaid, 0);
   const totalFees = students.reduce((acc, s) => acc + s.totalFees, 0);
@@ -131,7 +200,7 @@ export default function FeesPage() {
     s.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading && !isCollectFeeDialogOpen) {
+  if (loading) {
       return (
         <div className="flex items-center justify-center h-full">
             <Loader2 className="h-8 w-8 animate-spin" />
@@ -171,8 +240,8 @@ export default function FeesPage() {
                 <TableHead className="text-right">Fees Paid</TableHead>
                 <TableHead className="text-right">Remaining</TableHead>
                 <TableHead className="text-center">Status</TableHead>
-                <TableHead>
-                  <span className="sr-only">Actions</span>
+                <TableHead className="text-right">
+                  Actions
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -209,15 +278,15 @@ export default function FeesPage() {
                     </TableCell>
                     <TableCell className="text-center">
                         <div className="flex flex-col items-center gap-1">
-                             <Badge variant={isPaid ? 'default' : 'secondary'} className={isPaid ? 'bg-green-600' : ''}>
+                             <Badge variant={isPaid ? 'default' : 'secondary'} className={isPaid ? 'bg-green-600 hover:bg-green-700' : ''}>
                                 {isPaid ? 'Paid' : 'Pending'}
                             </Badge>
                             <Progress value={paidPercentage} className="h-1.5 w-20 mt-1" indicatorClassName={isPaid ? 'bg-green-600' : ''} />
                         </div>
                     </TableCell>
-                    <TableCell>
-                         <Button variant="outline" size="sm" onClick={() => handleCollectFeeClick(student)} disabled={isPaid}>
-                           <Receipt className="mr-2 h-4 w-4" /> Collect Fee
+                    <TableCell className="text-right">
+                         <Button variant="outline" size="sm" onClick={() => handleViewDetails(student)}>
+                           <Eye className="mr-2 h-4 w-4" /> View Details
                         </Button>
                     </TableCell>
                     </TableRow>
@@ -233,44 +302,65 @@ export default function FeesPage() {
         </CardFooter>
       </Card>
 
-      <Dialog open={isCollectFeeDialogOpen} onOpenChange={setIsCollectFeeDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={isDetailsDialogOpen} onOpenChange={setIsDetailsDialogOpen}>
+        <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Collect Fee from {selectedStudent?.name}</DialogTitle>
+              <DialogTitle>Installment Details for {selectedStudent?.name}</DialogTitle>
               <DialogDescription>
-                Enter the amount to be paid. The remaining balance is ₹{((selectedStudent?.totalFees ?? 0) - (selectedStudent?.feesPaid ?? 0)).toLocaleString()}.
+                Manage individual installments. Total due: ₹{(selectedStudent?.totalFees ?? 0) - (selectedStudent?.feesPaid ?? 0)}
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="amount" className="text-right">
-                  Amount (INR)
-                </Label>
-                <Input 
-                    id="amount" 
-                    name="amount" 
-                    type="number" 
-                    value={paymentAmount}
-                    onChange={(e) => setPaymentAmount(e.target.value)}
-                    placeholder="Enter amount" 
-                    className="col-span-3"
-                    disabled={loading}
-                 />
-              </div>
+            <div className="max-h-[60vh] overflow-y-auto pr-2">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Installment</TableHead>
+                            <TableHead>Due Date</TableHead>
+                            <TableHead>Amount</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead className="text-right">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                    {selectedStudent?.installments.map(inst => (
+                        <TableRow key={inst.id}>
+                            <TableCell>Installment {inst.id}</TableCell>
+                            <TableCell>{format(inst.dueDate, 'PPP')}</TableCell>
+                            <TableCell>₹{inst.amount.toLocaleString()}</TableCell>
+                            <TableCell>
+                                <Badge variant={inst.status === 'Paid' ? 'default' : 'secondary'} className={cn(
+                                    inst.status === 'Paid' && 'bg-green-600 hover:bg-green-700',
+                                    inst.status === 'Overdue' && 'bg-red-500 hover:bg-red-600',
+                                    inst.status === 'Due' && 'bg-yellow-500 hover:bg-yellow-600'
+                                )}>
+                                     {inst.status === 'Paid' ? <CheckCircle className="mr-1 h-3 w-3" /> : <Clock className="mr-1 h-3 w-3" />}
+                                     {inst.status}
+                                </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                                <Button size="sm" onClick={() => handlePayInstallment(selectedStudent.id, inst.id)} disabled={inst.status === 'Paid'}>
+                                    <Receipt className="mr-2 h-4 w-4" /> Pay
+                                </Button>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
             </div>
-            <DialogFooter>
+            <DialogFooter className="sm:justify-between items-center mt-4 pt-4 border-t">
+                 <Button onClick={() => handlePayFullFee(selectedStudent!.id)} disabled={selectedStudent?.feesPaid === selectedStudent?.totalFees}>
+                    <DollarSign className="mr-2 h-4 w-4" /> Pay Full Remaining Fee
+                </Button>
                 <DialogClose asChild>
-                    <Button type="button" variant="secondary" disabled={loading}>
-                        Cancel
+                    <Button type="button" variant="secondary">
+                        Close
                     </Button>
                 </DialogClose>
-              <Button type="button" onClick={handleProcessPayment} disabled={loading}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Process Payment
-              </Button>
             </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
+
+    
