@@ -42,7 +42,7 @@ export default async function CertificatePage({ params }: { params: { studentId:
   // NOTE: Sharing functionality will not work in a Server Component as it requires client-side window object.
   // For a real app, this would need to be extracted into a client component.
   const shareUrl = `https://your-app-domain.com/certificate/${student.id}`;
-  const shareText = `Check out the certificate for ${student.name} from Web and App!`;
+  const shareText = `Check out the certificate for ${student.name} from Global Computer Institute!`;
 
 
   return (
@@ -76,7 +76,7 @@ export default async function CertificatePage({ params }: { params: { studentId:
 
                       <header className="flex flex-col items-center">
                           <BookOpen className="h-16 w-16 text-primary" />
-                          <h1 className="text-3xl sm:text-4xl font-headline font-bold mt-2">Web and App</h1>
+                          <h1 className="text-3xl sm:text-4xl font-headline font-bold mt-2">Global Computer Institute</h1>
                       </header>
 
                       <div className="space-y-2">

@@ -53,7 +53,7 @@ export default function AdmissionsPage() {
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">Admissions</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base md:text-lg text-foreground/80">
-            Join Web and App. Learn about our simple enrollment process.
+            Join Global Computer Institute. Learn about our simple enrollment process.
           </p>
         </div>
       </section>
@@ -62,7 +62,7 @@ export default function AdmissionsPage() {
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">How to Enroll</h2>
           <p className="text-center mx-auto mt-4 max-w-2xl text-foreground/80">
-            We have a straightforward admissions process. Follow these steps to begin your journey at Web and App.
+            We have a straightforward admissions process. Follow these steps to begin your journey at Global Computer Institute.
           </p>
           <div className="relative mt-12">
             <div className="absolute left-1/2 top-4 hidden h-[calc(100%-2rem)] w-0.5 -translate-x-1/2 bg-border md:block"></div>
