@@ -45,6 +45,7 @@ type StudentFee = {
   totalFees: number;
   feesPaid: number;
   installments: Installment[];
+  registrationFeePaid: boolean;
 };
 
 const MOCK_STUDENTS_KEY = 'mockStudentsData';
@@ -84,7 +85,7 @@ export function updateAllStudents(students: Student[]) {
 }
 
 
-export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint' | 'status' | 'program' | 'admissionDate'>): Student | null {
+export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint' | 'status' | 'program' | 'admissionDate'> & { registrationFeePaid?: boolean }): Student | null {
     if (typeof window === 'undefined') return null;
 
     const students = getAllStudents();
@@ -105,7 +106,7 @@ export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint
     const updatedStudents = [newStudent, ...students];
     sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(updatedStudents));
     // After adding student, ensure their fee data is also generated
-    generateFeeForStudent(newStudent);
+    generateFeeForStudent(newStudent, studentData.registrationFeePaid || false);
     return newStudent;
 }
 
@@ -136,28 +137,45 @@ export function updateStudentData(studentId: string, dataToUpdate: Partial<Stude
 // --- Fee related functions using the same data source ---
 import { addMonths, isPast } from 'date-fns';
 
-const generateInstallments = (totalFees: number): Installment[] => {
-    const installmentAmount = Math.round(totalFees / 6); // Round to avoid decimals
+const generateInstallments = (totalFees: number, registrationFeePaid: boolean): Installment[] => {
+    const registrationFee = 100;
+    const remainingFees = totalFees - (registrationFeePaid ? registrationFee : 0);
+    const installmentCount = 6;
+    const installmentAmount = Math.round(remainingFees / installmentCount);
     const today = new Date();
-    return Array.from({ length: 6 }, (_, i) => {
-        const dueDate = addMonths(new Date(today.getFullYear(), today.getMonth(), 15), i - 1); // Start from last month for some overdue
+    
+    let installments = Array.from({ length: installmentCount }, (_, i) => {
+        const dueDate = addMonths(new Date(today.getFullYear(), today.getMonth(), 15), i);
         let status: 'Due' | 'Overdue' = isPast(dueDate) ? 'Overdue' : 'Due';
         
         return {
             id: i + 1,
             dueDate: dueDate,
             amount: installmentAmount,
-            status: status,
+            status: status as InstallmentStatus,
             linkSent: false,
         };
     });
+
+    if (registrationFeePaid) {
+        installments.unshift({
+            id: 0, // Special ID for registration fee
+            dueDate: today,
+            amount: registrationFee,
+            status: 'Paid',
+            paymentDate: today,
+            linkSent: false
+        });
+    }
+
+    return installments;
 };
 
-const generateFeeForStudent = (student: Student): StudentFee => {
+const generateFeeForStudent = (student: Student, registrationFeePaid: boolean = false): StudentFee => {
      // This is a simplified fee structure. Could be more complex in a real app.
     const totalFees = student.grade === '12' ? 60000 : student.grade === '11' ? 50000 : 45000;
-    const installments = generateInstallments(totalFees);
-    const feesPaid = 0;
+    const installments = generateInstallments(totalFees, registrationFeePaid);
+    const feesPaid = installments.filter(i => i.status === 'Paid').reduce((acc, i) => acc + i.amount, 0);
 
      const feeData: StudentFee = {
         id: student.id,
@@ -168,6 +186,7 @@ const generateFeeForStudent = (student: Student): StudentFee => {
         totalFees,
         feesPaid,
         installments,
+        registrationFeePaid,
     };
     // Attach the new fee data to the student record for persistence
     updateStudentData(student.id, { fees: feeData });

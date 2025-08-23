@@ -114,6 +114,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
             address: pendingRegistrationData.village,
             dob: pendingRegistrationData.dob,
             photoURL: photoDataUrl || undefined,
+            registrationFeePaid: true,
         };
         const newStudent = addStudent(studentData);
 
