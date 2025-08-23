@@ -26,6 +26,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 
+declare global {
+    interface Window {
+        Razorpay: any;
+    }
+}
+
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -53,9 +59,6 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [paymentLoading, setPaymentLoading] = useState(false);
-  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
-  const [pendingRegistrationData, setPendingRegistrationData] = useState<FormValues | null>(null);
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
 
 
@@ -95,24 +98,18 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     }
   };
 
-  const handleConfirmPayment = async () => {
-    if (!pendingRegistrationData) return;
-
-    setPaymentLoading(true);
-
+  const processRegistration = async (formData: FormValues, paymentId: string) => {
     try {
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay for payment processing
-        
         const studentData = {
-            name: pendingRegistrationData.fullName,
-            email: pendingRegistrationData.email,
-            phone: pendingRegistrationData.phoneNumber,
-            parent: pendingRegistrationData.fatherName,
-            motherName: pendingRegistrationData.motherName,
-            grade: pendingRegistrationData.grade,
-            gender: pendingRegistrationData.gender,
-            address: pendingRegistrationData.village,
-            dob: pendingRegistrationData.dob,
+            name: formData.fullName,
+            email: formData.email,
+            phone: formData.phoneNumber,
+            parent: formData.fatherName,
+            motherName: formData.motherName,
+            grade: formData.grade,
+            gender: formData.gender,
+            address: formData.village,
+            dob: formData.dob,
             photoURL: photoDataUrl || undefined,
             registrationFeePaid: true,
         };
@@ -124,15 +121,13 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
         
         toast({
             title: 'Registration Successful!',
-            description: "Your application has been received. You will be redirected to login.",
+            description: `Payment ID: ${paymentId}. You will be redirected to login.`,
         });
 
-        setIsPaymentDialogOpen(false);
         form.reset();
-        setPendingRegistrationData(null);
         setPhotoDataUrl(null);
 
-        setTimeout(() => router.push('/login'), 1500);
+        setTimeout(() => router.push('/login'), 2000);
 
     } catch (error) {
          toast({
@@ -141,19 +136,48 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
             description: 'There was a problem saving your data. Please try again.',
         });
     } finally {
-        setPaymentLoading(false);
         setLoading(false);
     }
   };
 
   async function onSubmit(values: FormValues) {
     setLoading(true);
-    setPendingRegistrationData(values);
-    
-    // Simulate reCAPTCHA verification or other checks before showing payment dialog
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setIsPaymentDialogOpen(true);
+
+    const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: 100 * 100, // Amount in paise (100 INR)
+        currency: "INR",
+        name: "Global Computer Institute",
+        description: "Registration Fee",
+        image: "https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png",
+        handler: function (response: any) {
+            processRegistration(values, response.razorpay_payment_id);
+        },
+        prefill: {
+            name: values.fullName,
+            email: values.email,
+            contact: values.phoneNumber,
+        },
+        notes: {
+            address: values.village,
+        },
+        theme: {
+            color: "#3B82F6",
+        },
+        modal: {
+            ondismiss: function() {
+                setLoading(false); // Re-enable the button if the user closes the modal
+                toast({
+                    variant: "destructive",
+                    title: "Payment Cancelled",
+                    description: "You cancelled the payment process.",
+                })
+            }
+        }
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   }
 
   return (
@@ -363,7 +387,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
           <CardFooter className="flex flex-col gap-4">
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {loading ? 'Verifying...' : 'Create Account & Continue'}
+                {loading ? 'Processing...' : 'Pay ₹100 & Register'}
               </Button>
               <p className="text-sm text-foreground/80">
                 Already have an account?{' '}
@@ -375,36 +399,6 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
         </form>
       </Form>
     </Card>
-
-    <Dialog open={isPaymentDialogOpen} onOpenChange={ (isOpen) => {
-        setIsPaymentDialogOpen(isOpen);
-        if (!isOpen) {
-          setLoading(false); // Reset loading state if dialog is closed manually
-          setPendingRegistrationData(null);
-        }
-    }}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Final Step: Registration Fee</DialogTitle>
-          <DialogDescription>
-            A non-refundable registration fee of ₹100 is required to complete your application. This payment is processed securely.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex flex-col items-center justify-center space-y-4 py-4">
-            <ShieldCheck className="h-16 w-16 text-green-500" />
-            <p className="text-center text-muted-foreground">You are about to make a secure payment. We do not store your card details.</p>
-        </div>
-        <DialogFooter>
-          <Button type="button" variant="outline" onClick={() => setIsPaymentDialogOpen(false)} disabled={paymentLoading}>Cancel</Button>
-          <Button type="button" onClick={handleConfirmPayment} disabled={paymentLoading}>
-             {paymentLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : null}
-              {paymentLoading ? 'Processing...' : 'Pay ₹100 Securely'}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
     </>
   );
 }

@@ -91,6 +91,7 @@ export default function RootLayout({
         </div>
         <Toaster />
         <DynamicDiscountPopup />
+        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       </body>
     </html>
   );
