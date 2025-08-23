@@ -1,3 +1,4 @@
+
 // A simple in-memory data store for students that persists in sessionStorage
 // In a real application, this would be a database.
 
@@ -78,17 +79,12 @@ export function getAllStudents(): Student[] {
 
 export function updateAllStudents(students: Student[]) {
     if (typeof window !== 'undefined') {
-        const existingData = getAllStudents();
-        const updatedData = existingData.map(existingStudent => {
-            const updatedStudent = students.find(s => s.id === existingStudent.id);
-            return updatedStudent ? { ...existingStudent, ...updatedStudent } : existingStudent;
-        });
-        sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(updatedData));
+        sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(students));
     }
 }
 
 
-export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint' | 'photoURL' | 'status' | 'program' | 'admissionDate'>): Student | null {
+export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint' | 'status' | 'program' | 'admissionDate'>): Student | null {
     if (typeof window === 'undefined') return null;
 
     const students = getAllStudents();
@@ -100,7 +96,7 @@ export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint
         id: newId,
         roll,
         avatarHint: studentData.gender.toLowerCase() === 'female' ? 'female student' : 'male student',
-        photoURL: 'https://placehold.co/100x100.png',
+        photoURL: studentData.photoURL || 'https://placehold.co/100x100.png',
         status: 'Enrolled',
         program: 'Not Assigned', // Default program
         admissionDate: new Date().toISOString().split('T')[0],

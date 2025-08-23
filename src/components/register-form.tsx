@@ -56,6 +56,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
   const [pendingRegistrationData, setPendingRegistrationData] = useState<FormValues | null>(null);
+  const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
 
 
   const form = useForm<FormValues>({
@@ -83,6 +84,17 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     }
   }, [selectedCourse, form]);
 
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoDataUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleConfirmPayment = async () => {
     if (!pendingRegistrationData) return;
 
@@ -96,10 +108,12 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
             email: pendingRegistrationData.email,
             phone: pendingRegistrationData.phoneNumber,
             parent: pendingRegistrationData.fatherName,
+            motherName: pendingRegistrationData.motherName,
             grade: pendingRegistrationData.grade,
             gender: pendingRegistrationData.gender,
             address: pendingRegistrationData.village,
             dob: pendingRegistrationData.dob,
+            photoURL: photoDataUrl || undefined,
         };
         const newStudent = addStudent(studentData);
 
@@ -115,6 +129,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
         setIsPaymentDialogOpen(false);
         form.reset();
         setPendingRegistrationData(null);
+        setPhotoDataUrl(null);
 
         setTimeout(() => router.push('/login'), 1500);
 
@@ -169,7 +184,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                  <FormItem>
                   <FormLabel>Your Passport-size Photo</FormLabel>
                   <FormControl>
-                    <Input type="file" accept="image/*" disabled={loading} />
+                    <Input type="file" accept="image/*" disabled={loading} onChange={handlePhotoUpload} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
