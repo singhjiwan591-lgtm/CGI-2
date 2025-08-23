@@ -81,7 +81,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
       </head>
-      <body suppressHydrationWarning={true} className={cn("font-body bg-background text-foreground antialiased min-h-screen flex flex-col", "screenshot-hidden")}>
+      <body suppressHydrationWarning={true} className={cn("font-body bg-background text-foreground antialiased min-h-screen flex flex-col")}>
         <TamperProtector />
         <Preloader />
         <div className="relative flex flex-col items-center flex-1 w-full">

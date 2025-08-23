@@ -93,41 +93,7 @@
 }
 
 @media print {
-  html::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: black;
-    z-index: 999999;
-  }
   body * {
     visibility: hidden;
-  }
-}
-
-@layer utilities {
-  @media (min-width: 640px) {
-    .screenshot-hidden {
-      position: relative;
-    }
-    .screenshot-hidden::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: hsl(var(--background));
-      z-index: 9999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-    }
-    .screenshot-hidden:not(:hover)::before {
-      opacity: 1;
-    }
   }
 }
