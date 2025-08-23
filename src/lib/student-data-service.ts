@@ -16,6 +16,11 @@ type Student = {
   avatarHint: string;
   status: 'Enrolled' | 'Withdrawn' | 'Graduated';
   program: string;
+  motherName?: string;
+  religion?: string;
+  fatherOccupation?: string;
+  admissionDate: string;
+  section?: string;
   fees?: StudentFee; // Optional fee data can be attached
 };
 
@@ -44,11 +49,11 @@ type StudentFee = {
 const MOCK_STUDENTS_KEY = 'mockStudentsData';
 
 const initialMockStudents: Student[] = [
-    { id: '1', name: 'Ravi Kumar', roll: '1001', grade: '12', parent: 'Manoj Kumar', gender: 'Male', address: 'Mumbai, India', dob: '2006-05-15', phone: '+91 9876543210', email: 'ravi@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'male student', status: 'Enrolled', program: 'Science' },
-    { id: '2', name: 'Priya Sharma', roll: '1002', grade: '11', parent: 'Sunita Sharma', gender: 'Female', address: 'Delhi, India', dob: '2007-02-20', phone: '+91 9876543211', email: 'priya@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'female student', status: 'Graduated', program: 'Arts' },
-    { id: '3', name: 'Amit Patel', roll: '1003', grade: '12', parent: 'Rajesh Patel', gender: 'Male', address: 'Ahmedabad, India', dob: '2006-08-10', phone: '+91 9876543212', email: 'amit@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy student', status: 'Graduated', program: 'Technology' },
-    { id: '4', name: 'Sunita Devi', roll: '1004', grade: '10', parent: 'Anil Singh', gender: 'Female', address: 'Patna, India', dob: '2008-11-25', phone: '+91 9876543213', email: 'sunita@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'girl smiling', status: 'Enrolled', program: 'Commerce' },
-    { id: '5', name: 'Vijay Singh', roll: '1005', grade: '11', parent: 'Kiran Singh', gender: 'Male', address: 'Jaipur, India', dob: '2007-07-07', phone: '+91 9876543214', email: 'vijay@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'student glasses', status: 'Withdrawn', program: 'Science' },
+    { id: '1', name: 'Ravi Kumar', roll: '1001', grade: '12', parent: 'Manoj Kumar', gender: 'Male', address: 'Mumbai, India', dob: '2006-05-15', phone: '+91 9876543210', email: 'ravi@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'male student', status: 'Enrolled', program: 'Science', admissionDate: '2022-04-01', motherName: 'Anjali Kumar', religion: 'Hinduism', fatherOccupation: 'Engineer' },
+    { id: '2', name: 'Priya Sharma', roll: '1002', grade: '11', parent: 'Sunita Sharma', gender: 'Female', address: 'Delhi, India', dob: '2007-02-20', phone: '+91 9876543211', email: 'priya@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'female student', status: 'Graduated', program: 'Arts', admissionDate: '2021-04-10', motherName: 'Reena Sharma', religion: 'Hinduism', fatherOccupation: 'Doctor' },
+    { id: '3', name: 'Amit Patel', roll: '1003', grade: '12', parent: 'Rajesh Patel', gender: 'Male', address: 'Ahmedabad, India', dob: '2006-08-10', phone: '+91 9876543212', email: 'amit@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy student', status: 'Graduated', program: 'Technology', admissionDate: '2022-04-05', motherName: 'Jayshree Patel', religion: 'Hinduism', fatherOccupation: 'Businessman' },
+    { id: '4', name: 'Sunita Devi', roll: '1004', grade: '10', parent: 'Anil Singh', gender: 'Female', address: 'Patna, India', dob: '2008-11-25', phone: '+91 9876543213', email: 'sunita@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'girl smiling', status: 'Enrolled', program: 'Commerce', admissionDate: '2023-04-15', motherName: 'Babita Devi', religion: 'Hinduism', fatherOccupation: 'Farmer' },
+    { id: '5', name: 'Vijay Singh', roll: '1005', grade: '11', parent: 'Kiran Singh', gender: 'Male', address: 'Jaipur, India', dob: '2007-07-07', phone: '+91 9876543214', email: 'vijay@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'student glasses', status: 'Withdrawn', program: 'Science', admissionDate: '2021-05-20', motherName: 'Meena Singh', religion: 'Sikhism', fatherOccupation: 'Army Officer' },
 ];
 
 
@@ -73,12 +78,17 @@ export function getAllStudents(): Student[] {
 
 export function updateAllStudents(students: Student[]) {
     if (typeof window !== 'undefined') {
-        sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(students));
+        const existingData = getAllStudents();
+        const updatedData = existingData.map(existingStudent => {
+            const updatedStudent = students.find(s => s.id === existingStudent.id);
+            return updatedStudent ? { ...existingStudent, ...updatedStudent } : existingStudent;
+        });
+        sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(updatedData));
     }
 }
 
 
-export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint' | 'photoURL' | 'status'>): Student | null {
+export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint' | 'photoURL' | 'status' | 'program' | 'admissionDate'>): Student | null {
     if (typeof window === 'undefined') return null;
 
     const students = getAllStudents();
@@ -91,11 +101,15 @@ export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint
         roll,
         avatarHint: studentData.gender.toLowerCase() === 'female' ? 'female student' : 'male student',
         photoURL: 'https://placehold.co/100x100.png',
-        status: 'Enrolled', // All new students start as enrolled
+        status: 'Enrolled',
+        program: 'Not Assigned', // Default program
+        admissionDate: new Date().toISOString().split('T')[0],
     };
     
     const updatedStudents = [newStudent, ...students];
     sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(updatedStudents));
+    // After adding student, ensure their fee data is also generated
+    generateFeeForStudent(newStudent);
     return newStudent;
 }
 
@@ -109,8 +123,15 @@ export function updateStudentData(studentId: string, dataToUpdate: Partial<Stude
         const students = getAllStudents();
         const studentIndex = students.findIndex(s => s.id === studentId);
         if (studentIndex > -1) {
+            // Merge new data with existing data, ensuring fees are not lost
+            const existingFees = students[studentIndex].fees;
             students[studentIndex] = { ...students[studentIndex], ...dataToUpdate };
-            updateAllStudents(students);
+            if (dataToUpdate.fees) {
+                 students[studentIndex].fees = { ...existingFees, ...dataToUpdate.fees };
+            } else {
+                students[studentIndex].fees = existingFees;
+            }
+            sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(students));
         }
     }
 }
@@ -136,47 +157,36 @@ const generateInstallments = (totalFees: number): Installment[] => {
     });
 };
 
+const generateFeeForStudent = (student: Student): StudentFee => {
+     // This is a simplified fee structure. Could be more complex in a real app.
+    const totalFees = student.grade === '12' ? 60000 : student.grade === '11' ? 50000 : 45000;
+    const installments = generateInstallments(totalFees);
+    const feesPaid = 0;
+
+     const feeData: StudentFee = {
+        id: student.id,
+        name: student.name,
+        grade: parseInt(student.grade, 10),
+        avatarHint: student.avatarHint,
+        photoURL: student.photoURL,
+        totalFees,
+        feesPaid,
+        installments,
+    };
+    // Attach the new fee data to the student record for persistence
+    updateStudentData(student.id, { fees: feeData });
+    return feeData;
+};
+
 export function getAllStudentsWithFees(): StudentFee[] {
     const students = getAllStudents();
     return students.map(s => {
-        if (s.fees) {
+        if (s.fees && s.fees.installments) {
             const feesPaid = s.fees.installments.filter(i => i.status === 'Paid').reduce((acc, i) => acc + i.amount, 0);
             return {...s.fees, feesPaid};
         }
-
-        // This is a simplified fee structure. Could be more complex in a real app.
-        const totalFees = s.grade === '12' ? 60000 : s.grade === '11' ? 50000 : 45000;
-        const installments = generateInstallments(totalFees);
         
-        // Mock some payments for initial data if it's one of the original students
-        if (s.id === '2') { // Priya Sharma - let's make her fully paid
-             installments.forEach(i => {
-                i.status = 'Paid';
-                i.paymentDate = new Date();
-            });
-        }
-        if (s.id === '3') { // Amit Patel
-            installments[0].status = 'Paid';
-            installments[0].paymentDate = new Date();
-            installments[1].status = 'Paid';
-            installments[1].paymentDate = new Date();
-        }
-        const feesPaid = installments.filter(i => i.status === 'Paid').reduce((acc, i) => acc + i.amount, 0);
-
-        const feeData: StudentFee = {
-            id: s.id,
-            name: s.name,
-            grade: parseInt(s.grade, 10),
-            avatarHint: s.avatarHint,
-            photoURL: s.photoURL,
-            totalFees,
-            feesPaid,
-            installments,
-        };
-
-        // Attach the new fee data to the student record for persistence
-        updateStudentData(s.id, { fees: feeData });
-
-        return feeData;
+        // This handles students who might not have fee data generated yet.
+        return generateFeeForStudent(s);
     });
 }

@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/card';
 import { notFound, useParams } from 'next/navigation';
 import { getStudentById } from '@/lib/student-data-service';
+import { format } from 'date-fns';
 
 const StudentDetailsCard = ({ student }: { student: any }) => (
   <Card>
@@ -44,12 +45,12 @@ const StudentDetailsCard = ({ student }: { student: any }) => (
         <div className="flex justify-between"><span className="text-muted-foreground">Name:</span> <span className="font-medium">{student.name}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Gender:</span> <span className="font-medium">{student.gender}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Father Name:</span> <span className="font-medium">{student.parent}</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Mother Name:</span> <span className="font-medium">Jannatul Kazi</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Date Of Birth:</span> <span className="font-medium">{student.dob}</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Mother Name:</span> <span className="font-medium">{student.motherName || 'Not Specified'}</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Date Of Birth:</span> <span className="font-medium">{format(new Date(student.dob), 'PPP')}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Religion:</span> <span className="font-medium">{student.religion || 'Not Specified'}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Father Occupation:</span> <span className="font-medium">{student.fatherOccupation || 'Not Specified'}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">E-Mail:</span> <span className="font-medium">{student.email}</span></div>
-        <div className="flex justify-between"><span className="text-muted-foreground">Admission Date:</span> <span className="font-medium">{student.admissionDate || new Date().toISOString().split('T')[0]}</span></div>
+        <div className="flex justify-between"><span className="text-muted-foreground">Admission Date:</span> <span className="font-medium">{format(new Date(student.admissionDate), 'PPP')}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Class:</span> <span className="font-medium">{student.grade}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Section:</span> <span className="font-medium">{student.section || 'A'}</span></div>
         <div className="flex justify-between"><span className="text-muted-foreground">Roll:</span> <span className="font-medium">{student.roll}</span></div>

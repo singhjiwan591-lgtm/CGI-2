@@ -118,22 +118,18 @@ export default function FeesPage() {
       const student = students.find(s => s.id === studentId);
       if (!student) return;
 
-      let totalPaid = 0;
       const updatedInstallments = student.installments.map(inst => {
-          if (inst.id === installmentId) {
+          if (inst.id === installmentId && inst.status !== 'Paid') {
              return { ...inst, status: 'Paid' as InstallmentStatus, paymentDate: new Date() };
           }
           return inst;
       });
       
-      const newlyPaidInstallments = updatedInstallments.map(inst => {
-          if (inst.status === 'Paid') {
-              totalPaid += inst.amount;
-          }
-          return inst;
-      });
+      const totalPaid = updatedInstallments
+        .filter(inst => inst.status === 'Paid')
+        .reduce((acc, inst) => acc + inst.amount, 0);
 
-      const updatedStudent = { ...student, installments: newlyPaidInstallments, feesPaid: totalPaid };
+      const updatedStudent = { ...student, installments: updatedInstallments, feesPaid: totalPaid };
       updateStudentAndPersist(updatedStudent);
       toast({ title: 'Success', description: 'Cash payment recorded successfully.' });
   };
@@ -270,7 +266,7 @@ export default function FeesPage() {
             <DialogHeader>
               <DialogTitle>Installment Details for {selectedStudent?.name}</DialogTitle>
               <DialogDescription>
-                Manage individual installments. Total due: ₹{(selectedStudent?.totalFees ?? 0) - (selectedStudent?.feesPaid ?? 0)}
+                Manage individual installments. Total due: ₹{((selectedStudent?.totalFees ?? 0) - (selectedStudent?.feesPaid ?? 0)).toLocaleString()}
               </DialogDescription>
             </DialogHeader>
             <div className="max-h-[60vh] overflow-y-auto pr-2">
