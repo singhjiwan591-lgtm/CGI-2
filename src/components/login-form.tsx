@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
+import { getStudentByEmail } from '@/lib/student-data-service';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -45,17 +46,38 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    // Mock login for localhost
+    // Case 1: Admin Login
     if (values.email === 'admin@webandapp.edu' && values.password === 'admin123') {
       toast({
-        title: 'Login Successful',
+        title: 'Admin Login Successful',
         description: 'Redirecting to your dashboard...',
       });
-      // Store a mock session state
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('user', JSON.stringify({ email: values.email, isLoggedIn: true }));
+        sessionStorage.removeItem('studentUser'); // Clear student session if any
       }
       router.push('/admin/dashboard');
+      return;
+    }
+
+    // Case 2: Student Login
+    const student = getStudentByEmail(values.email);
+
+    if (student && student.password === values.password) {
+       toast({
+        title: 'Login Successful',
+        description: 'Welcome back! Redirecting to your dashboard...',
+      });
+      if (typeof window !== 'undefined') {
+          sessionStorage.setItem('studentUser', JSON.stringify({ 
+            email: student.email, 
+            name: student.name, 
+            photoURL: student.photoURL,
+            avatarHint: student.avatarHint
+          }));
+          sessionStorage.removeItem('user'); // Clear admin session if any
+      }
+      router.push('/student/dashboard');
     } else {
        toast({
         variant: 'destructive',
@@ -83,7 +105,7 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="admin@webandapp.edu" {...field} disabled={loading} />
+                    <Input type="email" placeholder="your.email@example.com" {...field} disabled={loading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

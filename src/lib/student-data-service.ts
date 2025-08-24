@@ -1,3 +1,4 @@
+
 // A simple in-memory data store for students that persists in localStorage
 // In a real application, this would be a database.
 
@@ -52,11 +53,11 @@ type StudentFee = {
 const MOCK_STUDENTS_KEY = 'mockStudentsData';
 
 const initialMockStudents: Student[] = [
-    { id: '1', name: 'Ravi Kumar', roll: '1001', grade: '12', parent: 'Manoj Kumar', gender: 'Male', address: 'Mumbai, India', dob: '2006-05-15', phone: '+91 9876543210', email: 'ravi@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'male student', status: 'Enrolled', program: 'Science', admissionDate: '2022-04-01', motherName: 'Anjali Kumar', religion: 'Hinduism', fatherOccupation: 'Engineer' },
-    { id: '2', name: 'Priya Sharma', roll: '1002', grade: '11', parent: 'Sunita Sharma', gender: 'Female', address: 'Delhi, India', dob: '2007-02-20', phone: '+91 9876543211', email: 'priya@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'female student', status: 'Graduated', program: 'Arts', admissionDate: '2021-04-10', motherName: 'Reena Sharma', religion: 'Hinduism', fatherOccupation: 'Doctor' },
-    { id: '3', name: 'Amit Patel', roll: '1003', grade: '12', parent: 'Rajesh Patel', gender: 'Male', address: 'Ahmedabad, India', dob: '2006-08-10', phone: '+91 9876543212', email: 'amit@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy student', status: 'Graduated', program: 'Technology', admissionDate: '2022-04-05', motherName: 'Jayshree Patel', religion: 'Hinduism', fatherOccupation: 'Businessman' },
-    { id: '4', name: 'Sunita Devi', roll: '1004', grade: '10', parent: 'Anil Singh', gender: 'Female', address: 'Patna, India', dob: '2008-11-25', phone: '+91 9876543213', email: 'sunita@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'girl smiling', status: 'Enrolled', program: 'Commerce', admissionDate: '2023-04-15', motherName: 'Babita Devi', religion: 'Hinduism', fatherOccupation: 'Farmer' },
-    { id: '5', name: 'Vijay Singh', roll: '1005', grade: '11', parent: 'Kiran Singh', gender: 'Male', address: 'Jaipur, India', dob: '2007-07-07', phone: '+91 9876543214', email: 'vijay@example.com', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'student glasses', status: 'Withdrawn', program: 'Science', admissionDate: '2021-05-20', motherName: 'Meena Singh', religion: 'Sikhism', fatherOccupation: 'Army Officer' },
+    { id: '1', name: 'Ravi Kumar', roll: '1001', grade: '12', parent: 'Manoj Kumar', gender: 'Male', address: 'Mumbai, India', dob: '2006-05-15', phone: '+91 9876543210', email: 'ravi@example.com', password: 'password123', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'male student', status: 'Enrolled', program: 'Science', admissionDate: '2022-04-01', motherName: 'Anjali Kumar', religion: 'Hinduism', fatherOccupation: 'Engineer' },
+    { id: '2', name: 'Priya Sharma', roll: '1002', grade: '11', parent: 'Sunita Sharma', gender: 'Female', address: 'Delhi, India', dob: '2007-02-20', phone: '+91 9876543211', email: 'priya@example.com', password: 'password123', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'female student', status: 'Graduated', program: 'Arts', admissionDate: '2021-04-10', motherName: 'Reena Sharma', religion: 'Hinduism', fatherOccupation: 'Doctor' },
+    { id: '3', name: 'Amit Patel', roll: '1003', grade: '12', parent: 'Rajesh Patel', gender: 'Male', address: 'Ahmedabad, India', dob: '2006-08-10', phone: '+91 9876543212', email: 'amit@example.com', password: 'password123', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'boy student', status: 'Graduated', program: 'Technology', admissionDate: '2022-04-05', motherName: 'Jayshree Patel', religion: 'Hinduism', fatherOccupation: 'Businessman' },
+    { id: '4', name: 'Sunita Devi', roll: '1004', grade: '10', parent: 'Anil Singh', gender: 'Female', address: 'Patna, India', dob: '2008-11-25', phone: '+91 9876543213', email: 'sunita@example.com', password: 'password123', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'girl smiling', status: 'Enrolled', program: 'Commerce', admissionDate: '2023-04-15', motherName: 'Babita Devi', religion: 'Hinduism', fatherOccupation: 'Farmer' },
+    { id: '5', name: 'Vijay Singh', roll: '1005', grade: '11', parent: 'Kiran Singh', gender: 'Male', address: 'Jaipur, India', dob: '2007-07-07', phone: '+91 9876543214', email: 'vijay@example.com', password: 'password123', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'student glasses', status: 'Withdrawn', program: 'Science', admissionDate: '2021-05-20', motherName: 'Meena Singh', religion: 'Sikhism', fatherOccupation: 'Army Officer' },
 ];
 
 
@@ -109,6 +110,7 @@ export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint
         status: 'Enrolled',
         program: 'Not Assigned', // Default program
         admissionDate: new Date().toISOString().split('T')[0],
+        password: studentData.password, // Ensure password is saved
     };
     
     const updatedStudents = [newStudent, ...students];
@@ -127,6 +129,12 @@ export function getStudentByRoll(roll: string): Student | undefined {
     const students = getAllStudents();
     return students.find(s => s.roll === roll);
 }
+
+export function getStudentByEmail(email: string): Student | undefined {
+    const students = getAllStudents();
+    return students.find(s => s.email.toLowerCase() === email.toLowerCase());
+}
+
 
 export function updateStudentData(studentId: string, dataToUpdate: Partial<Student>) {
     if (typeof window !== 'undefined') {
