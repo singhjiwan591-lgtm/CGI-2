@@ -22,6 +22,8 @@ type Student = {
   admissionDate: string;
   section?: string;
   fees?: StudentFee; // Optional fee data can be attached
+  password?: string;
+  course?: string;
 };
 
 type InstallmentStatus = 'Paid' | 'Due' | 'Overdue' | 'Link Sent';
@@ -77,10 +79,17 @@ export function getAllStudents(): Student[] {
     return data ? JSON.parse(data) : [];
 }
 
-export function updateAllStudents(students: Student[]) {
-    if (typeof window !== 'undefined') {
+export function updateStudent(studentId: string, updatedData: Partial<Student>): Student | null {
+    if (typeof window === 'undefined') return null;
+
+    const students = getAllStudents();
+    const studentIndex = students.findIndex(s => s.id === studentId);
+    if (studentIndex > -1) {
+        students[studentIndex] = { ...students[studentIndex], ...updatedData };
         localStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(students));
+        return students[studentIndex];
     }
+    return null;
 }
 
 

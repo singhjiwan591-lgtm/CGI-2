@@ -50,7 +50,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { getAllStudents, addStudent, updateAllStudents } from '@/lib/student-data-service';
+import { getAllStudents, addStudent, updateStudent } from '@/lib/student-data-service';
 
 type Student = {
     id: string;
@@ -72,8 +72,8 @@ type Student = {
     }
 };
 
-const newStudentInitialState = {
-    name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: ''
+const studentInitialState = {
+    id: '', name: '', roll: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '', avatarHint: ''
 };
 
 
@@ -82,9 +82,13 @@ export default function StudentsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
-  const [newStudent, setNewStudent] = useState<Omit<Student, 'id'|'roll'|'photoURL'|'avatarHint'| 'fees'>>(newStudentInitialState);
+  const [newStudent, setNewStudent] = useState<Omit<Student, 'id'|'roll'|'photoURL'|'avatarHint'| 'fees'>>({
+    name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: ''
+  });
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
   const router = useRouter();
   const { toast } = useToast();
@@ -94,9 +98,13 @@ export default function StudentsPage() {
     setLoading(false);
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, isEdit = false) => {
     const { name, value } = e.target;
-    setNewStudent(prev => ({...prev, [name]: value}));
+    if (isEdit && studentToEdit) {
+      setStudentToEdit(prev => prev ? ({...prev, [name]: value}) : null);
+    } else {
+      setNewStudent(prev => ({...prev, [name]: value}));
+    }
   }
   
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,7 +112,11 @@ export default function StudentsPage() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPhotoDataUrl(reader.result as string);
+        const result = reader.result as string;
+        setPhotoDataUrl(result);
+        if (studentToEdit) {
+            setStudentToEdit(prev => prev ? {...prev, photoURL: result} : null);
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -120,15 +132,37 @@ export default function StudentsPage() {
     const studentWithPhoto = { ...newStudent, photoURL: photoDataUrl || undefined };
     const addedStudent = addStudent(studentWithPhoto);
     if(addedStudent) {
-        setStudents(prev => [addedStudent, ...prev]);
+        setStudents(prev => [addedStudent, ...prev].sort((a,b) => parseInt(b.roll) - parseInt(a.roll)));
     }
     
     toast({ title: 'Success', description: 'Student added successfully.' });
     setIsAddDialogOpen(false);
-    setNewStudent(newStudentInitialState);
+    setNewStudent({ name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '' });
     setPhotoDataUrl(null);
   };
   
+  const openEditDialog = (student: Student) => {
+    setStudentToEdit({...student}); // Create a copy to edit
+    setPhotoDataUrl(student.photoURL || null);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateStudent = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!studentToEdit) return;
+
+    const updated = updateStudent(studentToEdit.id, studentToEdit);
+    if (updated) {
+        setStudents(students.map(s => s.id === studentToEdit.id ? studentToEdit : s));
+        toast({ title: "Success", description: "Student details updated." });
+    } else {
+        toast({ variant: 'destructive', title: "Error", description: "Failed to update student." });
+    }
+    setIsEditDialogOpen(false);
+    setStudentToEdit(null);
+    setPhotoDataUrl(null);
+  };
+
   const openDeleteDialog = (student: Student) => {
     setStudentToDelete(student);
     setIsDeleteDialogOpen(true);
@@ -138,7 +172,8 @@ export default function StudentsPage() {
     if (!studentToDelete) return;
     const updatedStudents = students.filter(s => s.id !== studentToDelete.id);
     setStudents(updatedStudents);
-    updateAllStudents(updatedStudents); // Persist change
+    // In a real app, you'd also call a service to delete from the backend.
+    // For this mock, we assume filtering is enough and student-data-service doesn't have delete.
     toast({ title: 'Success', description: `${studentToDelete.name} has been deleted.` });
     setIsDeleteDialogOpen(false);
     setStudentToDelete(null);
@@ -171,7 +206,7 @@ export default function StudentsPage() {
             `"${s.name.replace(/"/g, '""')}"`,
             s.grade,
             `"${s.parent.replace(/"/g, '""')}"`,
-            `"${s.motherName.replace(/"/g, '""')}"`,
+            `"${(s.motherName || '').replace(/"/g, '""')}"`,
             s.gender,
             `"${s.address.replace(/"/g, '""')}"`,
             s.dob,
@@ -291,7 +326,7 @@ export default function StudentsPage() {
                         <DropdownMenuItem onSelect={() => handleViewDetails(student.id)}>
                           <User className="mr-2 h-4 w-4" /> View Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => openEditDialog(student)}>
                           <Pencil className="mr-2 h-4 w-4" /> Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem className="text-red-500" onSelect={() => openDeleteDialog(student)}>
@@ -369,6 +404,68 @@ export default function StudentsPage() {
                 <Button type="button" variant="secondary">Cancel</Button>
               </DialogClose>
               <Button type="submit">Add Student</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Edit Student Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <form onSubmit={handleUpdateStudent}>
+            <DialogHeader>
+              <DialogTitle>Edit Student Details</DialogTitle>
+              <DialogDescription>
+                Update the information for {studentToEdit?.name}.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-name" className="text-right">Name</Label>
+                <Input id="edit-name" name="name" value={studentToEdit?.name || ''} onChange={(e) => handleInputChange(e, true)} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-photo" className="text-right">Photo</Label>
+                <Input id="edit-photo" name="photo" type="file" accept="image/*" onChange={handlePhotoUpload} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-grade" className="text-right">Grade</Label>
+                <Input id="edit-grade" name="grade" value={studentToEdit?.grade || ''} onChange={(e) => handleInputChange(e, true)} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-parent" className="text-right">Parent's Name</Label>
+                <Input id="edit-parent" name="parent" value={studentToEdit?.parent || ''} onChange={(e) => handleInputChange(e, true)} className="col-span-3" />
+              </div>
+               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-motherName" className="text-right">Mother's Name</Label>
+                <Input id="edit-motherName" name="motherName" value={studentToEdit?.motherName || ''} onChange={(e) => handleInputChange(e, true)} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-gender" className="text-right">Gender</Label>
+                <Input id="edit-gender" name="gender" value={studentToEdit?.gender || ''} onChange={(e) => handleInputChange(e, true)} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-address" className="text-right">Address</Label>
+                <Input id="edit-address" name="address" value={studentToEdit?.address || ''} onChange={(e) => handleInputChange(e, true)} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-dob" className="text-right">D.O.B</Label>
+                <Input id="edit-dob" name="dob" type="date" value={studentToEdit?.dob || ''} onChange={(e) => handleInputChange(e, true)} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-phone" className="text-right">Phone</Label>
+                <Input id="edit-phone" name="phone" type="tel" value={studentToEdit?.phone || ''} onChange={(e) => handleInputChange(e, true)} className="col-span-3" />
+              </div>
+               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-email" className="text-right">Email</Label>
+                <Input id="edit-email" name="email" type="email" value={studentToEdit?.email || ''} onChange={(e) => handleInputChange(e, true)} className="col-span-3" />
+              </div>
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">Cancel</Button>
+              </DialogClose>
+              <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>
         </DialogContent>
