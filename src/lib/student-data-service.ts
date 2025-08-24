@@ -1,5 +1,5 @@
 
-// A simple in-memory data store for students that persists in sessionStorage
+// A simple in-memory data store for students that persists in localStorage
 // In a real application, this would be a database.
 
 type Student = {
@@ -61,9 +61,9 @@ const initialMockStudents: Student[] = [
 
 function initializeData() {
     if (typeof window !== 'undefined') {
-        const storedData = sessionStorage.getItem(MOCK_STUDENTS_KEY);
+        const storedData = localStorage.getItem(MOCK_STUDENTS_KEY);
         if (!storedData) {
-            sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(initialMockStudents));
+            localStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(initialMockStudents));
         }
     }
 }
@@ -74,13 +74,13 @@ export function getAllStudents(): Student[] {
     if (typeof window === 'undefined') {
         return initialMockStudents;
     }
-    const data = sessionStorage.getItem(MOCK_STUDENTS_KEY);
+    const data = localStorage.getItem(MOCK_STUDENTS_KEY);
     return data ? JSON.parse(data) : [];
 }
 
 export function updateAllStudents(students: Student[]) {
     if (typeof window !== 'undefined') {
-        sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(students));
+        localStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(students));
     }
 }
 
@@ -104,7 +104,7 @@ export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint
     };
     
     const updatedStudents = [newStudent, ...students];
-    sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(updatedStudents));
+    localStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(updatedStudents));
     // After adding student, ensure their fee data is also generated
     generateFeeForStudent(newStudent, studentData.registrationFeePaid || false);
     return newStudent;
@@ -128,7 +128,7 @@ export function updateStudentData(studentId: string, dataToUpdate: Partial<Stude
             } else {
                 students[studentIndex].fees = existingFees;
             }
-            sessionStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(students));
+            localStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(students));
         }
     }
 }
@@ -139,32 +139,40 @@ import { addMonths, isPast } from 'date-fns';
 
 const generateInstallments = (totalFees: number, registrationFeePaid: boolean): Installment[] => {
     const registrationFee = 100;
-    const remainingFees = totalFees - (registrationFeePaid ? registrationFee : 0);
+    let feesToInstall = totalFees;
+    
+    // If reg fee was paid, we account for it, but the installments should cover the whole amount.
+    if(registrationFeePaid) {
+        feesToInstall = totalFees - registrationFee;
+    }
+    
     const installmentCount = 6;
-    const installmentAmount = Math.round(remainingFees / installmentCount);
+    const installmentAmount = Math.round(feesToInstall / installmentCount);
     const today = new Date();
     
-    let installments = Array.from({ length: installmentCount }, (_, i) => {
-        const dueDate = addMonths(new Date(today.getFullYear(), today.getMonth(), 15), i);
-        let status: 'Due' | 'Overdue' = isPast(dueDate) ? 'Overdue' : 'Due';
-        
-        return {
-            id: i + 1,
-            dueDate: dueDate,
-            amount: installmentAmount,
-            status: status as InstallmentStatus,
-            linkSent: false,
-        };
-    });
-
+    let installments: Installment[] = [];
+    
     if (registrationFeePaid) {
-        installments.unshift({
+        installments.push({
             id: 0, // Special ID for registration fee
             dueDate: today,
             amount: registrationFee,
             status: 'Paid',
             paymentDate: today,
             linkSent: false
+        });
+    }
+
+    for (let i = 0; i < installmentCount; i++) {
+        const dueDate = addMonths(new Date(today.getFullYear(), today.getMonth(), 15), i);
+        let status: 'Due' | 'Overdue' = isPast(dueDate) ? 'Overdue' : 'Due';
+        
+        installments.push({
+            id: i + 1,
+            dueDate: dueDate,
+            amount: installmentAmount,
+            status: status as InstallmentStatus,
+            linkSent: false,
         });
     }
 
@@ -197,8 +205,18 @@ export function getAllStudentsWithFees(): StudentFee[] {
     const students = getAllStudents();
     return students.map(s => {
         if (s.fees && s.fees.installments) {
+            // Recalculate paid amount to ensure consistency
             const feesPaid = s.fees.installments.filter(i => i.status === 'Paid').reduce((acc, i) => acc + i.amount, 0);
-            return {...s.fees, feesPaid};
+            s.fees.feesPaid = feesPaid;
+            
+            // Check if due dates are in the past and update status if needed
+            s.fees.installments.forEach(inst => {
+                if (isPast(inst.dueDate) && inst.status === 'Due') {
+                    inst.status = 'Overdue';
+                }
+            });
+            updateStudentData(s.id, { fees: s.fees });
+            return s.fees;
         }
         
         // This handles students who might not have fee data generated yet.
