@@ -5,7 +5,10 @@ import {
   Loader2,
   Calendar,
   Percent,
-  ClipboardList
+  ClipboardList,
+  Banknote,
+  TrendingUp,
+  TrendingDown
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -22,6 +25,9 @@ import {
 import { notFound, useParams } from 'next/navigation';
 import { getStudentById } from '@/lib/student-data-service';
 import { format } from 'date-fns';
+import { Progress } from '@/components/ui/progress';
+import { formatNumber } from '@/lib/utils';
+import React from 'react';
 
 const StudentDetailsCard = ({ student }: { student: any }) => (
   <Card>
@@ -61,6 +67,46 @@ const StudentDetailsCard = ({ student }: { student: any }) => (
   </Card>
 );
 
+const FeeSummaryCard = ({ fees }: { fees: any }) => {
+  if (!fees) return null;
+
+  const { totalFees, feesPaid } = fees;
+  const remainingDue = totalFees - feesPaid;
+  const paidPercentage = totalFees > 0 ? (feesPaid / totalFees) * 100 : 0;
+  
+  const InfoBox = ({ icon, title, value, bgColorClass }: { icon: React.ReactNode, title: string, value: string, bgColorClass: string }) => (
+    <div className={`p-4 rounded-lg flex items-center gap-4 ${bgColorClass}`}>
+      {icon}
+      <div>
+        <p className="text-sm text-muted-foreground">{title}</p>
+        <p className="text-lg font-bold">{value}</p>
+      </div>
+    </div>
+  );
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Fee Summary</CardTitle>
+        <CardDescription>An overview of the student's fee status.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-1 gap-4">
+            <InfoBox icon={<Banknote className="h-8 w-8 text-blue-600"/>} title="Total Fees" value={`₹${formatNumber(totalFees)}`} bgColorClass="bg-blue-100 dark:bg-blue-900/30" />
+            <InfoBox icon={<TrendingUp className="h-8 w-8 text-green-600"/>} title="Fees Paid" value={`₹${formatNumber(feesPaid)}`} bgColorClass="bg-green-100 dark:bg-green-900/30" />
+            <InfoBox icon={<TrendingDown className="h-8 w-8 text-red-600"/>} title="Remaining Due" value={`₹${formatNumber(remainingDue)}`} bgColorClass="bg-red-100 dark:bg-red-900/30" />
+        </div>
+        <div className="space-y-2">
+            <Label htmlFor="fee-progress">Payment Progress</Label>
+            <Progress id="fee-progress" value={paidPercentage} />
+            <p className="text-sm text-muted-foreground text-right">{paidPercentage.toFixed(0)}% Paid</p>
+        </div>
+      </CardContent>
+    </Card>
+  )
+};
+
+
 export default function StudentProfilePage() {
   const params = useParams();
   const studentId = params.studentId as string;
@@ -91,6 +137,7 @@ export default function StudentProfilePage() {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-6">
         <StudentDetailsCard student={student} />
+        <FeeSummaryCard fees={student.fees} />
       </div>
 
       <div className="space-y-6">
