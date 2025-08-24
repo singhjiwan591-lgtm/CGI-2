@@ -66,6 +66,10 @@ type Student = {
     email: string;
     photoURL?: string;
     avatarHint: string;
+    fees?: {
+        totalFees: number;
+        feesPaid: number;
+    }
 };
 
 const newStudentInitialState = {
@@ -80,7 +84,7 @@ export default function StudentsPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
-  const [newStudent, setNewStudent] = useState<Omit<Student, 'id'|'roll'|'photoURL'|'avatarHint'>>(newStudentInitialState);
+  const [newStudent, setNewStudent] = useState<Omit<Student, 'id'|'roll'|'photoURL'|'avatarHint'| 'fees'>>(newStudentInitialState);
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
   const router = useRouter();
   const { toast } = useToast();
@@ -152,22 +156,33 @@ export default function StudentsPage() {
       return;
     }
 
-    const headers = ['ID', 'Roll', 'Name', 'Grade', "Parent's Name", "Mother's Name", 'Gender', 'Address', 'DOB', 'Phone', 'Email'];
+    const headers = ['ID', 'Roll', 'Name', 'Grade', "Parent's Name", "Mother's Name", 'Gender', 'Address', 'DOB', 'Phone', 'Email', 'Total Fees', 'Fees Paid', 'Remaining Fees', 'Fee Status'];
     const csvRows = [
       headers.join(','),
-      ...filteredStudents.map(s => [
-        s.id,
-        s.roll,
-        `"${s.name.replace(/"/g, '""')}"`,
-        s.grade,
-        `"${s.parent.replace(/"/g, '""')}"`,
-        `"${s.motherName.replace(/"/g, '""')}"`,
-        s.gender,
-        `"${s.address.replace(/"/g, '""')}"`,
-        s.dob,
-        s.phone,
-        s.email
-      ].join(','))
+      ...filteredStudents.map(s => {
+        const totalFees = s.fees?.totalFees ?? 0;
+        const feesPaid = s.fees?.feesPaid ?? 0;
+        const remainingFees = totalFees - feesPaid;
+        const feeStatus = remainingFees <= 0 ? 'Paid' : 'Pending';
+
+        return [
+            s.id,
+            s.roll,
+            `"${s.name.replace(/"/g, '""')}"`,
+            s.grade,
+            `"${s.parent.replace(/"/g, '""')}"`,
+            `"${s.motherName.replace(/"/g, '""')}"`,
+            s.gender,
+            `"${s.address.replace(/"/g, '""')}"`,
+            s.dob,
+            s.phone,
+            s.email,
+            totalFees,
+            feesPaid,
+            remainingFees,
+            feeStatus
+        ].join(',')
+      })
     ];
     
     const csvString = csvRows.join('\n');
