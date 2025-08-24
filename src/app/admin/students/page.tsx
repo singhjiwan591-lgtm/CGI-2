@@ -64,6 +64,7 @@ type Student = {
     dob: string;
     phone: string;
     email: string;
+    religion?: string;
     photoURL?: string;
     avatarHint: string;
     fees?: {
@@ -73,7 +74,7 @@ type Student = {
 };
 
 const studentInitialState = {
-    id: '', name: '', roll: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '', avatarHint: ''
+    id: '', name: '', roll: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '', avatarHint: '', religion: ''
 };
 
 
@@ -87,7 +88,7 @@ export default function StudentsPage() {
   const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
   const [newStudent, setNewStudent] = useState<Omit<Student, 'id'|'roll'|'photoURL'|'avatarHint'| 'fees'>>({
-    name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: ''
+    name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '', religion: ''
   });
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
   const router = useRouter();
@@ -122,10 +123,20 @@ export default function StudentsPage() {
     }
   };
 
+  const validateStudentForm = (studentData: any) => {
+    const requiredFields = ['name', 'grade', 'parent', 'motherName', 'gender', 'address', 'dob', 'phone', 'email', 'religion'];
+    for (const field of requiredFields) {
+        if (!studentData[field]) {
+            toast({ variant: 'destructive', title: 'Validation Error', description: `Please fill in the '${field}' field.`});
+            return false;
+        }
+    }
+    return true;
+  };
+
   const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newStudent.name || !newStudent.grade || !newStudent.email) {
-        toast({ variant: 'destructive', title: 'Validation Error', description: 'Please fill all required fields.'});
+    if (!validateStudentForm(newStudent)) {
         return;
     }
 
@@ -137,7 +148,7 @@ export default function StudentsPage() {
     
     toast({ title: 'Success', description: 'Student added successfully.' });
     setIsAddDialogOpen(false);
-    setNewStudent({ name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '' });
+    setNewStudent({ name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '', religion: '' });
     setPhotoDataUrl(null);
   };
   
@@ -150,6 +161,10 @@ export default function StudentsPage() {
   const handleUpdateStudent = (e: React.FormEvent) => {
     e.preventDefault();
     if (!studentToEdit) return;
+
+    if (!validateStudentForm(studentToEdit)) {
+        return;
+    }
 
     const updated = updateStudent(studentToEdit.id, studentToEdit);
     if (updated) {
@@ -354,7 +369,7 @@ export default function StudentsPage() {
             <DialogHeader>
               <DialogTitle>Add New Student</DialogTitle>
               <DialogDescription>
-                Fill in the details below to add a new student record.
+                Fill in the details below to add a new student record. All fields are required.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-4">
@@ -398,6 +413,10 @@ export default function StudentsPage() {
                 <Label htmlFor="email" className="text-right">Email</Label>
                 <Input id="email" name="email" type="email" value={newStudent.email} onChange={handleInputChange} className="col-span-3" />
               </div>
+               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="religion" className="text-right">Religion</Label>
+                <Input id="religion" name="religion" value={newStudent.religion || ''} onChange={handleInputChange} className="col-span-3" />
+              </div>
             </div>
             <DialogFooter>
               <DialogClose asChild>
@@ -416,7 +435,7 @@ export default function StudentsPage() {
             <DialogHeader>
               <DialogTitle>Edit Student Details</DialogTitle>
               <DialogDescription>
-                Update the information for {studentToEdit?.name}.
+                Update the information for {studentToEdit?.name}. All fields are required.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-4">
@@ -459,6 +478,10 @@ export default function StudentsPage() {
                <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-email" className="text-right">Email</Label>
                 <Input id="edit-email" name="email" type="email" value={studentToEdit?.email || ''} onChange={(e) => handleInputChange(e, true)} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-religion" className="text-right">Religion</Label>
+                <Input id="edit-religion" name="religion" value={studentToEdit?.religion || ''} onChange={(e) => handleInputChange(e, true)} className="col-span-3" />
               </div>
             </div>
             <DialogFooter>

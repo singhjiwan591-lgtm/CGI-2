@@ -108,7 +108,7 @@ export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint
         avatarHint: studentData.gender.toLowerCase() === 'female' ? 'female student' : 'male student',
         photoURL: studentData.photoURL || 'https://placehold.co/100x100.png',
         status: 'Enrolled',
-        program: 'Not Assigned', // Default program
+        program: studentData.course || 'Not Assigned',
         admissionDate: new Date().toISOString().split('T')[0],
         password: studentData.password, // Ensure password is saved
     };
