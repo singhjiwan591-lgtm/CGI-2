@@ -109,6 +109,8 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
             address: formData.village,
             dob: formData.dob,
             photoURL: photoDataUrl || undefined,
+            password: formData.password,
+            course: formData.course,
             registrationFeePaid: true,
         };
         const newStudent = addStudent(studentData);
@@ -384,7 +386,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col gap-4">
+          <CardFooter className="flex flex-col gap-4 p-6">
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? 'Processing...' : 'Pay ₹100 & Register'}
