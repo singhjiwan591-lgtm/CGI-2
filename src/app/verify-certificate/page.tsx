@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -10,21 +9,21 @@ import { Search, Award, BadgeCheck, XCircle, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { getStudentById } from '@/lib/student-data-service';
+import { getStudentByRoll } from '@/lib/student-data-service';
 
-type Student = ReturnType<typeof getStudentById>;
+type Student = ReturnType<typeof getStudentByRoll>;
 
 type VerificationResult = 'pending' | 'verified' | 'not_found' | 'not_graduated';
 
 export default function VerifyCertificatePage() {
-  const [certificateId, setCertificateId] = useState('');
+  const [studentId, setStudentId] = useState('');
   const [loading, setLoading] = useState(false);
   const [verifiedStudent, setVerifiedStudent] = useState<Student | null>(null);
   const [verificationStatus, setVerificationStatus] = useState<VerificationResult>('pending');
 
   const handleVerification = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!certificateId) return;
+    if (!studentId) return;
 
     setLoading(true);
     setVerificationStatus('pending');
@@ -32,7 +31,7 @@ export default function VerifyCertificatePage() {
 
     await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
 
-    const student = getStudentById(certificateId);
+    const student = getStudentByRoll(studentId);
     if (student) {
         if (student.status === 'Graduated') {
             setVerifiedStudent(student);
@@ -76,7 +75,7 @@ export default function VerifyCertificatePage() {
                             <AvatarFallback>{verifiedStudent.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                         </Avatar>
                         <h3 className="mt-4 text-2xl font-bold">{verifiedStudent.name}</h3>
-                        <p className="text-muted-foreground">Student ID: {verifiedStudent.id}</p>
+                        <p className="text-muted-foreground">Student Roll No: {verifiedStudent.roll}</p>
                     </div>
                     <div className="mt-6 grid grid-cols-2 gap-4 text-left">
                         <div className="space-y-1">
@@ -99,7 +98,7 @@ export default function VerifyCertificatePage() {
                         </div>
                     </div>
                      <Button asChild className="w-full mt-6">
-                        <Link href={`/certificate/${verifiedStudent.id}`}>View Certificate</Link>
+                        <Link href={`/certificate/${verifiedStudent.roll}`}>View Certificate</Link>
                     </Button>
                 </CardContent>
               </Card>
@@ -115,7 +114,7 @@ export default function VerifyCertificatePage() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-6 text-center">
-                    <p className="text-lg">A record was found for student <span className="font-bold">{verifiedStudent?.name}</span>, but they have not graduated yet. A certificate is only available upon graduation.</p>
+                    <p className="text-lg">A record was found for student <span className="font-bold">{verifiedStudent?.name}</span> (Roll No: {verifiedStudent?.roll}), but they have not graduated yet. A certificate is only available upon graduation.</p>
                 </CardContent>
               </Card>
             );
@@ -147,7 +146,7 @@ export default function VerifyCertificatePage() {
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">Certificate Verification</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-lg">
-            Enter the student ID from the certificate to verify its authenticity.
+            Enter the student's 4-digit Roll Number from the certificate to verify its authenticity.
           </p>
         </div>
       </section>
@@ -163,17 +162,17 @@ export default function VerifyCertificatePage() {
           <CardContent>
             <form onSubmit={handleVerification} className="flex flex-col gap-4 sm:flex-row">
               <div className="flex-grow">
-                <Label htmlFor="certificateId" className="sr-only">Certificate ID</Label>
+                <Label htmlFor="studentId" className="sr-only">Student ID</Label>
                 <Input
-                  id="certificateId"
-                  value={certificateId}
-                  onChange={(e) => setCertificateId(e.target.value)}
-                  placeholder="Enter Student ID..."
+                  id="studentId"
+                  value={studentId}
+                  onChange={(e) => setStudentId(e.target.value)}
+                  placeholder="Enter Student Roll Number..."
                   className="h-11 text-base"
                   disabled={loading}
                 />
               </div>
-              <Button type="submit" size="lg" className="h-11" disabled={loading || !certificateId}>
+              <Button type="submit" size="lg" className="h-11" disabled={loading || !studentId}>
                 {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Search className="mr-2 h-5 w-5" />}
                 {loading ? '' : 'Verify'}
               </Button>

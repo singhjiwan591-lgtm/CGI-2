@@ -1,4 +1,3 @@
-
 // A simple in-memory data store for students that persists in localStorage
 // In a real application, this would be a database.
 
@@ -115,6 +114,11 @@ export function getStudentById(id: string): Student | undefined {
     return students.find(s => s.id === id);
 }
 
+export function getStudentByRoll(roll: string): Student | undefined {
+    const students = getAllStudents();
+    return students.find(s => s.roll === roll);
+}
+
 export function updateStudentData(studentId: string, dataToUpdate: Partial<Student>) {
     if (typeof window !== 'undefined') {
         const students = getAllStudents();
@@ -141,36 +145,33 @@ const generateInstallments = (totalFees: number, registrationFeePaid: boolean): 
     const registrationFee = 100;
     let feesToInstall = totalFees;
     
-    // If reg fee was paid, we account for it, but the installments should cover the whole amount.
-    if(registrationFeePaid) {
-        feesToInstall = totalFees - registrationFee;
-    }
-    
-    const installmentCount = 6;
-    const installmentAmount = Math.round(feesToInstall / installmentCount);
-    const today = new Date();
-    
     let installments: Installment[] = [];
     
     if (registrationFeePaid) {
+        feesToInstall = totalFees - registrationFee;
         installments.push({
             id: 0, // Special ID for registration fee
-            dueDate: today,
+            dueDate: new Date(),
             amount: registrationFee,
             status: 'Paid',
-            paymentDate: today,
+            paymentDate: new Date(),
             linkSent: false
         });
     }
+    
+    const installmentCount = 6;
+    // Ensure installmentAmount is not negative if totalFees is less than reg fee
+    const perInstallmentAmount = feesToInstall > 0 ? Math.round(feesToInstall / installmentCount) : 0;
+    const today = new Date();
 
     for (let i = 0; i < installmentCount; i++) {
-        const dueDate = addMonths(new Date(today.getFullYear(), today.getMonth(), 15), i);
+        const dueDate = addMonths(new Date(today.getFullYear(), today.getMonth(), 15), i + 1); // Start from next month
         let status: 'Due' | 'Overdue' = isPast(dueDate) ? 'Overdue' : 'Due';
         
         installments.push({
             id: i + 1,
             dueDate: dueDate,
-            amount: installmentAmount,
+            amount: perInstallmentAmount,
             status: status as InstallmentStatus,
             linkSent: false,
         });
@@ -211,7 +212,7 @@ export function getAllStudentsWithFees(): StudentFee[] {
             
             // Check if due dates are in the past and update status if needed
             s.fees.installments.forEach(inst => {
-                if (isPast(inst.dueDate) && inst.status === 'Due') {
+                if (isPast(new Date(inst.dueDate)) && inst.status === 'Due') {
                     inst.status = 'Overdue';
                 }
             });

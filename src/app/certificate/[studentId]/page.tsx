@@ -1,13 +1,14 @@
-
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { BookOpen, Download, Twitter, Linkedin, Facebook } from 'lucide-react';
 import { CertificateStyler } from '@/components/certificate-styler';
-import { getStudentById } from '@/lib/student-data-service';
+import { getStudentByRoll } from '@/lib/student-data-service';
 
 export default async function CertificatePage({ params }: { params: { studentId: string } }) {
-  const student = getStudentById(params.studentId);
+  // The param is named studentId due to folder structure, but it's the roll number.
+  const studentRollNo = params.studentId;
+  const student = getStudentByRoll(studentRollNo);
   
   // A certificate should only be visible if the student exists AND has graduated.
   if (!student || student.status !== 'Graduated') {
@@ -22,7 +23,7 @@ export default async function CertificatePage({ params }: { params: { studentId:
 
   // NOTE: Sharing functionality will not work in a Server Component as it requires client-side window object.
   // For a real app, this would need to be extracted into a client component.
-  const shareUrl = `https://your-app-domain.com/certificate/${student.id}`;
+  const shareUrl = `https://your-app-domain.com/certificate/${student.roll}`;
   const shareText = `Check out the certificate for ${student.name} from Global Computer Institute!`;
 
 
@@ -91,7 +92,7 @@ export default async function CertificatePage({ params }: { params: { studentId:
 
                       <footer className="pt-4">
                           <p className="text-muted-foreground text-sm">Issued on: {currentDate}</p>
-                          <p className="text-muted-foreground text-xs mt-1">Student ID: {student.id}</p>
+                          <p className="text-muted-foreground text-xs mt-1">Student Roll No.: {student.roll}</p>
                       </footer>
                   </div>
                   </div>
