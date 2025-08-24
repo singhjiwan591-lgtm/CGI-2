@@ -58,6 +58,7 @@ type Student = {
     roll: string;
     grade: string;
     parent: string;
+    motherName: string;
     gender: string;
     address: string;
     dob: string;
@@ -68,7 +69,7 @@ type Student = {
 };
 
 const newStudentInitialState = {
-    name: '', grade: '', parent: '', gender: '', address: '', dob: '', phone: '', email: ''
+    name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: ''
 };
 
 
@@ -80,6 +81,7 @@ export default function StudentsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
   const [newStudent, setNewStudent] = useState<Omit<Student, 'id'|'roll'|'photoURL'|'avatarHint'>>(newStudentInitialState);
+  const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
   const router = useRouter();
   const { toast } = useToast();
 
@@ -92,6 +94,17 @@ export default function StudentsPage() {
     const { name, value } = e.target;
     setNewStudent(prev => ({...prev, [name]: value}));
   }
+  
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoDataUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,12 +113,16 @@ export default function StudentsPage() {
         return;
     }
 
-    const addedStudent = addStudent(newStudent);
-    setStudents(prev => [addedStudent, ...prev]);
+    const studentWithPhoto = { ...newStudent, photoURL: photoDataUrl || undefined };
+    const addedStudent = addStudent(studentWithPhoto);
+    if(addedStudent) {
+        setStudents(prev => [addedStudent, ...prev]);
+    }
     
     toast({ title: 'Success', description: 'Student added successfully.' });
     setIsAddDialogOpen(false);
     setNewStudent(newStudentInitialState);
+    setPhotoDataUrl(null);
   };
   
   const openDeleteDialog = (student: Student) => {
@@ -130,15 +147,21 @@ export default function StudentsPage() {
   );
   
   const handleDownloadCSV = () => {
-    const headers = ['ID', 'Roll', 'Name', 'Grade', 'Parent', 'Gender', 'Address', 'DOB', 'Phone', 'Email'];
+    if (filteredStudents.length === 0) {
+      toast({ variant: 'destructive', title: 'No Data', description: 'There are no students to download.' });
+      return;
+    }
+
+    const headers = ['ID', 'Roll', 'Name', 'Grade', "Parent's Name", "Mother's Name", 'Gender', 'Address', 'DOB', 'Phone', 'Email'];
     const csvRows = [
       headers.join(','),
       ...filteredStudents.map(s => [
         s.id,
         s.roll,
-        `"${s.name.replace(/"/g, '""')}"`, // Handle names with quotes
+        `"${s.name.replace(/"/g, '""')}"`,
         s.grade,
         `"${s.parent.replace(/"/g, '""')}"`,
+        `"${s.motherName.replace(/"/g, '""')}"`,
         s.gender,
         `"${s.address.replace(/"/g, '""')}"`,
         s.dob,
@@ -290,12 +313,20 @@ export default function StudentsPage() {
                 <Input id="name" name="name" value={newStudent.name} onChange={handleInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="photo" className="text-right">Photo</Label>
+                <Input id="photo" name="photo" type="file" accept="image/*" onChange={handlePhotoUpload} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="grade" className="text-right">Grade</Label>
                 <Input id="grade" name="grade" value={newStudent.grade} onChange={handleInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="parent" className="text-right">Parent's Name</Label>
                 <Input id="parent" name="parent" value={newStudent.parent} onChange={handleInputChange} className="col-span-3" />
+              </div>
+               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="motherName" className="text-right">Mother's Name</Label>
+                <Input id="motherName" name="motherName" value={newStudent.motherName} onChange={handleInputChange} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="gender" className="text-right">Gender</Label>
