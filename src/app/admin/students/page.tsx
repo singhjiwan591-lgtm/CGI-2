@@ -128,6 +128,37 @@ export default function StudentsPage() {
     student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.roll.includes(searchTerm)
   );
+  
+  const handleDownloadCSV = () => {
+    const headers = ['ID', 'Roll', 'Name', 'Grade', 'Parent', 'Gender', 'Address', 'DOB', 'Phone', 'Email'];
+    const csvRows = [
+      headers.join(','),
+      ...filteredStudents.map(s => [
+        s.id,
+        s.roll,
+        `"${s.name.replace(/"/g, '""')}"`, // Handle names with quotes
+        s.grade,
+        `"${s.parent.replace(/"/g, '""')}"`,
+        s.gender,
+        `"${s.address.replace(/"/g, '""')}"`,
+        s.dob,
+        s.phone,
+        s.email
+      ].join(','))
+    ];
+    
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'students_data.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast({ title: 'Download Started', description: 'Your student data is being downloaded.' });
+  }
 
   if (loading) {
     return (
@@ -158,7 +189,7 @@ export default function StudentsPage() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-                 <Button variant="outline"><FileDown className="mr-2 h-4 w-4"/>Download</Button>
+                 <Button variant="outline" onClick={handleDownloadCSV}><FileDown className="mr-2 h-4 w-4"/>Download</Button>
                  <Button onClick={() => setIsAddDialogOpen(true)}><PlusCircle className="mr-2 h-4 w-4"/>Add New Student</Button>
             </div>
           </div>
