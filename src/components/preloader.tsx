@@ -16,7 +16,7 @@ export function Preloader() {
       gsap.fromTo(
         logoRef.current,
         { scale: 0.5, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1.5, ease: 'power3.out' }
+        { scale: 1, opacity: 1, duration: 1, ease: 'power3.out' }
       );
 
       const timer = setTimeout(() => {
@@ -25,7 +25,7 @@ export function Preloader() {
           duration: 0.5,
           onComplete: () => setIsVisible(false),
         });
-      }, 2000); // Total preloader time
+      }, 500); // Reduced preloader time
 
       return () => clearTimeout(timer);
     }

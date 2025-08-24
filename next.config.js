@@ -3,7 +3,6 @@
 const nextConfig = {
   /* config options here */
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
