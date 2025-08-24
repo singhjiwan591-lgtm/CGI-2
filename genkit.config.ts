@@ -4,9 +4,7 @@ import {genkit} from 'genkit';
 
 export default genkit({
   plugins: [
-    googleAI({
-      apiVersion: 'v1beta',
-    }),
+    googleAI(),
   ],
   logLevel: 'debug',
   enableTracingAndMetrics: true,
