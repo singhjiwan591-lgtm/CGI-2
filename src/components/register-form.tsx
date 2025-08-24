@@ -23,8 +23,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 
 declare global {
     interface Window {
@@ -176,8 +174,8 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
         }
     };
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+    const rzp1 = new window.Razorpay(options);
+    rzp1.open();
   }
 
   return (
@@ -191,7 +189,8 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
               Create an account to begin your application.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4 max-h-[60vh] overflow-y-auto pr-4">
+          <CardContent className="p-6 pt-0">
+            <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-4">
               <div className="space-y-4 animate-in fade-in-50">
                 <FormField
                   control={form.control}
@@ -383,6 +382,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                   )}
                 />
               </div>
+            </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
               <Button type="submit" className="w-full" disabled={loading}>
