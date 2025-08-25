@@ -84,8 +84,8 @@ export function LoginForm() {
         title: 'Login Failed',
         description: 'Invalid email or password. Please try again.',
       });
-      setLoading(false);
     }
+    setLoading(false);
   }
 
   return (
