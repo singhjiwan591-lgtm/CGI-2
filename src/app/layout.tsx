@@ -7,7 +7,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { Preloader } from '@/components/preloader';
 import Script from 'next/script';
 import { DynamicDiscountPopup } from '@/components/dynamic-components';
-import { TamperProtector } from '@/components/tamper-protector';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
@@ -82,7 +81,6 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning={true} className={cn("font-body bg-background text-foreground antialiased min-h-screen flex flex-col")}>
-        <TamperProtector />
         <Preloader />
         <div className="relative flex flex-col items-center flex-1 w-full">
           <SiteHeader />
