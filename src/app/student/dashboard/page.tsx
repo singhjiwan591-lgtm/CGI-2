@@ -2,13 +2,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { notFound, useRouter } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { getStudentByEmail } from '@/lib/student-data-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, User, Mail, Phone, MapPin, GraduationCap, Calendar, Banknote, TrendingUp, TrendingDown } from 'lucide-react';
+import { Loader2, User, Mail, Phone, MapPin, GraduationCap, Calendar, Banknote, TrendingUp, TrendingDown, Megaphone } from 'lucide-react';
 import { format } from 'date-fns';
 import { formatNumber } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { getNotices, Notice } from '@/backend/notice';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+
 
 type Student = ReturnType<typeof getStudentByEmail>;
 
@@ -23,6 +31,59 @@ const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.Reac
     </div>
   </Card>
 );
+
+const NoticeBoard = () => {
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      const fetchedNotices = await getNotices();
+      setNotices(fetchedNotices);
+      setLoading(false);
+    }
+    fetchNotices();
+  }, []);
+
+  return (
+    <Card>
+        <CardHeader>
+            <div className="flex items-center gap-2">
+                <Megaphone className="h-6 w-6 text-primary" />
+                <CardTitle>Notice Board</CardTitle>
+            </div>
+            <CardDescription>Important announcements from the institute.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            {loading ? (
+                <div className="flex justify-center items-center h-24">
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                </div>
+            ) : notices.length === 0 ? (
+                <p className="text-muted-foreground text-center py-4">No notices at the moment.</p>
+            ) : (
+                <Accordion type="single" collapsible className="w-full">
+                  {notices.map((notice, index) => (
+                    <AccordionItem value={`item-${index}`} key={notice.id}>
+                      <AccordionTrigger>
+                        <div className='text-left'>
+                            <p className='font-semibold'>{notice.title}</p>
+                            <p className='text-xs text-muted-foreground'>
+                                {format(new Date(notice.createdAt), "do MMMM, yyyy")}
+                            </p>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="whitespace-pre-wrap">
+                        {notice.content}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+            )}
+        </CardContent>
+    </Card>
+  )
+}
 
 
 export default function StudentDashboardPage() {
@@ -59,6 +120,8 @@ export default function StudentDashboardPage() {
 
   return (
     <div className="space-y-6">
+        <NoticeBoard />
+
         <Card>
             <CardHeader>
                 <CardTitle>Fee Status</CardTitle>
@@ -66,7 +129,7 @@ export default function StudentDashboardPage() {
             </CardHeader>
             <CardContent className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 <InfoCard icon={<Banknote />} title="Total Fees" value={`₹${formatNumber(totalFees)}`} bgColor="bg-blue-100" iconColor="text-blue-500" />
-                <InfoCard icon={<TrendingUp />} title="Total Paid" value={`₹${formatNumber(feesPaid)}`} bgColor="bg-green-100" iconColor="text-green-500" />
+                <InfoCard icon={<TrendingUp />} title="Total Collected" value={`₹${formatNumber(feesPaid)}`} bgColor="bg-green-100" iconColor="text-green-500" />
                 <InfoCard icon={<TrendingDown />} title="Remaining Due" value={`₹${formatNumber(remainingFees)}`} bgColor="bg-red-100" iconColor="text-red-500" />
             </CardContent>
         </Card>
