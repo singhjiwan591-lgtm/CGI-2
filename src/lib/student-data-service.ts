@@ -50,7 +50,7 @@ type StudentFee = {
   registrationFeePaid: boolean;
 };
 
-const MOCK_STUDENTS_KEY = 'mockStudentsData';
+const getSchoolDataKey = (schoolId: string) => `mockStudentsData_${schoolId}`;
 
 const initialMockStudents: Student[] = [
     { id: '1', name: 'Ravi Kumar', roll: '1001', grade: '12', parent: 'Manoj Kumar', gender: 'Male', address: 'Mumbai, India', dob: '2006-05-15', phone: '+91 9876543210', email: 'ravi@example.com', password: 'password123', photoURL: 'https://placehold.co/100x100.png', avatarHint: 'male student', status: 'Enrolled', program: 'Science', admissionDate: '2022-04-01', motherName: 'Anjali Kumar', religion: 'Hinduism', fatherOccupation: 'Engineer' },
@@ -63,41 +63,50 @@ const initialMockStudents: Student[] = [
 
 function initializeData() {
     if (typeof window !== 'undefined') {
-        const storedData = localStorage.getItem(MOCK_STUDENTS_KEY);
-        if (!storedData) {
-            localStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(initialMockStudents));
-        }
+        const schoolIds = ['schoolA', 'schoolB'];
+        schoolIds.forEach(schoolId => {
+             const key = getSchoolDataKey(schoolId);
+             const storedData = localStorage.getItem(key);
+             if (!storedData) {
+                // To make data different for each school, we can slightly alter it.
+                // For this example, schoolB will have names prefixed with "B-".
+                const schoolSpecificData = schoolId === 'schoolB'
+                    ? initialMockStudents.map(s => ({...s, name: `B-${s.name}`}))
+                    : initialMockStudents;
+                localStorage.setItem(key, JSON.stringify(schoolSpecificData));
+            }
+        });
     }
 }
 
 initializeData();
 
-export function getAllStudents(): Student[] {
+export function getAllStudents(schoolId: string): Student[] {
     if (typeof window === 'undefined') {
         return initialMockStudents;
     }
-    const data = localStorage.getItem(MOCK_STUDENTS_KEY);
+    const data = localStorage.getItem(getSchoolDataKey(schoolId));
     return data ? JSON.parse(data) : [];
 }
 
-export function updateStudent(studentId: string, updatedData: Partial<Student>): Student | null {
+export function updateStudent(studentId: string, updatedData: Partial<Student>, schoolId: string): Student | null {
     if (typeof window === 'undefined') return null;
 
-    const students = getAllStudents();
+    const students = getAllStudents(schoolId);
     const studentIndex = students.findIndex(s => s.id === studentId);
     if (studentIndex > -1) {
         students[studentIndex] = { ...students[studentIndex], ...updatedData };
-        localStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(students));
+        localStorage.setItem(getSchoolDataKey(schoolId), JSON.stringify(students));
         return students[studentIndex];
     }
     return null;
 }
 
 
-export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint' | 'status' | 'program' | 'admissionDate'> & { registrationFeePaid?: boolean }): Student | null {
+export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint' | 'status' | 'program' | 'admissionDate'> & { registrationFeePaid?: boolean }, schoolId: string): Student | null {
     if (typeof window === 'undefined') return null;
 
-    const students = getAllStudents();
+    const students = getAllStudents(schoolId);
     const newId = (Math.max(...students.map(s => parseInt(s.id, 10)), 0) + 1).toString();
     const roll = (Math.max(...students.map(s => parseInt(s.roll, 10)), 1000) + 1).toString();
 
@@ -114,31 +123,31 @@ export function addStudent(studentData: Omit<Student, 'id' | 'roll'| 'avatarHint
     };
     
     const updatedStudents = [newStudent, ...students];
-    localStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(updatedStudents));
+    localStorage.setItem(getSchoolDataKey(schoolId), JSON.stringify(updatedStudents));
     // After adding student, ensure their fee data is also generated
-    generateFeeForStudent(newStudent, studentData.registrationFeePaid || false);
+    generateFeeForStudent(newStudent, schoolId, studentData.registrationFeePaid || false);
     return newStudent;
 }
 
-export function getStudentById(id: string): Student | undefined {
-    const students = getAllStudents();
+export function getStudentById(id: string, schoolId: string): Student | undefined {
+    const students = getAllStudents(schoolId);
     return students.find(s => s.id === id);
 }
 
-export function getStudentByRoll(roll: string): Student | undefined {
-    const students = getAllStudents();
+export function getStudentByRoll(roll: string, schoolId: string): Student | undefined {
+    const students = getAllStudents(schoolId);
     return students.find(s => s.roll === roll);
 }
 
-export function getStudentByEmail(email: string): Student | undefined {
-    const students = getAllStudents();
+export function getStudentByEmail(email: string, schoolId: string): Student | undefined {
+    const students = getAllStudents(schoolId);
     return students.find(s => s.email.toLowerCase() === email.toLowerCase());
 }
 
 
-export function updateStudentData(studentId: string, dataToUpdate: Partial<Student>) {
+export function updateStudentData(studentId: string, schoolId: string, dataToUpdate: Partial<Student>) {
     if (typeof window !== 'undefined') {
-        const students = getAllStudents();
+        const students = getAllStudents(schoolId);
         const studentIndex = students.findIndex(s => s.id === studentId);
         if (studentIndex > -1) {
             // Merge new data with existing data, ensuring fees are not lost
@@ -149,7 +158,7 @@ export function updateStudentData(studentId: string, dataToUpdate: Partial<Stude
             } else {
                 students[studentIndex].fees = existingFees;
             }
-            localStorage.setItem(MOCK_STUDENTS_KEY, JSON.stringify(students));
+            localStorage.setItem(getSchoolDataKey(schoolId), JSON.stringify(students));
         }
     }
 }
@@ -197,7 +206,7 @@ const generateInstallments = (totalFees: number, registrationFeePaid: boolean): 
     return installments;
 };
 
-const generateFeeForStudent = (student: Student, registrationFeePaid: boolean = false): StudentFee => {
+const generateFeeForStudent = (student: Student, schoolId: string, registrationFeePaid: boolean = false): StudentFee => {
      // This is a simplified fee structure. Could be more complex in a real app.
     const totalFees = student.grade === '12' ? 60000 : student.grade === '11' ? 50000 : 45000;
     const installments = generateInstallments(totalFees, registrationFeePaid);
@@ -215,12 +224,12 @@ const generateFeeForStudent = (student: Student, registrationFeePaid: boolean = 
         registrationFeePaid,
     };
     // Attach the new fee data to the student record for persistence
-    updateStudentData(student.id, { fees: feeData });
+    updateStudentData(student.id, schoolId, { fees: feeData });
     return feeData;
 };
 
-export function getAllStudentsWithFees(): StudentFee[] {
-    const students = getAllStudents();
+export function getAllStudentsWithFees(schoolId: string): StudentFee[] {
+    const students = getAllStudents(schoolId);
     return students.map(s => {
         if (s.fees && s.fees.installments) {
             // Recalculate paid amount to ensure consistency
@@ -233,11 +242,11 @@ export function getAllStudentsWithFees(): StudentFee[] {
                     inst.status = 'Overdue';
                 }
             });
-            updateStudentData(s.id, { fees: s.fees });
+            updateStudentData(s.id, schoolId, { fees: s.fees });
             return s.fees;
         }
         
         // This handles students who might not have fee data generated yet.
-        return generateFeeForStudent(s);
+        return generateFeeForStudent(s, schoolId);
     });
 }

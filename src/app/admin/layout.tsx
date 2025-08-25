@@ -31,7 +31,8 @@ import {
   Map,
   Settings,
   ChevronDown,
-  LogOut
+  LogOut,
+  Replace
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -167,7 +168,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = useState<{ email: string; isLoggedIn: boolean } | null>(null);
+  const [user, setUser] = useState<{ email: string; isLoggedIn: boolean; schoolId: string; } | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
@@ -191,6 +192,16 @@ export default function DashboardLayout({
     setUser(null);
     router.push('/login');
   };
+
+  const handleSwitchSchool = () => {
+      if (user) {
+          const newSchoolId = user.schoolId === 'schoolA' ? 'schoolB' : 'schoolA';
+          const updatedUser = {...user, schoolId: newSchoolId };
+          sessionStorage.setItem('user', JSON.stringify(updatedUser));
+          setUser(updatedUser);
+          window.location.reload(); // Reload to reflect data from the new school
+      }
+  }
 
   if (loading) {
     return (
@@ -226,6 +237,12 @@ export default function DashboardLayout({
               ))}
             </nav>
           </div>
+          <div className="mt-auto p-4">
+              <Button onClick={handleSwitchSchool} variant="outline" className="w-full">
+                  <Replace className="mr-2 h-4 w-4" />
+                  Switch to School {user.schoolId === 'schoolA' ? 'B' : 'A'}
+              </Button>
+          </div>
         </div>
       </div>
       <div className="flex flex-col bg-muted/40">
@@ -259,7 +276,9 @@ export default function DashboardLayout({
             </SheetContent>
           </Sheet>
           <div className="w-full flex-1">
-             <h1 className="text-lg font-semibold hidden md:block">Welcome, Admin!</h1>
+             <h1 className="text-lg font-semibold hidden md:block">
+                {user.schoolId === 'schoolA' ? "School A" : "School B"} Dashboard
+             </h1>
              <p className="text-sm text-muted-foreground hidden md:block">Home &gt; {pageTitle}</p>
           </div>
           <DropdownMenu>

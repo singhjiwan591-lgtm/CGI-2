@@ -28,6 +28,7 @@ import { format } from 'date-fns';
 import { Progress } from '@/components/ui/progress';
 import { formatNumber } from '@/lib/utils';
 import React from 'react';
+import { Label } from '@/components/ui/label';
 
 const StudentDetailsCard = ({ student }: { student: any }) => (
   <Card>
@@ -114,9 +115,15 @@ export default function StudentProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const foundStudent = getStudentById(studentId);
-    if (foundStudent) {
-      setStudent(foundStudent);
+    const userSession = sessionStorage.getItem('user');
+    if (userSession) {
+        const parsedSession = JSON.parse(userSession);
+        if (parsedSession.schoolId) {
+             const foundStudent = getStudentById(studentId, parsedSession.schoolId);
+             if (foundStudent) {
+                setStudent(foundStudent);
+             }
+        }
     }
     setLoading(false);
   }, [studentId]);

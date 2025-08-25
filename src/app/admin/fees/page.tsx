@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -94,10 +95,18 @@ export default function FeesPage() {
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentFee | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [schoolId, setSchoolId] = useState('');
   const { toast } = useToast();
 
   useEffect(() => {
-    setStudents(getAllStudentsWithFees());
+    const userSession = sessionStorage.getItem('user');
+    if (userSession) {
+        const parsedSession = JSON.parse(userSession);
+        if (parsedSession.schoolId) {
+            setSchoolId(parsedSession.schoolId);
+            setStudents(getAllStudentsWithFees(parsedSession.schoolId));
+        }
+    }
     setLoading(false);
   }, []);
 
@@ -109,11 +118,12 @@ export default function FeesPage() {
   const updateStudentAndPersist = (updatedStudent: StudentFee) => {
       const updatedStudents = students.map(s => s.id === updatedStudent.id ? updatedStudent : s);
       setStudents(updatedStudents);
-      updateStudentData(updatedStudent.id, { fees: updatedStudent });
+      updateStudentData(updatedStudent.id, schoolId, { fees: updatedStudent });
       setSelectedStudent(updatedStudent);
   }
 
   const handlePayInstallment = (studentId: string, installmentId: number) => {
+    if (!schoolId) return;
     const studentToUpdate = students.find(s => s.id === studentId);
     if (!studentToUpdate) return;
 
@@ -135,12 +145,13 @@ export default function FeesPage() {
     const updatedStudentsList = students.map(s => (s.id === studentId ? updatedStudent : s));
     setStudents(updatedStudentsList);
     setSelectedStudent(updatedStudent); // This ensures the dialog re-renders with the new state
-    updateStudentData(studentId, { fees: updatedStudent });
+    updateStudentData(studentId, schoolId, { fees: updatedStudent });
     
     toast({ title: 'Success', description: 'Cash payment recorded successfully.' });
   };
   
   const handleSendPaymentLink = (studentId: string, installmentId: number) => {
+    if (!schoolId) return;
     const studentToUpdate = students.find(s => s.id === studentId);
     if (!studentToUpdate) return;
 
@@ -156,7 +167,7 @@ export default function FeesPage() {
     const updatedStudentsList = students.map(s => (s.id === studentId ? updatedStudent : s));
     setStudents(updatedStudentsList);
     setSelectedStudent(updatedStudent); // This ensures the dialog re-renders with the new state
-    updateStudentData(studentId, { fees: updatedStudent });
+    updateStudentData(studentId, schoolId, { fees: updatedStudent });
 
     toast({ title: 'Link Sent', description: `Payment link for Installment ${installmentId} sent to student.` });
   };

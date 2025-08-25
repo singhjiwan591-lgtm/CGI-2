@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/accordion"
 
 
-type Student = ReturnType<typeof getStudentByEmail>;
+type Student = NonNullable<ReturnType<typeof getStudentByEmail>>;
 
 const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.ReactNode, title: string, value: string, bgColor: string, iconColor: string }) => (
   <Card className="flex items-center p-4 gap-4">
@@ -32,18 +32,19 @@ const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.Reac
   </Card>
 );
 
-const NoticeBoard = () => {
+const NoticeBoard = ({ schoolId }: { schoolId: string}) => {
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchNotices = async () => {
-      const fetchedNotices = await getNotices();
+      if (!schoolId) return;
+      const fetchedNotices = await getNotices(schoolId);
       setNotices(fetchedNotices);
       setLoading(false);
     }
     fetchNotices();
-  }, []);
+  }, [schoolId]);
 
   return (
     <Card>
@@ -94,9 +95,11 @@ export default function StudentDashboardPage() {
     const storedUser = sessionStorage.getItem('studentUser');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      const studentData = getStudentByEmail(parsedUser.email);
-      if (studentData) {
-        setStudent(studentData);
+      if (parsedUser.email && parsedUser.schoolId) {
+        const studentData = getStudentByEmail(parsedUser.email, parsedUser.schoolId);
+        if (studentData) {
+          setStudent(studentData);
+        }
       }
     }
     setLoading(false);
@@ -117,10 +120,12 @@ export default function StudentDashboardPage() {
   const totalFees = student.fees?.totalFees ?? 0;
   const feesPaid = student.fees?.feesPaid ?? 0;
   const remainingFees = totalFees - feesPaid;
+  const schoolId = JSON.parse(sessionStorage.getItem('studentUser') || '{}').schoolId;
+
 
   return (
     <div className="space-y-6">
-        <NoticeBoard />
+        <NoticeBoard schoolId={schoolId}/>
 
         <Card>
             <CardHeader>

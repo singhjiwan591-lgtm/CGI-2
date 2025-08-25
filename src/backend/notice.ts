@@ -11,57 +11,62 @@ export type Notice = {
   createdAt: string;
 };
 
-const NOTICES_KEY = 'noticesData';
+const getNoticesKey = (schoolId: string) => `noticesData_${schoolId}`;
 
 // Function to get notices from localStorage
-const getStoredNotices = (): Notice[] => {
+const getStoredNotices = (schoolId: string): Notice[] => {
   if (typeof window === 'undefined') {
     return [];
   }
-  const data = localStorage.getItem(NOTICES_KEY);
+  const data = localStorage.getItem(getNoticesKey(schoolId));
   return data ? JSON.parse(data) : [];
 };
 
 // Function to save notices to localStorage
-const storeNotices = (notices: Notice[]) => {
+const storeNotices = (notices: Notice[], schoolId: string) => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem(NOTICES_KEY, JSON.stringify(notices));
+    localStorage.setItem(getNoticesKey(schoolId), JSON.stringify(notices));
   }
 };
 
 // Initialize with some mock data if empty
 const initializeMockNotices = () => {
-  const notices = getStoredNotices();
-  if (notices.length === 0) {
-    storeNotices([
-      {
-        id: '1',
-        title: 'Welcome to the New Semester!',
-        content: 'We are excited to welcome all new and returning students to the new semester. Please check your class schedules and be prepared for an amazing learning journey.',
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: '2',
-        title: 'Holiday for Diwali Festival',
-        content: 'The institute will be closed for the Diwali festival. We wish everyone a happy and safe celebration.',
-        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      },
-    ]);
-  }
+  if (typeof window === 'undefined') return;
+
+  const schoolIds = ['schoolA', 'schoolB'];
+  schoolIds.forEach(schoolId => {
+    const notices = getStoredNotices(schoolId);
+    if (notices.length === 0) {
+      storeNotices([
+        {
+          id: '1',
+          title: `Welcome to the New Semester at ${schoolId === 'schoolA' ? 'School A' : 'School B'}!`,
+          content: 'We are excited to welcome all new and returning students to the new semester. Please check your class schedules and be prepared for an amazing learning journey.',
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: '2',
+          title: 'Holiday for Diwali Festival',
+          content: 'The institute will be closed for the Diwali festival. We wish everyone a happy and safe celebration.',
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        },
+      ], schoolId);
+    }
+  });
 };
 
 // Call initialize on module load
 initializeMockNotices();
 
 
-export async function getNotices(): Promise<Notice[]> {
-  const notices = getStoredNotices();
+export async function getNotices(schoolId: string): Promise<Notice[]> {
+  const notices = getStoredNotices(schoolId);
   // Return notices sorted by most recent first
   return notices.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-export async function addNotice(data: { title: string; content: string }): Promise<Notice> {
-  const notices = getStoredNotices();
+export async function addNotice(data: { title: string; content: string }, schoolId: string): Promise<Notice> {
+  const notices = getStoredNotices(schoolId);
   const newNotice: Notice = {
     id: new Date().getTime().toString(),
     title: data.title,
@@ -69,21 +74,21 @@ export async function addNotice(data: { title: string; content: string }): Promi
     createdAt: new Date().toISOString(),
   };
   const updatedNotices = [newNotice, ...notices];
-  storeNotices(updatedNotices);
+  storeNotices(updatedNotices, schoolId);
   return newNotice;
 }
 
-export async function updateNotice(noticeToUpdate: Notice): Promise<Notice> {
-  let notices = getStoredNotices();
+export async function updateNotice(noticeToUpdate: Notice, schoolId: string): Promise<Notice> {
+  let notices = getStoredNotices(schoolId);
   notices = notices.map(notice =>
     notice.id === noticeToUpdate.id ? noticeToUpdate : notice
   );
-  storeNotices(notices);
+  storeNotices(notices, schoolId);
   return noticeToUpdate;
 }
 
-export async function deleteNotice(id: string): Promise<void> {
-  let notices = getStoredNotices();
+export async function deleteNotice(id: string, schoolId: string): Promise<void> {
+  let notices = getStoredNotices(schoolId);
   notices = notices.filter(notice => notice.id !== id);
-  storeNotices(notices);
+  storeNotices(notices, schoolId);
 }

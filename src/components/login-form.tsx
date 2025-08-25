@@ -22,8 +22,16 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from './ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const formSchema = z.object({
+  schoolId: z.string({ required_error: 'Please select a school.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
   rememberMe: z.boolean().default(false).optional(),
@@ -46,14 +54,16 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
+    const { schoolId, email, password } = values;
+
     // Case 1: Admin Login
-    if (values.email === 'admin@webandapp.edu' && values.password === 'admin123') {
+    if (email === 'admin@webandapp.edu' && password === 'admin123') {
       toast({
         title: 'Admin Login Successful',
         description: 'Redirecting to your dashboard...',
       });
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem('user', JSON.stringify({ email: values.email, isLoggedIn: true }));
+        sessionStorage.setItem('user', JSON.stringify({ email, isLoggedIn: true, schoolId }));
         sessionStorage.removeItem('studentUser'); // Clear student session if any
       }
       router.push('/admin/dashboard');
@@ -61,9 +71,9 @@ export function LoginForm() {
     }
 
     // Case 2: Student Login
-    const student = getStudentByEmail(values.email);
+    const student = getStudentByEmail(email, schoolId);
 
-    if (student && student.password === values.password) {
+    if (student && student.password === password) {
        toast({
         title: 'Login Successful',
         description: 'Welcome back! Redirecting to your dashboard...',
@@ -73,7 +83,8 @@ export function LoginForm() {
             email: student.email, 
             name: student.name, 
             photoURL: student.photoURL,
-            avatarHint: student.avatarHint
+            avatarHint: student.avatarHint,
+            schoolId,
           }));
           sessionStorage.removeItem('user'); // Clear admin session if any
       }
@@ -82,7 +93,7 @@ export function LoginForm() {
        toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: 'Invalid email or password. Please try again.',
+        description: 'Invalid email, password, or school selection. Please try again.',
       });
     }
     setLoading(false);
@@ -98,6 +109,27 @@ export function LoginForm() {
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
+            <FormField
+              control={form.control}
+              name="schoolId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Select School</FormLabel>
+                   <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select the school branch" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="schoolA">School A</SelectItem>
+                      <SelectItem value="schoolB">School B</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"

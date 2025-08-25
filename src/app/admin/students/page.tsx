@@ -91,11 +91,19 @@ export default function StudentsPage() {
     name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '', religion: ''
   });
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
+  const [schoolId, setSchoolId] = useState<string>('');
   const router = useRouter();
   const { toast } = useToast();
 
   useEffect(() => {
-    setStudents(getAllStudents());
+    const userSession = sessionStorage.getItem('user');
+    if (userSession) {
+        const parsedSession = JSON.parse(userSession);
+        if (parsedSession.schoolId) {
+            setSchoolId(parsedSession.schoolId);
+            setStudents(getAllStudents(parsedSession.schoolId));
+        }
+    }
     setLoading(false);
   }, []);
 
@@ -136,12 +144,12 @@ export default function StudentsPage() {
 
   const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateStudentForm(newStudent)) {
+    if (!validateStudentForm(newStudent) || !schoolId) {
         return;
     }
 
     const studentWithPhoto = { ...newStudent, photoURL: photoDataUrl || undefined };
-    const addedStudent = addStudent(studentWithPhoto);
+    const addedStudent = addStudent(studentWithPhoto, schoolId);
     if(addedStudent) {
         setStudents(prev => [addedStudent, ...prev].sort((a,b) => parseInt(b.roll) - parseInt(a.roll)));
     }
@@ -160,13 +168,13 @@ export default function StudentsPage() {
 
   const handleUpdateStudent = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!studentToEdit) return;
+    if (!studentToEdit || !schoolId) return;
 
     if (!validateStudentForm(studentToEdit)) {
         return;
     }
 
-    const updated = updateStudent(studentToEdit.id, studentToEdit);
+    const updated = updateStudent(studentToEdit.id, studentToEdit, schoolId);
     if (updated) {
         setStudents(students.map(s => s.id === studentToEdit.id ? studentToEdit : s));
         toast({ title: "Success", description: "Student details updated." });
