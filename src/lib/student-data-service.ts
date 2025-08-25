@@ -145,7 +145,7 @@ export function updateStudentData(studentId: string, dataToUpdate: Partial<Stude
             const existingFees = students[studentIndex].fees;
             students[studentIndex] = { ...students[studentIndex], ...dataToUpdate };
             if (dataToUpdate.fees) {
-                 students[studentIndex].fees = { ...existingFees, ...dataToUpdate.fees };
+                 students[studentIndex].fees = { ...(existingFees || {}), ...dataToUpdate.fees };
             } else {
                 students[studentIndex].fees = existingFees;
             }
