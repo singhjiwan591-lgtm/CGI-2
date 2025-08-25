@@ -195,7 +195,7 @@ export default function DashboardLayout({
 
   const handleSwitchSchool = () => {
       if (user) {
-          const newSchoolId = user.schoolId === 'schoolA' ? 'schoolB' : 'schoolA';
+          const newSchoolId = user.schoolId === 'jalalabad' ? 'golu_ka_mor' : 'jalalabad';
           const updatedUser = {...user, schoolId: newSchoolId };
           sessionStorage.setItem('user', JSON.stringify(updatedUser));
           setUser(updatedUser);
@@ -220,6 +220,12 @@ export default function DashboardLayout({
   
   const closeSheet = () => setIsSheetOpen(false);
 
+  const getSchoolDisplayName = (schoolId: string) => {
+    if (schoolId === 'jalalabad') return 'Jalalabad';
+    if (schoolId === 'golu_ka_mor') return 'Golu Ka Mor';
+    return 'School';
+  }
+
   return (
       <div className="grid min-h-screen w-full md:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-card md:block">
@@ -240,7 +246,7 @@ export default function DashboardLayout({
           <div className="mt-auto p-4">
               <Button onClick={handleSwitchSchool} variant="outline" className="w-full">
                   <Replace className="mr-2 h-4 w-4" />
-                  Switch to School {user.schoolId === 'schoolA' ? 'B' : 'A'}
+                  Switch to {user.schoolId === 'jalalabad' ? 'Golu Ka Mor' : 'Jalalabad'}
               </Button>
           </div>
         </div>
@@ -277,7 +283,7 @@ export default function DashboardLayout({
           </Sheet>
           <div className="w-full flex-1">
              <h1 className="text-lg font-semibold hidden md:block">
-                {user.schoolId === 'schoolA' ? "School A" : "School B"} Dashboard
+                {getSchoolDisplayName(user.schoolId)} Dashboard
              </h1>
              <p className="text-sm text-muted-foreground hidden md:block">Home &gt; {pageTitle}</p>
           </div>

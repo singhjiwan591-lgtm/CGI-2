@@ -114,7 +114,7 @@ export function LoginForm() {
               name="schoolId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Select School</FormLabel>
+                  <FormLabel>Select Branch</FormLabel>
                    <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
                     <FormControl>
                       <SelectTrigger>
@@ -122,8 +122,8 @@ export function LoginForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="schoolA">School A</SelectItem>
-                      <SelectItem value="schoolB">School B</SelectItem>
+                      <SelectItem value="jalalabad">Jalalabad</SelectItem>
+                      <SelectItem value="golu_ka_mor">Golu Ka Mor</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

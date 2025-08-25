@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -11,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { getStudentByRoll } from '@/lib/student-data-service';
 
-type Student = ReturnType<typeof getStudentByRoll>;
+type Student = NonNullable<ReturnType<typeof getStudentByRoll>>;
 
 type VerificationResult = 'pending' | 'verified' | 'not_found' | 'not_graduated';
 

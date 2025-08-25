@@ -63,15 +63,14 @@ const initialMockStudents: Student[] = [
 
 function initializeData() {
     if (typeof window !== 'undefined') {
-        const schoolIds = ['schoolA', 'schoolB'];
+        const schoolIds = ['jalalabad', 'golu_ka_mor'];
         schoolIds.forEach(schoolId => {
              const key = getSchoolDataKey(schoolId);
              const storedData = localStorage.getItem(key);
              if (!storedData) {
                 // To make data different for each school, we can slightly alter it.
-                // For this example, schoolB will have names prefixed with "B-".
-                const schoolSpecificData = schoolId === 'schoolB'
-                    ? initialMockStudents.map(s => ({...s, name: `B-${s.name}`}))
+                const schoolSpecificData = schoolId === 'golu_ka_mor'
+                    ? initialMockStudents.map(s => ({...s, name: `GKM-${s.name}`}))
                     : initialMockStudents;
                 localStorage.setItem(key, JSON.stringify(schoolSpecificData));
             }
@@ -134,9 +133,19 @@ export function getStudentById(id: string, schoolId: string): Student | undefine
     return students.find(s => s.id === id);
 }
 
-export function getStudentByRoll(roll: string, schoolId: string): Student | undefined {
-    const students = getAllStudents(schoolId);
-    return students.find(s => s.roll === roll);
+export function getStudentByRoll(roll: string, schoolId?: string): Student | undefined {
+    // This function might be called from a public page without a schoolId in session
+    // It should check all schools if no schoolId is provided.
+    if (schoolId) {
+        return getAllStudents(schoolId).find(s => s.roll === roll);
+    } else {
+        const allSchoolIds = ['jalalabad', 'golu_ka_mor'];
+        for (const id of allSchoolIds) {
+            const student = getAllStudents(id).find(s => s.roll === roll);
+            if (student) return student;
+        }
+    }
+    return undefined;
 }
 
 export function getStudentByEmail(email: string, schoolId: string): Student | undefined {

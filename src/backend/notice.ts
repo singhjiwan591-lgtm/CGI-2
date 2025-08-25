@@ -33,14 +33,14 @@ const storeNotices = (notices: Notice[], schoolId: string) => {
 const initializeMockNotices = () => {
   if (typeof window === 'undefined') return;
 
-  const schoolIds = ['schoolA', 'schoolB'];
+  const schoolIds = ['jalalabad', 'golu_ka_mor'];
   schoolIds.forEach(schoolId => {
     const notices = getStoredNotices(schoolId);
     if (notices.length === 0) {
       storeNotices([
         {
           id: '1',
-          title: `Welcome to the New Semester at ${schoolId === 'schoolA' ? 'School A' : 'School B'}!`,
+          title: `Welcome to the New Semester at ${schoolId === 'jalalabad' ? 'Jalalabad' : 'Golu Ka Mor'}!`,
           content: 'We are excited to welcome all new and returning students to the new semester. Please check your class schedules and be prepared for an amazing learning journey.',
           createdAt: new Date().toISOString(),
         },
