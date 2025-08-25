@@ -113,22 +113,6 @@ export default function Home() {
       quote:
         'Global Computer Institute provided the perfect launchpad for my career. The hands-on approach and expert faculty are unmatched. Highly recommended!',
     },
-    {
-      name: 'Priya Kaur',
-      title: 'Alumna, Class of 2023',
-      avatar: 'https://placehold.co/100x100.png',
-      dataAiHint: 'woman programmer',
-      quote:
-        'The skills I gained here were directly applicable to my job from day one. The career support team was fantastic in helping me land my first role.',
-    },
-    {
-      name: 'Amit Sharma',
-      title: 'UI/UX Designer',
-      avatar: 'https://placehold.co/100x100.png',
-      dataAiHint: 'man designer',
-      quote:
-        'A great learning environment with a focus on practical skills. The instructors are always ready to help and the community is very supportive.',
-    },
   ];
   
   return (
