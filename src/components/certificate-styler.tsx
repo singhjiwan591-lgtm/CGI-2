@@ -1,3 +1,4 @@
+
 'use client';
 
 // This component uses styled-jsx, which is a client-only feature.
@@ -8,13 +9,27 @@ export function CertificateStyler() {
   return (
     <style jsx global>{`
       @media print {
-          body {
-              -webkit-print-color-adjust: exact;
-              print-color-adjust: exact;
+          body, html {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          #certificate {
+            visibility: visible;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin: 0;
+            padding: 0;
           }
           .print-no-bg {
-              background-color: transparent !important;
+            background-color: transparent !important;
           }
+      }
+      body > *:not(#certificate) {
+        @media print {
+            visibility: hidden;
+        }
       }
     `}</style>
   );
