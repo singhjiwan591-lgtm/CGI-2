@@ -8,7 +8,8 @@ import {
   ClipboardList,
   Banknote,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  ArrowLeft,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -22,7 +23,7 @@ import {
   CardTitle,
   CardFooter
 } from '@/components/ui/card';
-import { notFound, useParams } from 'next/navigation';
+import { notFound, useParams, useRouter } from 'next/navigation';
 import { getStudentById } from '@/lib/student-data-service';
 import { format } from 'date-fns';
 import { Progress } from '@/components/ui/progress';
@@ -110,6 +111,7 @@ const FeeSummaryCard = ({ fees }: { fees: any }) => {
 
 export default function StudentProfilePage() {
   const params = useParams();
+  const router = useRouter();
   const studentId = params.studentId as string;
   const [student, setStudent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -141,44 +143,50 @@ export default function StudentProfilePage() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2 space-y-6">
-        <StudentDetailsCard student={student} />
-        <FeeSummaryCard fees={student.fees} />
-      </div>
+    <div className="space-y-6">
+      <Button variant="outline" onClick={() => router.push('/admin/students')}>
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back to All Students
+      </Button>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          <StudentDetailsCard student={student} />
+          <FeeSummaryCard fees={student.fees} />
+        </div>
 
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Overview</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-4 rounded-md bg-purple-50 border border-purple-200">
-                <ClipboardList className="h-8 w-8 text-purple-500" />
-                <div className="text-right">
-                    <p className="text-muted-foreground">Notification</p>
-                    <p className="text-2xl font-bold">12</p>
-                </div>
-            </div>
-             <div className="flex items-center justify-between p-4 rounded-md bg-blue-50 border border-blue-200">
-                <Calendar className="h-8 w-8 text-blue-500" />
-                <div className="text-right">
-                    <p className="text-muted-foreground">Events</p>
-                    <p className="text-2xl font-bold">6</p>
-                </div>
-            </div>
-             <div className="flex items-center justify-between p-4 rounded-md bg-yellow-50 border border-yellow-200">
-                <Percent className="h-8 w-8 text-yellow-500" />
-                <div className="text-right">
-                    <p className="text-muted-foreground">Attendance</p>
-                    <p className="text-2xl font-bold">94%</p>
-                </div>
-            </div>
-          </CardContent>
-           <CardFooter>
-            <Button variant="outline" className="w-full">All Exam Results</Button>
-          </CardFooter>
-        </Card>
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Overview</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-4 rounded-md bg-purple-50 border border-purple-200">
+                  <ClipboardList className="h-8 w-8 text-purple-500" />
+                  <div className="text-right">
+                      <p className="text-muted-foreground">Notification</p>
+                      <p className="text-2xl font-bold">12</p>
+                  </div>
+              </div>
+              <div className="flex items-center justify-between p-4 rounded-md bg-blue-50 border border-blue-200">
+                  <Calendar className="h-8 w-8 text-blue-500" />
+                  <div className="text-right">
+                      <p className="text-muted-foreground">Events</p>
+                      <p className="text-2xl font-bold">6</p>
+                  </div>
+              </div>
+              <div className="flex items-center justify-between p-4 rounded-md bg-yellow-50 border border-yellow-200">
+                  <Percent className="h-8 w-8 text-yellow-500" />
+                  <div className="text-right">
+                      <p className="text-muted-foreground">Attendance</p>
+                      <p className="text-2xl font-bold">94%</p>
+                  </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button variant="outline" className="w-full">All Exam Results</Button>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
     </div>
   );
