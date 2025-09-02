@@ -23,7 +23,8 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription
+  CardDescription,
+  CardFooter,
 } from '@/components/ui/card';
 import {
   Carousel,
@@ -254,20 +255,24 @@ export default function Home() {
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 md:gap-8">
             {latestJobs.length > 0 ? latestJobs.map((job) => (
               <Card key={job.id} data-animate="stagger-item-3" className="overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl bg-card flex flex-col">
-                <CardHeader className="flex-row gap-4 items-start p-4">
-                  <Image src={job.photoURL} alt={job.title} width={150} height={150} data-ai-hint="government building" className="rounded-lg object-cover w-32 h-32" />
-                  <div className="flex-1">
-                    <CardTitle className="font-headline text-xl">
-                      {job.title}
-                    </CardTitle>
-                     <CardDescription className="mt-2 text-foreground/80">{job.description}</CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-4 pt-0 mt-auto">
-                   <Button className="w-full" onClick={() => handleWhatsAppInquiry(job.title)}>
-                      Apply on WhatsApp
-                   </Button>
-                </CardContent>
+                <div className="relative w-full h-48">
+                    <Image src={job.photoURL} alt={job.title} layout="fill" objectFit="cover" data-ai-hint="government building" />
+                </div>
+                <div className="p-4 flex flex-col flex-grow">
+                    <CardHeader className="p-0">
+                        <CardTitle className="font-headline text-xl mb-2">
+                            {job.title}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0 flex-grow">
+                        <CardDescription className="text-foreground/80">{job.description}</CardDescription>
+                    </CardContent>
+                    <CardFooter className="p-0 pt-4 mt-auto">
+                        <Button className="w-full" onClick={() => handleWhatsAppInquiry(job.title)}>
+                            Apply on WhatsApp
+                        </Button>
+                    </CardFooter>
+                </div>
               </Card>
             )) : (
               <p className="text-center col-span-full text-muted-foreground">No job openings at the moment. Please check back later.</p>
