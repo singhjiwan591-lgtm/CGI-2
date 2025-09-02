@@ -9,6 +9,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { getAllStudents, Student } from '@/lib/student-data-service';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { sendMessage } from '@/backend/messaging';
 
 type Parent = {
   id: string;
@@ -25,8 +38,14 @@ type Parent = {
 export default function ParentsPage() {
   const [parents, setParents] = useState<Parent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isMessaging, setIsMessaging] = useState(false);
+  const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
+  const [selectedParent, setSelectedParent] = useState<Parent | null>(null);
+  const [messageSubject, setMessageSubject] = useState('');
+  const [messageBody, setMessageBody] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [schoolId, setSchoolId] = useState<string>('');
+  const { toast } = useToast();
 
   useEffect(() => {
     async function loadData() {
@@ -57,6 +76,36 @@ export default function ParentsPage() {
     loadData();
   }, []);
 
+  const handleOpenMessageDialog = (parent: Parent) => {
+    setSelectedParent(parent);
+    setMessageSubject('');
+    setMessageBody('');
+    setIsMessageDialogOpen(true);
+  };
+  
+  const handleSendMessage = async () => {
+    if (!selectedParent || !messageSubject || !messageBody) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Subject and message body are required.' });
+      return;
+    }
+
+    setIsMessaging(true);
+    try {
+      await sendMessage({
+        toEmail: selectedParent.email,
+        subject: messageSubject,
+        message: messageBody
+      });
+      toast({ title: 'Success', description: 'Message sent successfully.' });
+      setIsMessageDialogOpen(false);
+      setSelectedParent(null);
+    } catch(error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Failed to send message.' });
+    } finally {
+      setIsMessaging(false);
+    }
+  }
+
   const filteredParents = parents.filter(p =>
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.studentName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -71,6 +120,7 @@ export default function ParentsPage() {
   }
 
   return (
+    <>
     <Card>
       <CardHeader>
         <CardTitle>Parents Information</CardTitle>
@@ -128,7 +178,7 @@ export default function ParentsPage() {
                 </TableCell>
                 <TableCell>{parent.studentName}</TableCell>
                 <TableCell className="text-right">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => handleOpenMessageDialog(parent)}>
                     <MessageSquare className="mr-2 h-4 w-4" /> Message
                   </Button>
                 </TableCell>
@@ -143,5 +193,48 @@ export default function ParentsPage() {
             </div>
         </CardFooter>
     </Card>
+
+     {/* Message Dialog */}
+    <Dialog open={isMessageDialogOpen} onOpenChange={setIsMessageDialogOpen}>
+        <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+                <DialogTitle>Send Message to {selectedParent?.name}</DialogTitle>
+                <DialogDescription>
+                    Compose your message below. The parent will receive this via email to {selectedParent?.email}.
+                </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+                <div className="space-y-2">
+                    <Label htmlFor="subject">Subject</Label>
+                    <Input 
+                        id="subject" 
+                        value={messageSubject}
+                        onChange={(e) => setMessageSubject(e.target.value)}
+                        placeholder="e.g., Update on Student Progress" 
+                    />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="message-body">Message</Label>
+                    <Textarea 
+                        id="message-body" 
+                        value={messageBody}
+                        onChange={(e) => setMessageBody(e.target.value)}
+                        placeholder="Type your message here..." 
+                        className="min-h-[150px]"
+                    />
+                </div>
+            </div>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button type="button" variant="secondary">Cancel</Button>
+                </DialogClose>
+                <Button type="button" onClick={handleSendMessage} disabled={isMessaging}>
+                    {isMessaging && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Send Message
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+    </>
   );
 }
