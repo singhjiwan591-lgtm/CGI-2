@@ -128,7 +128,7 @@ export default function Home() {
   ];
 
   const handleWhatsAppInquiry = (jobTitle: string) => {
-    const adminPhoneNumber = '919876543210'; // Replace with your actual WhatsApp number
+    const adminPhoneNumber = '918566950470'; // Replaced with the new number
     const message = encodeURIComponent(`Hello, I am interested in the job: ${jobTitle}`);
     const whatsappUrl = `https://wa.me/${adminPhoneNumber}?text=${message}`;
     window.open(whatsappUrl, '_blank');
