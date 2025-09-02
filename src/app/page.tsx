@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -14,7 +14,8 @@ import {
   BarChart,
   Palette,
   Laptop,
-  Film
+  Film,
+  Building2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,6 +23,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription
 } from '@/components/ui/card';
 import {
   Carousel,
@@ -34,10 +36,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { usePageAnimations } from '@/hooks/usePageAnimations';
 import { gsap } from 'gsap';
 import { ScrollingText } from '@/components/scrolling-text';
+import { getJobs, Job } from '@/lib/job-data-service';
 
 export default function Home() {
   const pageRef = useRef<HTMLDivElement>(null);
   const bgLogoRef = useRef<HTMLImageElement>(null);
+  const [latestJobs, setLatestJobs] = useState<Job[]>([]);
   usePageAnimations(pageRef);
 
   useEffect(() => {
@@ -47,6 +51,13 @@ export default function Home() {
         { scale: 1, opacity: 0.05, duration: 1.5, ease: 'power3.out' }
       );
     }
+
+    async function fetchJobs() {
+      const jobs = await getJobs();
+      setLatestJobs(jobs.slice(0, 4)); // Get latest 4 jobs
+    }
+    fetchJobs();
+
   }, []);
 
   const features = [
@@ -114,6 +125,13 @@ export default function Home() {
         'Global Computer Institute provided the perfect launchpad for my career. The hands-on approach and expert faculty are unmatched. Highly recommended!',
     },
   ];
+
+  const handleWhatsAppInquiry = (jobTitle: string) => {
+    const adminPhoneNumber = '919876543210'; // Replace with your actual WhatsApp number
+    const message = encodeURIComponent(`Hello, I am interested in the job: ${jobTitle}`);
+    const whatsappUrl = `https://wa.me/${adminPhoneNumber}?text=${message}`;
+    window.open(whatsappUrl, '_blank');
+  };
   
   return (
     <div ref={pageRef} className="flex flex-col items-center">
@@ -223,7 +241,42 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" data-animate="fade-in-up" className="w-full py-12 md:py-24 bg-secondary">
+       <section id="govt-jobs" data-animate="fade-in-up" className="w-full py-12 md:py-24 bg-secondary">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h2 className="font-headline text-2xl font-bold md:text-4xl">
+              Latest Govt. Job Openings
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-foreground/80 md:text-lg">
+              Stay updated with the latest government job vacancies relevant to your skills.
+            </p>
+          </div>
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 md:gap-8">
+            {latestJobs.length > 0 ? latestJobs.map((job) => (
+              <Card key={job.id} data-animate="stagger-item-3" className="overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl bg-card flex flex-col">
+                <CardHeader className="flex-row gap-4 items-start p-4">
+                  <Image src={job.photoURL} alt={job.title} width={150} height={150} data-ai-hint="government building" className="rounded-lg object-cover w-32 h-32" />
+                  <div className="flex-1">
+                    <CardTitle className="font-headline text-xl">
+                      {job.title}
+                    </CardTitle>
+                     <CardDescription className="mt-2 text-foreground/80">{job.description}</CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-4 pt-0 mt-auto">
+                   <Button className="w-full" onClick={() => handleWhatsAppInquiry(job.title)}>
+                      Apply on WhatsApp
+                   </Button>
+                </CardContent>
+              </Card>
+            )) : (
+              <p className="text-center col-span-full text-muted-foreground">No job openings at the moment. Please check back later.</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section id="features" data-animate="fade-in-up" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -253,7 +306,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="testimonials" data-animate="fade-in-up" className="w-full py-12 md:py-24">
+      <section id="testimonials" data-animate="fade-in-up" className="w-full py-12 md:py-24 bg-secondary">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -271,7 +324,7 @@ export default function Home() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index}>
                   <div className="p-1">
-                    <Card className="transform transition-transform duration-300 hover:scale-[1.03] bg-secondary/80">
+                    <Card className="transform transition-transform duration-300 hover:scale-[1.03] bg-background">
                       <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                         <p className="text-base italic text-foreground/90 md:text-lg">
                           "{testimonial.quote}"

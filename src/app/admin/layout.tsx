@@ -32,7 +32,8 @@ import {
   Settings,
   ChevronDown,
   LogOut,
-  Replace
+  Replace,
+  Building2
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -86,6 +87,7 @@ const navLinks = [
   { href: '/admin/hostel', label: 'Hostel', icon: Bed },
   { href: '/admin/notice', label: 'Notice', icon: Megaphone },
   { href: '/admin/messages', label: 'Message', icon: Mail },
+  { href: '/admin/govt-jobs', label: 'Govt Jobs', icon: Building2 },
   { href: '/admin/account-settings', label: 'Settings', icon: Settings },
 ];
 
