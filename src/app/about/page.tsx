@@ -124,7 +124,7 @@ export default function AboutPage() {
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Meet Our Leadership</h2>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 md:gap-8">
             {teamMembers.map((member) => (
-              <Card key={member.name} data-animate="stagger-item" className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
+              <Card key={member.position} data-animate="stagger-item" className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
                 <CardContent className="p-4 md:p-6">
                   <Avatar className="w-24 h-24 md:w-32 md:h-32 mx-auto ring-2 ring-primary/20 p-1">
                     <AvatarImage src={member.image} data-ai-hint={member.dataAiHint} />
