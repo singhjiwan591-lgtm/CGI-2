@@ -97,15 +97,26 @@ export default function GovtJobsPage() {
   const JobForm = () => {
     const [title, setTitle] = useState(currentJob?.title || '');
     const [description, setDescription] = useState(currentJob?.description || '');
-    const [photoURL, setPhotoURL] = useState(currentJob?.photoURL || '');
+    const [photoDataUrl, setPhotoDataUrl] = useState(currentJob?.photoURL || '');
+
+    const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPhotoDataUrl(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
-      if (!title || !description || !photoURL) {
-        toast({ variant: 'destructive', title: 'Validation Error', description: 'All fields are required.' });
+      if (!title || !description || !photoDataUrl) {
+        toast({ variant: 'destructive', title: 'Validation Error', description: 'All fields including a photo are required.' });
         return;
       }
-      handleSaveJob({ title, description, photoURL });
+      handleSaveJob({ title, description, photoURL: photoDataUrl });
     };
 
     return (
@@ -128,8 +139,14 @@ export default function GovtJobsPage() {
                 <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="Full details of the job..." className="min-h-[120px]" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="photoURL">Photo URL</Label>
-                <Input id="photoURL" value={photoURL} onChange={e => setPhotoURL(e.target.value)} placeholder="https://example.com/image.png" />
+                <Label htmlFor="photo">Upload Photo</Label>
+                <Input id="photo" type="file" accept="image/*" onChange={handlePhotoUpload} />
+                 {photoDataUrl && (
+                    <div className="mt-2">
+                        <p className="text-sm text-muted-foreground">Image Preview:</p>
+                        <Image src={photoDataUrl} alt="Preview" width={100} height={100} className="rounded-md object-cover mt-1" />
+                    </div>
+                )}
               </div>
             </div>
             <DialogFooter>
