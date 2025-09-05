@@ -118,7 +118,7 @@ export default function DashboardPage() {
                         New students who joined this month.
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-0">
                      <Table>
                         <TableHeader>
                             <TableRow>

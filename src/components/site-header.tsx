@@ -155,9 +155,11 @@ export function SiteHeader() {
             {/* Desktop Navigation */}
             <nav className="hidden items-center gap-6 text-sm md:flex">
                 <NavLinksContent />
-                 <AuthButton />
             </nav>
-            <ThemeToggle />
+            <div className="hidden md:flex items-center gap-2">
+              <AuthButton />
+              <ThemeToggle />
+            </div>
 
             {/* Mobile Navigation */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>

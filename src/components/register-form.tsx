@@ -199,7 +199,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
               Create an account to begin your application.
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-6 pt-0">
+          <CardContent className="pt-0">
             <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-4">
               <div className="space-y-4 animate-in fade-in-50">
                  <FormField
@@ -415,7 +415,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col gap-4 p-6">
+          <CardFooter className="flex flex-col gap-4">
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? 'Processing...' : 'Pay ₹100 & Register'}
