@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 
 // In-memory notice board service using localStorage
 // In a real application, this would be a database like Firestore.
@@ -56,16 +56,18 @@ const initializeMockNotices = () => {
 };
 
 // Call initialize on module load
-initializeMockNotices();
+if (typeof window !== 'undefined') {
+    initializeMockNotices();
+}
 
 
-export async function getNotices(schoolId: string): Promise<Notice[]> {
+export function getNotices(schoolId: string): Notice[] {
   const notices = getStoredNotices(schoolId);
   // Return notices sorted by most recent first
   return notices.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-export async function addNotice(data: { title: string; content: string }, schoolId: string): Promise<Notice> {
+export function addNotice(data: { title: string; content: string }, schoolId: string): Notice {
   const notices = getStoredNotices(schoolId);
   const newNotice: Notice = {
     id: new Date().getTime().toString(),
@@ -78,7 +80,7 @@ export async function addNotice(data: { title: string; content: string }, school
   return newNotice;
 }
 
-export async function updateNotice(noticeToUpdate: Notice, schoolId: string): Promise<Notice> {
+export function updateNotice(noticeToUpdate: Notice, schoolId: string): Notice {
   let notices = getStoredNotices(schoolId);
   notices = notices.map(notice =>
     notice.id === noticeToUpdate.id ? noticeToUpdate : notice
@@ -87,7 +89,7 @@ export async function updateNotice(noticeToUpdate: Notice, schoolId: string): Pr
   return noticeToUpdate;
 }
 
-export async function deleteNotice(id: string, schoolId: string): Promise<void> {
+export function deleteNotice(id: string, schoolId: string): void {
   let notices = getStoredNotices(schoolId);
   notices = notices.filter(notice => notice.id !== id);
   storeNotices(notices, schoolId);

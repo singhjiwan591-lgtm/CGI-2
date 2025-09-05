@@ -82,7 +82,10 @@ function initializeStudentData() {
   }
 }
 
-initializeStudentData();
+if (typeof window !== 'undefined') {
+    initializeStudentData();
+}
+
 
 export function getAllStudents(schoolId: string): Student[] {
   if (typeof window === 'undefined') return [];

@@ -32,20 +32,19 @@ export default function TeachersPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    async function loadData() {
-      const userSession = sessionStorage.getItem('user');
-      if (userSession) {
-        const parsedSession = JSON.parse(userSession);
-        if (parsedSession.schoolId) {
-          setSchoolId(parsedSession.schoolId);
-          setLoading(true);
-          const fetchedTeachers = await getTeachers(parsedSession.schoolId);
-          setTeachers(fetchedTeachers);
-          setLoading(false);
-        }
+    const userSession = sessionStorage.getItem('user');
+    if (userSession) {
+      const parsedSession = JSON.parse(userSession);
+      if (parsedSession.schoolId) {
+        setSchoolId(parsedSession.schoolId);
+        setLoading(true);
+        const fetchedTeachers = getTeachers(parsedSession.schoolId);
+        setTeachers(fetchedTeachers);
+        setLoading(false);
       }
+    } else {
+        setLoading(false);
     }
-    loadData();
   }, []);
 
   const handleOpenForm = (teacher: Teacher | null = null) => {
@@ -58,7 +57,7 @@ export default function TeachersPage() {
       setCurrentTeacher(null);
   }
 
-  const handleSaveTeacher = async (formData: Omit<Teacher, 'id' | 'joiningDate'>) => {
+  const handleSaveTeacher = (formData: Omit<Teacher, 'id' | 'joiningDate'>) => {
     if (!schoolId) {
       toast({ variant: 'destructive', title: 'Error', description: 'School not identified.' });
       return;
@@ -66,11 +65,11 @@ export default function TeachersPage() {
     setLoading(true);
     try {
       if (currentTeacher?.id) {
-        const updated = await updateTeacher({ ...currentTeacher, ...formData }, schoolId);
+        const updated = updateTeacher({ ...currentTeacher, ...formData }, schoolId);
         setTeachers(teachers.map(t => t.id === updated.id ? updated : t));
         toast({ title: 'Success', description: 'Teacher details updated successfully.' });
       } else {
-        const newTeacherData = await addTeacher(formData, schoolId);
+        const newTeacherData = addTeacher(formData, schoolId);
         setTeachers([newTeacherData, ...teachers]);
         toast({ title: 'Success', description: 'Teacher added successfully.' });
       }
@@ -87,11 +86,11 @@ export default function TeachersPage() {
     setIsDeleteDialogOpen(true);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!currentTeacher || !schoolId) return;
     setLoading(true);
     try {
-        await deleteTeacher(currentTeacher.id, schoolId);
+        deleteTeacher(currentTeacher.id, schoolId);
         setTeachers(teachers.filter(t => t.id !== currentTeacher.id));
         toast({ title: 'Success', description: 'Teacher record deleted successfully.'});
     } catch (error) {
@@ -108,7 +107,7 @@ export default function TeachersPage() {
     teacher.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading && teachers.length === 0) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
         <Loader2 className="h-8 w-8 animate-spin" />

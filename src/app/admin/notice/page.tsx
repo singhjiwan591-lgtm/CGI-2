@@ -37,20 +37,19 @@ export default function NoticePage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    async function loadData() {
-        const userSession = sessionStorage.getItem('user');
-        if (userSession) {
-            const parsedSession = JSON.parse(userSession);
-            if (parsedSession.schoolId) {
-                setSchoolId(parsedSession.schoolId);
-                setLoading(true);
-                const fetchedNotices = await getNotices(parsedSession.schoolId);
-                setNotices(fetchedNotices);
-                setLoading(false);
-            }
+    const userSession = sessionStorage.getItem('user');
+    if (userSession) {
+        const parsedSession = JSON.parse(userSession);
+        if (parsedSession.schoolId) {
+            setSchoolId(parsedSession.schoolId);
+            setLoading(true);
+            const fetchedNotices = getNotices(parsedSession.schoolId);
+            setNotices(fetchedNotices);
+            setLoading(false);
         }
+    } else {
+        setLoading(false);
     }
-    loadData();
   }, []);
 
   const handleOpenForm = (notice: Notice | null = null) => {
@@ -63,7 +62,7 @@ export default function NoticePage() {
     setCurrentNotice(null);
   };
 
-  const handleSaveNotice = async (formData: { title: string; content: string }) => {
+  const handleSaveNotice = (formData: { title: string; content: string }) => {
     if (!schoolId) {
         toast({ variant: 'destructive', title: 'Error', description: 'School not identified.' });
         return;
@@ -72,12 +71,12 @@ export default function NoticePage() {
     try {
       if (currentNotice?.id) {
         // Update existing notice
-        const updated = await updateNotice({ ...currentNotice, ...formData }, schoolId);
+        const updated = updateNotice({ ...currentNotice, ...formData }, schoolId);
         setNotices(notices.map(n => n.id === updated.id ? updated : n));
         toast({ title: 'Success', description: 'Notice updated successfully.' });
       } else {
         // Add new notice
-        const newNotice = await addNotice(formData, schoolId);
+        const newNotice = addNotice(formData, schoolId);
         setNotices([newNotice, ...notices]);
         toast({ title: 'Success', description: 'Notice published successfully.' });
       }
@@ -94,11 +93,11 @@ export default function NoticePage() {
     setIsDeleteDialogOpen(true);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!currentNotice || !schoolId) return;
     setLoading(true);
     try {
-        await deleteNotice(currentNotice.id, schoolId);
+        deleteNotice(currentNotice.id, schoolId);
         setNotices(notices.filter(n => n.id !== currentNotice.id));
         toast({ title: 'Success', description: 'Notice deleted successfully.'});
     } catch (error) {
@@ -191,7 +190,7 @@ export default function NoticePage() {
             </Button>
         </CardHeader>
         <CardContent>
-          {loading && notices.length === 0 ? (
+          {loading ? (
             <div className="flex items-center justify-center p-12">
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>

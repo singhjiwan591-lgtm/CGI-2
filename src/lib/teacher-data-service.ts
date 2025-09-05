@@ -38,18 +38,21 @@ const initializeMockTeachers = () => {
   });
 };
 
-initializeMockTeachers();
+if (typeof window !== 'undefined') {
+    initializeMockTeachers();
+}
 
-export async function getTeachers(schoolId: string): Promise<Teacher[]> {
+
+export function getTeachers(schoolId: string): Teacher[] {
   if (typeof window === 'undefined') return [];
   const data = localStorage.getItem(getTeachersKey(schoolId));
   const teachers: Teacher[] = data ? JSON.parse(data) : [];
   return teachers.sort((a, b) => new Date(b.joiningDate).getTime() - new Date(a.joiningDate).getTime());
 }
 
-export async function addTeacher(data: Omit<Teacher, 'id' | 'joiningDate'>, schoolId: string): Promise<Teacher> {
+export function addTeacher(data: Omit<Teacher, 'id' | 'joiningDate'>, schoolId: string): Teacher {
   if (typeof window === 'undefined') throw new Error("Local storage not available");
-  const teachers = await getTeachers(schoolId);
+  const teachers = getTeachers(schoolId);
   const newTeacher: Teacher = {
     id: new Date().getTime().toString(),
     ...data,
@@ -61,9 +64,9 @@ export async function addTeacher(data: Omit<Teacher, 'id' | 'joiningDate'>, scho
   return newTeacher;
 }
 
-export async function updateTeacher(teacherToUpdate: Teacher, schoolId: string): Promise<Teacher> {
+export function updateTeacher(teacherToUpdate: Teacher, schoolId: string): Teacher {
   if (typeof window === 'undefined') throw new Error("Local storage not available");
-  let teachers = await getTeachers(schoolId);
+  let teachers = getTeachers(schoolId);
   teachers = teachers.map(teacher =>
     teacher.id === teacherToUpdate.id ? teacherToUpdate : teacher
   );
@@ -71,9 +74,9 @@ export async function updateTeacher(teacherToUpdate: Teacher, schoolId: string):
   return teacherToUpdate;
 }
 
-export async function deleteTeacher(id: string, schoolId: string): Promise<void> {
+export function deleteTeacher(id: string, schoolId: string): void {
   if (typeof window === 'undefined') throw new Error("Local storage not available");
-  let teachers = await getTeachers(schoolId);
+  let teachers = getTeachers(schoolId);
   teachers = teachers.filter(teacher => teacher.id !== id);
   localStorage.setItem(getTeachersKey(schoolId), JSON.stringify(teachers));
 }

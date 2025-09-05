@@ -37,13 +37,13 @@ const NoticeBoard = ({ schoolId }: { schoolId: string}) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchNotices = async () => {
-      if (!schoolId) return;
-      const fetchedNotices = await getNotices(schoolId);
-      setNotices(fetchedNotices);
-      setLoading(false);
-    }
-    fetchNotices();
+    if (!schoolId) {
+        setLoading(false);
+        return;
+    };
+    const fetchedNotices = getNotices(schoolId);
+    setNotices(fetchedNotices);
+    setLoading(false);
   }, [schoolId]);
 
   return (

@@ -37,13 +37,10 @@ export default function GovtJobsPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    async function loadData() {
-      setLoading(true);
-      const fetchedJobs = await getJobs();
-      setJobs(fetchedJobs);
-      setLoading(false);
-    }
-    loadData();
+    setLoading(true);
+    const fetchedJobs = getJobs();
+    setJobs(fetchedJobs);
+    setLoading(false);
   }, []);
 
   const handleOpenForm = (job: Job | null = null) => {
@@ -56,15 +53,15 @@ export default function GovtJobsPage() {
     setCurrentJob(null);
   };
 
-  const handleSaveJob = async (formData: { title: string; description: string; photoURL: string }) => {
+  const handleSaveJob = (formData: { title: string; description: string; photoURL: string }) => {
     setLoading(true);
     try {
       if (currentJob?.id) {
-        const updated = await updateJob({ ...currentJob, ...formData });
+        const updated = updateJob({ ...currentJob, ...formData });
         setJobs(jobs.map(j => j.id === updated.id ? updated : j));
         toast({ title: 'Success', description: 'Job posting updated successfully.' });
       } else {
-        const newJob = await addJob(formData);
+        const newJob = addJob(formData);
         setJobs([newJob, ...jobs]);
         toast({ title: 'Success', description: 'Job posted successfully.' });
       }
@@ -81,11 +78,11 @@ export default function GovtJobsPage() {
     setIsDeleteDialogOpen(true);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!currentJob) return;
     setLoading(true);
     try {
-      await deleteJob(currentJob.id);
+      deleteJob(currentJob.id);
       setJobs(jobs.filter(j => j.id !== currentJob.id));
       toast({ title: 'Success', description: 'Job posting deleted successfully.' });
     } catch (error) {

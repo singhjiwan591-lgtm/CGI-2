@@ -53,11 +53,8 @@ export default function Home() {
       );
     }
 
-    async function fetchJobs() {
-      const jobs = await getJobs();
-      setLatestJobs(jobs.slice(0, 4)); // Get latest 4 jobs
-    }
-    fetchJobs();
+    const jobs = getJobs();
+    setLatestJobs(jobs.slice(0, 4)); // Get latest 4 jobs
 
   }, []);
 

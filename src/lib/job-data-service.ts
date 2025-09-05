@@ -50,16 +50,20 @@ const initializeMockJobs = () => {
   }
 };
 
-initializeMockJobs();
+// Ensure initialization happens on the client
+if (typeof window !== 'undefined') {
+    initializeMockJobs();
+}
 
-export async function getJobs(): Promise<Job[]> {
+
+export function getJobs(): Job[] {
   const jobs = getStoredJobs();
   return jobs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-export async function addJob(data: Omit<Job, 'id' | 'createdAt'>): Promise<Job> {
+export function addJob(data: Omit<Job, 'id' | 'createdAt'>): Job {
   if (typeof window === 'undefined') throw new Error("Local storage not available");
-  const jobs = getStoredJobs();
+  const jobs = getJobs();
   const newJob: Job = {
     id: new Date().getTime().toString(),
     ...data,
@@ -70,9 +74,9 @@ export async function addJob(data: Omit<Job, 'id' | 'createdAt'>): Promise<Job> 
   return newJob;
 }
 
-export async function updateJob(jobToUpdate: Job): Promise<Job> {
+export function updateJob(jobToUpdate: Job): Job {
   if (typeof window === 'undefined') throw new Error("Local storage not available");
-  let jobs = getStoredJobs();
+  let jobs = getJobs();
   jobs = jobs.map(job =>
     job.id === jobToUpdate.id ? jobToUpdate : job
   );
@@ -80,9 +84,9 @@ export async function updateJob(jobToUpdate: Job): Promise<Job> {
   return jobToUpdate;
 }
 
-export async function deleteJob(id: string): Promise<void> {
+export function deleteJob(id: string): void {
   if (typeof window === 'undefined') throw new Error("Local storage not available");
-  let jobs = getStoredJobs();
+  let jobs = getJobs();
   jobs = jobs.filter(job => job.id !== id);
   storeJobs(jobs);
 }
