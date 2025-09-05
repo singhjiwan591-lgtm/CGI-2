@@ -50,33 +50,11 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { getAllStudents, addStudent, updateStudent } from '@/lib/student-data-service';
-
-type Student = {
-    id: string;
-    name: string;
-    roll: string;
-    grade: string;
-    parent: string;
-    motherName: string;
-    gender: string;
-    address: string;
-    dob: string;
-    phone: string;
-    email: string;
-    religion?: string;
-    photoURL?: string;
-    avatarHint: string;
-    fees?: {
-        totalFees: number;
-        feesPaid: number;
-    }
-};
+import { getAllStudents, addStudent, updateStudent, Student } from '@/lib/student-data-service';
 
 const studentInitialState = {
-    id: '', name: '', roll: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '', avatarHint: '', religion: ''
+    name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '', religion: ''
 };
-
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -87,9 +65,7 @@ export default function StudentsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
-  const [newStudent, setNewStudent] = useState<Omit<Student, 'id'|'roll'|'photoURL'|'avatarHint'| 'fees'>>({
-    name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '', religion: ''
-  });
+  const [newStudent, setNewStudent] = useState<Omit<Student, 'id'|'roll'|'photoURL'|'avatarHint'| 'fees' | 'status' | 'program' | 'admissionDate'>>(studentInitialState);
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
   const [schoolId, setSchoolId] = useState<string>('');
   const router = useRouter();
@@ -156,7 +132,7 @@ export default function StudentsPage() {
     
     toast({ title: 'Success', description: 'Student added successfully.' });
     setIsAddDialogOpen(false);
-    setNewStudent({ name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '', religion: '' });
+    setNewStudent(studentInitialState);
     setPhotoDataUrl(null);
   };
   
@@ -524,3 +500,5 @@ export default function StudentsPage() {
     </>
   );
 }
+
+    

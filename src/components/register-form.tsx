@@ -20,6 +20,13 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -31,6 +38,7 @@ declare global {
 }
 
 const formSchema = z.object({
+  schoolId: z.string({ required_error: 'Please select a branch.' }),
   fullName: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
@@ -113,7 +121,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
             course: formData.course,
             registrationFeePaid: true,
         };
-        const newStudent = addStudent(studentData);
+        const newStudent = addStudent(studentData, formData.schoolId);
 
         if (!newStudent) {
             throw new Error('Could not save student data.');
@@ -194,6 +202,27 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
           <CardContent className="p-6 pt-0">
             <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-4">
               <div className="space-y-4 animate-in fade-in-50">
+                 <FormField
+                  control={form.control}
+                  name="schoolId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Select Branch</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select the school branch" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="jalalabad">Jalalabad</SelectItem>
+                          <SelectItem value="golu_ka_mor">Golu Ka Mor</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="fullName"
@@ -404,3 +433,5 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     </>
   );
 }
+
+    
