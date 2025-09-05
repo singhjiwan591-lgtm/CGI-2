@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import Image from 'next/image';
+import { ThemeToggle } from './theme-toggle';
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -156,6 +157,7 @@ export function SiteHeader() {
                 <NavLinksContent />
                  <AuthButton />
             </nav>
+            <ThemeToggle />
 
             {/* Mobile Navigation */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>

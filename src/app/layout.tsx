@@ -8,6 +8,7 @@ import { Preloader } from '@/components/preloader';
 import Script from 'next/script';
 import { DynamicDiscountPopup } from '@/components/dynamic-components';
 import { cn } from '@/lib/utils';
+import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
   title: {
@@ -63,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -81,15 +82,22 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning={true} className={cn("font-body bg-background text-foreground antialiased min-h-screen flex flex-col")}>
-        <Preloader />
-        <div className="relative flex flex-col items-center flex-1 w-full">
-          <SiteHeader />
-          <main className="flex-1 w-full">{children}</main>
-          <SiteFooter />
-        </div>
-        <Toaster />
-        <DynamicDiscountPopup />
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+        >
+          <Preloader />
+          <div className="relative flex flex-col items-center flex-1 w-full">
+            <SiteHeader />
+            <main className="flex-1 w-full">{children}</main>
+            <SiteFooter />
+          </div>
+          <Toaster />
+          <DynamicDiscountPopup />
+          <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+        </ThemeProvider>
       </body>
     </html>
   );
