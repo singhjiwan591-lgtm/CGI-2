@@ -137,7 +137,7 @@ export function updateStudentData(studentId: string, schoolId: string, dataToUpd
             const existingFees = students[studentIndex].fees;
             students[studentIndex] = { ...students[studentIndex], ...dataToUpdate };
             if (dataToUpdate.fees) {
-                 students[studentIndex].fees = { ...(existingFees || {}), ...dataToUpdate.fees, ...dataToUpdate.fees };
+                 students[studentIndex].fees = { ...(existingFees || {}), ...dataToUpdate.fees, id: studentId, name: students[studentIndex].name, grade: parseInt(students[studentIndex].grade), photoURL: students[studentIndex].photoURL, avatarHint: students[studentIndex].avatarHint };
             } else {
                 students[studentIndex].fees = existingFees;
             }
@@ -241,9 +241,9 @@ export function getAllStudentsWithFees(schoolId: string): StudentFee[] {
         
         // This will now be called by initialize or addStudent
         // It's a fallback here.
-        const tempFees = {
+        const tempFees: StudentFee = {
             id: s.id, name: s.name, grade: parseInt(s.grade), totalFees: 0, feesPaid: 0, installments: [], registrationFeePaid: false, avatarHint: s.avatarHint, photoURL: s.photoURL
         };
         return tempFees;
-    });
+    }).filter(Boolean) as StudentFee[];
 }

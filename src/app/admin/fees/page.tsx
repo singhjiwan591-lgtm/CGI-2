@@ -125,7 +125,7 @@ export default function FeesPage() {
   const handlePayInstallment = (studentId: string, installmentId: number) => {
     if (!schoolId) return;
     const studentToUpdate = students.find(s => s.id === studentId);
-    if (!studentToUpdate) return;
+    if (!studentToUpdate || !studentToUpdate.installments) return;
 
     let updatedStudent = { ...studentToUpdate };
 
@@ -153,7 +153,7 @@ export default function FeesPage() {
   const handleSendPaymentLink = (studentId: string, installmentId: number) => {
     if (!schoolId) return;
     const studentToUpdate = students.find(s => s.id === studentId);
-    if (!studentToUpdate) return;
+    if (!studentToUpdate || !studentToUpdate.installments) return;
 
     const updatedInstallments = studentToUpdate.installments.map(inst => {
       if (inst.id === installmentId) {
@@ -303,7 +303,7 @@ export default function FeesPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                    {selectedStudent?.installments.map(inst => (
+                    {selectedStudent?.installments && selectedStudent.installments.map(inst => (
                         <TableRow key={inst.id}>
                             <TableCell>Installment {inst.id}</TableCell>
                             <TableCell>{format(new Date(inst.dueDate), 'PPP')}</TableCell>
