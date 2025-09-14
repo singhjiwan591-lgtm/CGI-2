@@ -186,7 +186,7 @@ export default function Home() {
                 At Global Computer Institute, we are dedicated to providing top-tier education in the latest technologies. Our curriculum is designed by industry experts to equip you with the practical skills and theoretical knowledge needed to excel in the fast-paced world of technology. Join us to turn your passion for computing into a rewarding career and achieve new heights of success.
               </p>
             </div>
-            <div className="order-1 md:order-2">
+            <div className="order-1 md:order-2 group [perspective:1000px]">
               <Image
                 src="https://picsum.photos/seed/coding-students/800/600"
                 data-ai-hint="students coding"
@@ -194,7 +194,7 @@ export default function Home() {
                 width={800}
                 height={600}
                 style={{ height: 'auto', width: '100%' }}
-                className="rounded-lg shadow-xl"
+                className="rounded-lg shadow-xl transition-transform duration-500 group-hover:[transform:rotateY(-10deg)_scale(1.05)]"
               />
             </div>
           </div>
@@ -206,7 +206,7 @@ export default function Home() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                   {stats.map((stat, index) => (
                       <div key={index} data-animate="stagger-item">
-                          <p className="text-4xl md:text-5xl font-bold text-primary">{stat.value}</p>
+                          <p className="text-4xl md:text-5xl font-bold text-primary [text-shadow:2px_2px_4px_hsl(var(--primary)/0.3)]">{stat.value}</p>
                           <p className="mt-2 text-base md:text-lg text-muted-foreground">{stat.label}</p>
                       </div>
                   ))}
@@ -226,22 +226,26 @@ export default function Home() {
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 md:gap-8">
             {courseCategories.map((course) => (
-              <Card key={course.title} data-animate="stagger-item" className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl bg-card">
-                <CardHeader>
-                  <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
-                    {course.icon}
-                  </div>
-                  <CardTitle className="mt-4 font-headline text-xl">
-                    {course.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-foreground/80 h-16">{course.description}</p>
-                  <Button variant="link" asChild className="mt-4">
-                    <Link href={course.link}>Learn More <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                  </Button>
-                </CardContent>
-              </Card>
+              <div key={course.title} className="group [perspective:1000px]">
+                <Card data-animate="stagger-item" className="text-center transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(15deg)_scale(1.05)] group-hover:shadow-2xl bg-card h-full flex flex-col">
+                  <CardHeader>
+                    <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
+                      {course.icon}
+                    </div>
+                    <CardTitle className="mt-4 font-headline text-xl">
+                      {course.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                    <p className="text-foreground/80">{course.description}</p>
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="link" asChild className="mt-auto">
+                      <Link href={course.link}>Learn More <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </div>
             ))}
           </div>
         </div>
@@ -259,26 +263,28 @@ export default function Home() {
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 md:gap-8">
             {latestJobs.length > 0 ? latestJobs.map((job) => (
-              <Card key={job.id} data-animate="stagger-item-3" className="overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl bg-card flex flex-col">
-                <div className="relative w-full h-48">
-                    <Image src={job.photoURL} alt={job.title} layout="fill" objectFit="cover" data-ai-hint="government building" />
-                </div>
-                <div className="p-4 flex flex-col flex-grow">
-                    <CardHeader className="p-0">
-                        <CardTitle className="font-headline text-xl mb-2">
-                            {job.title}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0 flex-grow">
-                        <CardDescription className="text-foreground/80">{job.description}</CardDescription>
-                    </CardContent>
-                    <CardFooter className="p-0 pt-4 mt-auto">
-                        <Button className="w-full" onClick={() => handleWhatsAppInquiry(job.title)}>
-                            Apply on WhatsApp
-                        </Button>
-                    </CardFooter>
-                </div>
-              </Card>
+              <div key={job.id} className="group [perspective:1000px]">
+                <Card data-animate="stagger-item-3" className="overflow-hidden transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(-10deg)_scale(1.05)] group-hover:shadow-2xl bg-card flex flex-col h-full">
+                  <div className="relative w-full h-48">
+                      <Image src={job.photoURL} alt={job.title} layout="fill" objectFit="cover" data-ai-hint="government building" />
+                  </div>
+                  <div className="p-4 flex flex-col flex-grow">
+                      <CardHeader className="p-0">
+                          <CardTitle className="font-headline text-xl mb-2">
+                              {job.title}
+                          </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-0 flex-grow">
+                          <CardDescription className="text-foreground/80">{job.description}</CardDescription>
+                      </CardContent>
+                      <CardFooter className="p-0 pt-4 mt-auto">
+                          <Button className="w-full" onClick={() => handleWhatsAppInquiry(job.title)}>
+                              Apply on WhatsApp
+                          </Button>
+                      </CardFooter>
+                  </div>
+                </Card>
+              </div>
             )) : (
               <p className="text-center col-span-full text-muted-foreground">No job openings at the moment. Please check back later.</p>
             )}
@@ -298,19 +304,21 @@ export default function Home() {
           </div>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {features.map((feature) => (
-              <Card key={feature.title} data-animate="stagger-item-2" className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl bg-card p-4">
-                <CardHeader>
-                  <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
-                    {feature.icon}
-                  </div>
-                  <CardTitle className="mt-4 font-headline text-xl md:text-2xl">
-                    {feature.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-foreground/80">{feature.description}</p>
-                </CardContent>
-              </Card>
+              <div key={feature.title} className="group [perspective:1000px]">
+                <Card data-animate="stagger-item-2" className="text-center transition-transform duration-500 transform-style-3d group-hover:[transform:translateZ(20px)_rotateX(10deg)] group-hover:shadow-2xl bg-card p-4 h-full">
+                  <CardHeader>
+                    <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
+                      {feature.icon}
+                    </div>
+                    <CardTitle className="mt-4 font-headline text-xl md:text-2xl">
+                      {feature.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-foreground/80">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              </div>
             ))}
           </div>
         </div>
@@ -332,9 +340,9 @@ export default function Home() {
           >
             <CarouselContent>
               {testimonials.map((testimonial, index) => (
-                <CarouselItem key={index}>
+                <CarouselItem key={index} className="group [perspective:1000px]">
                   <div className="p-1">
-                    <Card className="transform transition-transform duration-300 hover:scale-[1.03] bg-background">
+                    <Card className="transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(10deg)_scale(1.03)] bg-background">
                       <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                         <p className="text-base italic text-foreground/90 md:text-lg">
                           "{testimonial.quote}"

@@ -23,16 +23,16 @@ export function ScrollingText() {
   }, []);
 
   return (
-    <div className="relative h-20 sm:h-24 md:h-28 overflow-hidden">
+    <div className="relative h-20 sm:h-24 md:h-28 overflow-hidden [perspective:800px]">
       {texts.map((text, index) => (
         <h1
           key={index}
           className={cn(
-            'font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl absolute w-full transition-transform duration-1000 ease-in-out text-center',
+            'font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl absolute w-full transition-transform duration-1000 ease-in-out text-center [text-shadow:3px_3px_0px_hsl(var(--primary)/0.2)] dark:[text-shadow:3px_3px_0px_hsl(var(--primary)/0.4)]',
             {
-              'transform -translate-y-full opacity-0': index < currentIndex,
-              'transform translate-y-0 opacity-100': index === currentIndex,
-              'transform translate-y-full opacity-0': index > currentIndex,
+              'transform -translate-y-full opacity-0 [transform:rotateX(-90deg)]': index < currentIndex,
+              'transform translate-y-0 opacity-100 [transform:rotateX(0deg)]': index === currentIndex,
+              'transform translate-y-full opacity-0 [transform:rotateX(90deg)]': index > currentIndex,
             }
           )}
           style={{ top: '50%', transform: 'translateY(-50%)' }}

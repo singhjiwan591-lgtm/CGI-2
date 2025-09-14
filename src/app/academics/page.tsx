@@ -122,10 +122,10 @@ export default function AcademicsPage() {
         <div className="container mx-auto px-4">
            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {courseCards.map((card) => (
-              <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block group">
+              <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block group [perspective:1000px]">
                 <Card 
                   data-animate="stagger-item"
-                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/30 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
+                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} transition-transform duration-500 group-hover:[transform:rotateX(10deg)_rotateY(-10deg)] hover:shadow-2xl hover:shadow-primary/30 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square transform-style-3d`}
                 >
                   {card.imageUrl ? (
                     <>
@@ -133,7 +133,7 @@ export default function AcademicsPage() {
                       <div className="absolute inset-0 bg-black/50 z-10"></div>
                     </>
                   ) : null}
-                  <div className="z-20 flex flex-col items-center justify-center">
+                  <div className="z-20 flex flex-col items-center justify-center transform-style-3d group-hover:[transform:translateZ(40px)] transition-transform duration-500">
                     <div className="mb-3">{card.icon}</div>
                     <CardTitle className="text-base md:text-lg font-bold">{card.title}</CardTitle>
                     <CardDescription className="text-white/80 text-xs hidden sm:block mt-1">{card.description}</CardDescription>

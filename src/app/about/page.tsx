@@ -65,7 +65,7 @@ export default function AboutPage() {
     <div ref={pageRef} className="flex flex-col items-center">
       <section data-animate="fade-in" className="w-full bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-headline text-3xl font-bold md:text-5xl">About Global Computer Institute</h1>
+          <h1 className="font-headline text-3xl font-bold md:text-5xl [text-shadow:2px_2px_4px_rgba(0,0,0,0.1)] dark:[text-shadow:2px_2px_6px_rgba(0,0,0,0.4)]">About Global Computer Institute</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-lg">
             Welcome to Global Computer Institute, a premier computer education institute where we transform passion for technology into professional excellence. We are committed to providing top-quality, practical training that empowers our students to thrive in the dynamic digital landscape. Our mission is to make tech education accessible, fostering a community of innovators and problem-solvers who will shape the future.
           </p>
@@ -81,14 +81,14 @@ export default function AboutPage() {
                 Our mission is to democratize technology education by bridging the gap between academic learning and the demands of the tech industry. We provide a hands-on, inclusive learning environment where students from all backgrounds can develop the skills, confidence, and real-world experience needed to excel. We are dedicated to building a community of forward-thinking professionals who will lead the next wave of technological innovation and solve real-world challenges.
               </p>
             </div>
-            <div className="order-1 md:order-2">
+            <div className="order-1 md:order-2 group [perspective:1000px]">
               <Image
                 src="https://i.ibb.co/jv8gNqNH/Compress-JPEG-Online-img-800x600.jpg"
                 data-ai-hint="modern computer lab"
                 alt="Modern computer lab"
                 width={800}
                 height={600}
-                className="rounded-lg shadow-xl"
+                className="rounded-lg shadow-xl transition-transform duration-500 group-hover:[transform:rotateY(-10deg)_rotateX(5deg)_scale(1.05)]"
               />
             </div>
           </div>
@@ -101,13 +101,13 @@ export default function AboutPage() {
           <div className="relative mt-10">
             <div className="absolute left-1/2 top-0 hidden h-full w-0.5 -translate-x-1/2 bg-border md:block"></div>
             {timeline.map((item, index) => (
-              <div key={index} data-animate="timeline-item" className="relative mb-8 flex w-full items-center md:justify-between md:odd:flex-row-reverse">
+              <div key={index} data-animate="timeline-item" className="relative mb-8 flex w-full items-center md:justify-between md:odd:flex-row-reverse group [perspective:1000px]">
                 <div className="hidden md:block md:w-5/12"></div>
                 <div className={`absolute left-0 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground md:left-1/2 md:-translate-x-1/2`}>
                   <CheckCircle2 className="h-5 w-5" />
                 </div>
                 <div className="w-full pl-12 md:w-5/12 md:pl-0">
-                  <Card className="p-4 md:p-6 transform transition-transform duration-300 hover:scale-[1.03] hover:shadow-2xl">
+                  <Card className="p-4 md:p-6 transition-transform duration-500 transform-style-3d group-hover:[transform:rotateX(5deg)_rotateY(10deg)_scale(1.05)] group-hover:shadow-2xl">
                     <p className={`font-bold text-primary text-sm md:text-base`}>{item.year}</p>
                     <h3 className="font-headline text-lg font-bold mt-1 md:text-xl">{item.event}</h3>
                     <p className="mt-2 text-foreground/70 text-sm md:text-base">{item.description}</p>
@@ -124,21 +124,23 @@ export default function AboutPage() {
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Meet Our Leadership</h2>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 md:gap-8">
             {teamMembers.map((member) => (
-              <Card key={member.position} data-animate="stagger-item" className="text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
-                <CardContent className="p-4 md:p-6">
-                  <Avatar className="w-24 h-24 md:w-32 md:h-32 mx-auto ring-2 ring-primary/20 p-1">
-                    <AvatarImage src={member.image} data-ai-hint={member.dataAiHint} />
-                    <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <h3 className="mt-4 font-headline text-xl font-bold md:text-2xl">{member.name}</h3>
-                  <p className={`text-primary`}>{member.position}</p>
-                  <div className="mt-4 flex justify-center space-x-4">
-                    <Link href="#"><Twitter className="h-5 w-5 text-foreground/60 hover:text-primary" /></Link>
-                    <Link href="#"><Linkedin className="h-5 w-5 text-foreground/60 hover:text-primary" /></Link>
-                    <Link href="#"><Facebook className="h-5 w-5 text-foreground/60 hover:text-primary" /></Link>
-                  </div>
-                </CardContent>
-              </Card>
+              <div key={member.position} className="group [perspective:1000px]">
+                <Card data-animate="stagger-item" className="text-center transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(15deg)_scale(1.05)] group-hover:shadow-2xl">
+                  <CardContent className="p-4 md:p-6">
+                    <Avatar className="w-24 h-24 md:w-32 md:h-32 mx-auto ring-2 ring-primary/20 p-1">
+                      <AvatarImage src={member.image} data-ai-hint={member.dataAiHint} />
+                      <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <h3 className="mt-4 font-headline text-xl font-bold md:text-2xl">{member.name}</h3>
+                    <p className={`text-primary`}>{member.position}</p>
+                    <div className="mt-4 flex justify-center space-x-4">
+                      <Link href="#"><Twitter className="h-5 w-5 text-foreground/60 hover:text-primary" /></Link>
+                      <Link href="#"><Linkedin className="h-5 w-5 text-foreground/60 hover:text-primary" /></Link>
+                      <Link href="#"><Facebook className="h-5 w-5 text-foreground/60 hover:text-primary" /></Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             ))}
           </div>
         </div>
