@@ -52,30 +52,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 import { formatNumber, cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { getAllStudentsWithFees, updateStudentData } from '@/lib/student-data-service';
+import { getAllStudentsWithFees, updateStudentData, StudentFee, Installment } from '@/lib/student-data-service';
 
-
-type InstallmentStatus = 'Paid' | 'Due' | 'Overdue' | 'Link Sent';
-
-type Installment = {
-  id: number;
-  dueDate: Date;
-  amount: number;
-  status: InstallmentStatus;
-  paymentDate?: Date;
-  linkSent?: boolean;
-};
-
-type StudentFee = {
-  id: string;
-  name: string;
-  grade: number;
-  avatarHint: string;
-  photoURL?: string;
-  totalFees: number;
-  feesPaid: number;
-  installments: Installment[];
-};
 
 const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.ReactNode, title: string, value: string, bgColor: string, iconColor: string }) => (
   <Card className="flex items-center p-4 gap-4">
@@ -109,29 +87,26 @@ export default function FeesPage() {
     }
     setLoading(false);
   }, []);
+  
+  const refreshStudentData = () => {
+    if (schoolId) {
+        setStudents(getAllStudentsWithFees(schoolId));
+    }
+  }
 
   const handleViewDetails = (student: StudentFee) => {
     setSelectedStudent(student);
     setIsDetailsDialogOpen(true);
   };
-  
-  const updateStudentAndPersist = (updatedStudent: StudentFee) => {
-      const updatedStudents = students.map(s => s.id === updatedStudent.id ? updatedStudent : s);
-      setStudents(updatedStudents);
-      updateStudentData(updatedStudent.id, schoolId, { fees: updatedStudent });
-      setSelectedStudent(updatedStudent);
-  }
 
   const handlePayInstallment = (studentId: string, installmentId: number) => {
     if (!schoolId) return;
     const studentToUpdate = students.find(s => s.id === studentId);
     if (!studentToUpdate || !studentToUpdate.installments) return;
 
-    let updatedStudent = { ...studentToUpdate };
-
-    const updatedInstallments = updatedStudent.installments.map(inst => {
+    const updatedInstallments = studentToUpdate.installments.map(inst => {
       if (inst.id === installmentId && inst.status !== 'Paid') {
-        return { ...inst, status: 'Paid' as InstallmentStatus, paymentDate: new Date() };
+        return { ...inst, status: 'Paid' as const, paymentDate: new Date() };
       }
       return inst;
     });
@@ -140,12 +115,11 @@ export default function FeesPage() {
       .filter(inst => inst.status === 'Paid')
       .reduce((acc, inst) => acc + inst.amount, 0);
 
-    updatedStudent = { ...updatedStudent, installments: updatedInstallments, feesPaid: totalPaid };
-
-    const updatedStudentsList = students.map(s => (s.id === studentId ? updatedStudent : s));
-    setStudents(updatedStudentsList);
-    setSelectedStudent(updatedStudent); // This ensures the dialog re-renders with the new state
+    const updatedStudent: StudentFee = { ...studentToUpdate, installments: updatedInstallments, feesPaid: totalPaid };
+    
     updateStudentData(studentId, schoolId, { fees: updatedStudent });
+    refreshStudentData(); // Refresh all data from source
+    setSelectedStudent(prev => prev ? {...prev, installments: updatedInstallments, feesPaid: totalPaid} : null); // Also update dialog state immediately
     
     toast({ title: 'Success', description: 'Cash payment recorded successfully.' });
   };
@@ -157,17 +131,16 @@ export default function FeesPage() {
 
     const updatedInstallments = studentToUpdate.installments.map(inst => {
       if (inst.id === installmentId) {
-        return { ...inst, status: 'Link Sent' as InstallmentStatus, linkSent: true };
+        return { ...inst, status: 'Link Sent' as const, linkSent: true };
       }
       return inst;
     });
 
-    const updatedStudent = { ...studentToUpdate, installments: updatedInstallments };
+    const updatedStudent: StudentFee = { ...studentToUpdate, installments: updatedInstallments };
 
-    const updatedStudentsList = students.map(s => (s.id === studentId ? updatedStudent : s));
-    setStudents(updatedStudentsList);
-    setSelectedStudent(updatedStudent); // This ensures the dialog re-renders with the new state
     updateStudentData(studentId, schoolId, { fees: updatedStudent });
+    refreshStudentData(); // Refresh all data from source
+    setSelectedStudent(prev => prev ? {...prev, installments: updatedInstallments} : null); // Also update dialog state immediately
 
     toast({ title: 'Link Sent', description: `Payment link for Installment ${installmentId} sent to student.` });
   };
@@ -192,9 +165,9 @@ export default function FeesPage() {
   return (
     <div className="space-y-6">
        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <InfoCard icon={<Banknote />} title="Total Fees" value={`₹${formatNumber(totalFees)}`} bgColor="bg-blue-100" iconColor="text-blue-500" />
-          <InfoCard icon={<TrendingUp />} title="Total Collected" value={`₹${formatNumber(totalCollected)}`} bgColor="bg-green-100" iconColor="text-green-500" />
-          <InfoCard icon={<TrendingDown />} title="Total Due" value={`₹${formatNumber(totalRemaining)}`} bgColor="bg-red-100" iconColor="text-red-500" />
+          <InfoCard icon={<Banknote />} title="Total Fees" value={`₹${formatNumber(totalFees)}`} bgColor="bg-blue-100 dark:bg-blue-900/30" iconColor="text-blue-500" />
+          <InfoCard icon={<TrendingUp />} title="Total Collected" value={`₹${formatNumber(totalCollected)}`} bgColor="bg-green-100 dark:bg-green-900/30" iconColor="text-green-500" />
+          <InfoCard icon={<TrendingDown />} title="Total Due" value={`₹${formatNumber(totalRemaining)}`} bgColor="bg-red-100 dark:bg-red-900/30" iconColor="text-red-500" />
         </div>
       <Card>
         <CardHeader>
@@ -234,6 +207,7 @@ export default function FeesPage() {
                   </TableCell>
                 </TableRow>
               ) : filteredStudents.map((student) => {
+                if (!student) return null; // Safety check
                 const remaining = student.totalFees - student.feesPaid;
                 const paidPercentage = student.totalFees > 0 ? (student.feesPaid / student.totalFees) * 100 : 0;
                 const isPaid = remaining <= 0;
@@ -305,7 +279,7 @@ export default function FeesPage() {
                     <TableBody>
                     {selectedStudent?.installments && selectedStudent.installments.map(inst => (
                         <TableRow key={inst.id}>
-                            <TableCell>Installment {inst.id}</TableCell>
+                            <TableCell>Installment {inst.id === 0 ? 'Reg.' : inst.id}</TableCell>
                             <TableCell>{format(new Date(inst.dueDate), 'PPP')}</TableCell>
                             <TableCell>₹{inst.amount.toLocaleString()}</TableCell>
                             <TableCell>

@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { notFound } from 'next/navigation';
-import { getStudentByEmail } from '@/lib/student-data-service';
+import { getStudentByEmail, Student } from '@/lib/student-data-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, User, Mail, Phone, MapPin, GraduationCap, Calendar, Banknote, TrendingUp, TrendingDown, Megaphone } from 'lucide-react';
 import { format } from 'date-fns';
@@ -18,9 +18,15 @@ import {
 } from "@/components/ui/accordion"
 
 
-type Student = NonNullable<ReturnType<typeof getStudentByEmail>>;
+type InfoCardProps = {
+  icon: React.ReactNode;
+  title: string;
+  value: string;
+  bgColor: string;
+  iconColor: string;
+}
 
-const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.ReactNode, title: string, value: string, bgColor: string, iconColor: string }) => (
+const InfoCard = ({ icon, title, value, bgColor, iconColor }: InfoCardProps) => (
   <Card className="flex items-center p-4 gap-4">
     <div className={`p-3 rounded-full ${bgColor}`}>
       {React.cloneElement(icon as React.ReactElement, { className: `h-6 w-6 ${iconColor}` })}
@@ -32,73 +38,24 @@ const InfoCard = ({ icon, title, value, bgColor, iconColor }: { icon: React.Reac
   </Card>
 );
 
-const NoticeBoard = ({ schoolId }: { schoolId: string}) => {
-  const [notices, setNotices] = useState<Notice[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!schoolId) {
-        setLoading(false);
-        return;
-    };
-    const fetchedNotices = getNotices(schoolId);
-    setNotices(fetchedNotices);
-    setLoading(false);
-  }, [schoolId]);
-
-  return (
-    <Card>
-        <CardHeader>
-            <div className="flex items-center gap-2">
-                <Megaphone className="h-6 w-6 text-primary" />
-                <CardTitle>Notice Board</CardTitle>
-            </div>
-            <CardDescription>Important announcements from the institute.</CardDescription>
-        </CardHeader>
-        <CardContent>
-            {loading ? (
-                <div className="flex justify-center items-center h-24">
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                </div>
-            ) : notices.length === 0 ? (
-                <p className="text-muted-foreground text-center py-4">No notices at the moment.</p>
-            ) : (
-                <Accordion type="single" collapsible className="w-full">
-                  {notices.map((notice, index) => (
-                    <AccordionItem value={`item-${index}`} key={notice.id}>
-                      <AccordionTrigger>
-                        <div className='text-left'>
-                            <p className='font-semibold'>{notice.title}</p>
-                            <p className='text-xs text-muted-foreground'>
-                                {format(new Date(notice.createdAt), "do MMMM, yyyy")}
-                            </p>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="whitespace-pre-wrap">
-                        {notice.content}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-            )}
-        </CardContent>
-    </Card>
-  )
-}
-
-
 export default function StudentDashboardPage() {
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [schoolId, setSchoolId] = useState<string>('');
 
   useEffect(() => {
+    // This effect runs only on the client
     const storedUser = sessionStorage.getItem('studentUser');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       if (parsedUser.email && parsedUser.schoolId) {
         const studentData = getStudentByEmail(parsedUser.email, parsedUser.schoolId);
+        const noticeData = getNotices(parsedUser.schoolId);
         if (studentData) {
           setStudent(studentData);
+          setNotices(noticeData);
+          setSchoolId(parsedUser.schoolId);
         }
       }
     }
@@ -120,12 +77,41 @@ export default function StudentDashboardPage() {
   const totalFees = student.fees?.totalFees ?? 0;
   const feesPaid = student.fees?.feesPaid ?? 0;
   const remainingFees = totalFees - feesPaid;
-  const schoolId = JSON.parse(sessionStorage.getItem('studentUser') || '{}').schoolId;
-
 
   return (
     <div className="space-y-6">
-        <NoticeBoard schoolId={schoolId}/>
+        <Card>
+            <CardHeader>
+                <div className="flex items-center gap-2">
+                    <Megaphone className="h-6 w-6 text-primary" />
+                    <CardTitle>Notice Board</CardTitle>
+                </div>
+                <CardDescription>Important announcements from the institute.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                {notices.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-4">No notices at the moment.</p>
+                ) : (
+                    <Accordion type="single" collapsible className="w-full">
+                      {notices.map((notice, index) => (
+                        <AccordionItem value={`item-${index}`} key={notice.id}>
+                          <AccordionTrigger>
+                            <div className='text-left'>
+                                <p className='font-semibold'>{notice.title}</p>
+                                <p className='text-xs text-muted-foreground'>
+                                    {format(new Date(notice.createdAt), "do MMMM, yyyy")}
+                                </p>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="whitespace-pre-wrap">
+                            {notice.content}
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                )}
+            </CardContent>
+        </Card>
 
         <Card>
             <CardHeader>
@@ -133,9 +119,9 @@ export default function StudentDashboardPage() {
                 <CardDescription>A summary of your fee payments.</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <InfoCard icon={<Banknote />} title="Total Fees" value={`₹${formatNumber(totalFees)}`} bgColor="bg-blue-100" iconColor="text-blue-500" />
-                <InfoCard icon={<TrendingUp />} title="Total Collected" value={`₹${formatNumber(feesPaid)}`} bgColor="bg-green-100" iconColor="text-green-500" />
-                <InfoCard icon={<TrendingDown />} title="Remaining Due" value={`₹${formatNumber(remainingFees)}`} bgColor="bg-red-100" iconColor="text-red-500" />
+                <InfoCard icon={<Banknote />} title="Total Fees" value={`₹${formatNumber(totalFees)}`} bgColor="bg-blue-100 dark:bg-blue-900/30" iconColor="text-blue-500" />
+                <InfoCard icon={<TrendingUp />} title="Total Collected" value={`₹${formatNumber(feesPaid)}`} bgColor="bg-green-100 dark:bg-green-900/30" iconColor="text-green-500" />
+                <InfoCard icon={<TrendingDown />} title="Remaining Due" value={`₹${formatNumber(remainingFees)}`} bgColor="bg-red-100 dark:bg-red-900/30" iconColor="text-red-500" />
             </CardContent>
         </Card>
     

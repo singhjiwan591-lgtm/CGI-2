@@ -4,7 +4,7 @@
 import { notFound, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { BookOpen, Download, Twitter, Linkedin, Facebook } from 'lucide-react';
+import { BookOpen, Download, Twitter, Linkedin, Facebook, Loader2 } from 'lucide-react';
 import { CertificateStyler } from '@/components/certificate-styler';
 import { getStudentByRoll } from '@/lib/student-data-service';
 import { useEffect, useState } from 'react';
@@ -19,22 +19,29 @@ export default function CertificatePage() {
   const [currentUrl, setCurrentUrl] = useState('');
 
   useEffect(() => {
-    const studentData = getStudentByRoll(studentRollNo);
-    if (!studentData || studentData.status !== 'Graduated') {
-      setLoading(false);
-    } else {
-      setStudent(studentData);
-      setLoading(false);
+    // Ensure this runs only on the client
+    if (typeof window !== 'undefined') {
+      const studentData = getStudentByRoll(studentRollNo);
+      if (studentData && studentData.status === 'Graduated') {
+        setStudent(studentData);
+      }
+      // Set loading to false regardless of whether student is found,
+      // so we can trigger the notFound() or render the page.
+      setLoading(false); 
+      setCurrentUrl(window.location.href);
     }
-    // Set URL in useEffect to ensure window object is available
-    setCurrentUrl(window.location.href);
   }, [studentRollNo]);
 
   if (loading) {
-    return <div>Loading...</div>; // Or a proper loading component
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   if (!student) {
+    // This will render the not-found.tsx component in the same directory
     notFound();
   }
 

@@ -22,7 +22,7 @@ export default function VerifyCertificatePage() {
   const [verifiedStudent, setVerifiedStudent] = useState<Student | null>(null);
   const [verificationStatus, setVerificationStatus] = useState<VerificationResult>('pending');
 
-  const handleVerification = async (event: React.FormEvent) => {
+  const handleVerification = (event: React.FormEvent) => {
     event.preventDefault();
     if (!studentId) return;
 
@@ -30,21 +30,22 @@ export default function VerifyCertificatePage() {
     setVerificationStatus('pending');
     setVerifiedStudent(null);
 
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
-
-    const student = getStudentByRoll(studentId);
-    if (student) {
-        if (student.status === 'Graduated') {
-            setVerifiedStudent(student);
-            setVerificationStatus('verified');
+    // Simulate network delay for better UX
+    setTimeout(() => {
+        const student = getStudentByRoll(studentId);
+        if (student) {
+            if (student.status === 'Graduated') {
+                setVerifiedStudent(student);
+                setVerificationStatus('verified');
+            } else {
+                 setVerifiedStudent(student);
+                 setVerificationStatus('not_graduated');
+            }
         } else {
-             setVerifiedStudent(student);
-             setVerificationStatus('not_graduated');
+            setVerificationStatus('not_found');
         }
-    } else {
-        setVerificationStatus('not_found');
-    }
-    setLoading(false);
+        setLoading(false);
+    }, 500);
   };
 
   const VerificationResultCard = () => {
@@ -63,7 +64,7 @@ export default function VerifyCertificatePage() {
         case 'verified':
             return verifiedStudent && (
               <Card className="mx-auto mt-8 max-w-lg animate-in fade-in-50">
-                <CardHeader className="text-center bg-green-50 text-green-800 rounded-t-lg py-4">
+                <CardHeader className="text-center bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-t-lg py-4">
                   <div className="flex items-center justify-center gap-2">
                     <BadgeCheck className="h-7 w-7" />
                     <CardTitle className="text-2xl font-bold">Certificate Verified</CardTitle>
@@ -108,7 +109,7 @@ export default function VerifyCertificatePage() {
         case 'not_graduated':
              return (
               <Card className="mx-auto mt-8 max-w-lg animate-in fade-in-50">
-                <CardHeader className="text-center bg-yellow-50 text-yellow-800 rounded-t-lg py-4">
+                <CardHeader className="text-center bg-yellow-50 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-t-lg py-4">
                     <div className="flex items-center justify-center gap-2">
                         <XCircle className="h-7 w-7" />
                         <CardTitle className="text-2xl font-bold">Record Found</CardTitle>
@@ -123,7 +124,7 @@ export default function VerifyCertificatePage() {
         case 'not_found':
             return (
               <Card className="mx-auto mt-8 max-w-lg animate-in fade-in-50">
-                <CardHeader className="text-center bg-red-50 text-red-800 rounded-t-lg py-4">
+                <CardHeader className="text-center bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200 rounded-t-lg py-4">
                     <div className="flex items-center justify-center gap-2">
                         <XCircle className="h-7 w-7" />
                         <CardTitle className="text-2xl font-bold">Verification Failed</CardTitle>
