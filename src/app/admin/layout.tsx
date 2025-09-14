@@ -72,14 +72,7 @@ const navLinks = [
        { href: '/admin/class-routine', label: 'Class Routine', icon: CalendarClock },
     ]
   },
-   { 
-    label: 'Accounting', 
-    icon: Banknote,
-    subLinks: [
-       { href: '/admin/fees', label: 'Collect Fees', icon: DollarSign },
-       { href: '/admin/account', label: 'Expense', icon: Banknote },
-    ]
-  },
+   { href: '/admin/fees', label: 'Collect Fees', icon: DollarSign },
   { href: '/admin/attendance', label: 'Attendance', icon: Fingerprint },
   { href: '/admin/exam', label: 'Exam', icon: PencilRuler },
   { href: '/admin/library', label: 'Library', icon: Library },
