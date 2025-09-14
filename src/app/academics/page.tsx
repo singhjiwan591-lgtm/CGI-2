@@ -29,7 +29,7 @@ export default function AcademicsPage() {
       title: 'ADCA',
       description: 'Advanced Diploma in Computer Applications',
       icon: <FileText className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/0VXPWLDb/IMG-20250803-WA0010.jpg',
+      imageUrl: 'https://i.ibb.co/0VXPWLD/IMG-20250803-WA0010.jpg',
       dataAiHint: 'advanced diploma computer',
       color: 'from-blue-500 to-blue-700',
     },
