@@ -40,14 +40,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { format } from 'date-fns';
-
-type Student = {
-  id: string;
-  name: string;
-  grade: number;
-  photoURL?: string;
-  avatarHint: string;
-};
+import { getAllStudents, Student } from '@/lib/student-data-service';
 
 type AttendanceLog = {
     id: string;
@@ -63,18 +56,12 @@ type DailyStatus = {
   clockedOut: string | null;
 };
 
-// Mock data
-const mockStudents: Student[] = [
-    { id: '1', name: 'Ravi Kumar', grade: 12, avatarHint: 'student portrait', photoURL: 'https://placehold.co/100x100.png' },
-    { id: '2', name: 'Priya Sharma', grade: 11, avatarHint: 'student smiling', photoURL: 'https://placehold.co/100x100.png' },
-    { id: '3', name: 'Amit Patel', grade: 12, avatarHint: 'student happy', photoURL: 'https://placehold.co/100x100.png' },
-    { id: '4', name: 'Sunita Devi', grade: 10, avatarHint: 'student thinking', photoURL: 'https://placehold.co/100x100.png' },
-    { id: '5', name: 'Vijay Singh', grade: 11, avatarHint: 'student outside', photoURL: 'https://placehold.co/100x100.png' },
-];
+const getLogsKey = (schoolId: string) => `attendanceLogs_${schoolId}`;
 
 export default function AttendancePage() {
-    const [students, setStudents] = useState<Student[]>(mockStudents);
-    const [loading, setLoading] = useState(false);
+    const [students, setStudents] = useState<Student[]>([]);
+    const [schoolId, setSchoolId] = useState('');
+    const [loading, setLoading] = useState(true);
     const [attendanceLogs, setAttendanceLogs] = useState<AttendanceLog[]>([]);
     const [dailyAttendance, setDailyAttendance] = useState<Record<string, DailyStatus>>({});
     const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
@@ -86,10 +73,31 @@ export default function AttendancePage() {
     const { toast } = useToast();
 
     useEffect(() => {
+        const userSession = sessionStorage.getItem('user');
+        if (userSession) {
+            const parsedSession = JSON.parse(userSession);
+            if (parsedSession.schoolId) {
+                const currentSchoolId = parsedSession.schoolId;
+                setSchoolId(currentSchoolId);
+                setStudents(getAllStudents(currentSchoolId));
+                const storedLogs = localStorage.getItem(getLogsKey(currentSchoolId));
+                if (storedLogs) {
+                    setAttendanceLogs(JSON.parse(storedLogs).map((log: any) => ({...log, timestamp: new Date(log.timestamp)})));
+                }
+            }
+        }
+        setLoading(false);
+    }, []);
+
+    useEffect(() => {
+        if (!schoolId) return;
         const newDailyAttendance: Record<string, DailyStatus> = {};
         
         students.forEach(student => {
-            const studentLogs = attendanceLogs.filter(log => log.studentId === student.id).sort((a,b) => a.timestamp.getTime() - b.timestamp.getTime());
+            const studentLogs = attendanceLogs
+                .filter(log => log.studentId === student.id && new Date(log.timestamp).toDateString() === selectedDate.toDateString())
+                .sort((a,b) => a.timestamp.getTime() - b.timestamp.getTime());
+            
             const clockInLog = studentLogs.find(l => l.type === 'clock-in');
             const clockOutLog = studentLogs.find(l => l.type === 'clock-out');
 
@@ -109,47 +117,33 @@ export default function AttendancePage() {
             };
         });
         setDailyAttendance(newDailyAttendance);
-    }, [students, attendanceLogs, selectedDate]);
+        localStorage.setItem(getLogsKey(schoolId), JSON.stringify(attendanceLogs));
 
-    const handleClockIn = async () => {
-        if (!selectedStudent) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Please select a student first.' });
-            return;
-        }
-        
-        const student = students.find(s => s.id === selectedStudent);
-        if (!student || dailyAttendance[selectedStudent]?.clockedIn) return;
-        
-        const newLog: AttendanceLog = {
-            id: new Date().toISOString(),
-            studentId: selectedStudent,
-            studentName: student.name,
-            timestamp: new Date(),
-            type: 'clock-in'
-        };
-        setAttendanceLogs([...attendanceLogs, newLog]);
-        toast({ title: 'Clocked In', description: `${student.name} has been clocked in.` });
-        setSelectedStudent(null);
-    };
+    }, [students, attendanceLogs, selectedDate, schoolId]);
 
-    const handleClockOut = async () => {
+    const handleClockAction = (type: 'clock-in' | 'clock-out') => {
         if (!selectedStudent) {
             toast({ variant: 'destructive', title: 'Error', description: 'Please select a student first.' });
             return;
         }
 
         const student = students.find(s => s.id === selectedStudent);
-        if (!student || !dailyAttendance[selectedStudent]?.clockedIn || dailyAttendance[selectedStudent]?.clockedOut) return;
-        
+        if (!student) return;
+
+        const dailyStatus = dailyAttendance[selectedStudent];
+        if (type === 'clock-in' && dailyStatus?.clockedIn) return;
+        if (type === 'clock-out' && (!dailyStatus?.clockedIn || dailyStatus?.clockedOut)) return;
+
         const newLog: AttendanceLog = {
             id: new Date().toISOString(),
             studentId: selectedStudent,
             studentName: student.name,
             timestamp: new Date(),
-            type: 'clock-out'
+            type,
         };
-        setAttendanceLogs([...attendanceLogs, newLog]);
-        toast({ title: 'Clocked Out', description: `${student.name} has been clocked out.` });
+
+        setAttendanceLogs(prevLogs => [...prevLogs, newLog]);
+        toast({ title: `Clocked ${type === 'clock-in' ? 'In' : 'Out'}`, description: `${student.name} has been clocked ${type === 'clock-in' ? 'in' : 'out'}.` });
         setSelectedStudent(null);
     };
 
@@ -287,10 +281,10 @@ export default function AttendancePage() {
             </Select>
           </CardContent>
           <CardFooter className="grid grid-cols-2 gap-4">
-            <Button onClick={handleClockIn} disabled={!selectedStudent || !!dailyAttendance[selectedStudent as string]?.clockedIn}>
+            <Button onClick={() => handleClockAction('clock-in')} disabled={!selectedStudent || !!dailyAttendance[selectedStudent as string]?.clockedIn}>
                 <LogIn className="mr-2 h-4 w-4" /> Clock In
             </Button>
-            <Button onClick={handleClockOut} disabled={!selectedStudent || !dailyAttendance[selectedStudent as string]?.clockedIn || !!dailyAttendance[selectedStudent as string]?.clockedOut} variant="outline">
+            <Button onClick={() => handleClockAction('clock-out')} disabled={!selectedStudent || !dailyAttendance[selectedStudent as string]?.clockedIn || !!dailyAttendance[selectedStudent as string]?.clockedOut} variant="outline">
                 <LogOut className="mr-2 h-4 w-4" /> Clock Out
             </Button>
           </CardFooter>

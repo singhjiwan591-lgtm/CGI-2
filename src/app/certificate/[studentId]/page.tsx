@@ -6,10 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { BookOpen, Download, Twitter, Linkedin, Facebook, Loader2 } from 'lucide-react';
 import { CertificateStyler } from '@/components/certificate-styler';
-import { getStudentByRoll } from '@/lib/student-data-service';
+import { getStudentByRoll, Student } from '@/lib/student-data-service';
 import { useEffect, useState } from 'react';
-
-type Student = NonNullable<ReturnType<typeof getStudentByRoll>>;
+import { format } from 'date-fns';
 
 export default function CertificatePage() {
   const params = useParams();
@@ -25,8 +24,6 @@ export default function CertificatePage() {
       if (studentData && studentData.status === 'Graduated') {
         setStudent(studentData);
       }
-      // Set loading to false regardless of whether student is found,
-      // so we can trigger the notFound() or render the page.
       setLoading(false); 
       setCurrentUrl(window.location.href);
     }
@@ -41,15 +38,8 @@ export default function CertificatePage() {
   }
 
   if (!student) {
-    // This will render the not-found.tsx component in the same directory
     notFound();
   }
-
-  const currentDate = new Date().toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
   
   const handlePrint = () => {
     window.print();
@@ -102,7 +92,7 @@ export default function CertificatePage() {
                   <p className="text-base sm:text-lg text-muted-foreground">
                     for successfully completing the requirements of the program
                   </p>
-                  <p className="text-2xl sm:text-3xl font-semibold font-headline">{student.program}</p>
+                  <p className="text-2xl sm:text-3xl font-semibold font-headline">{student.program || 'Designated Program'}</p>
                 </div>
                 <div className="pt-8 grid grid-cols-1 sm:grid-cols-2 gap-8 text-sm">
                   <div className="border-t border-foreground pt-2">
@@ -115,7 +105,7 @@ export default function CertificatePage() {
                   </div>
                 </div>
                 <footer className="pt-4">
-                  <p className="text-muted-foreground text-sm">Issued on: {currentDate}</p>
+                  <p className="text-muted-foreground text-sm">Issued on: {format(new Date(), 'PPP')}</p>
                   <p className="text-muted-foreground text-xs mt-1">Student Roll No.: {student.roll}</p>
                 </footer>
               </div>

@@ -108,10 +108,6 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
-        <Script
-          src="https://www.google.com/recaptcha/enterprise.js?render=6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7"
-          strategy="beforeInteractive"
-        />
       </head>
       <body suppressHydrationWarning={true} className={cn("font-body bg-background text-foreground antialiased min-h-screen flex flex-col")}>
         <ThemeProvider
@@ -128,8 +124,16 @@ export default function RootLayout({
           </div>
           <Toaster />
           <DynamicDiscountPopup />
-          <Script src="https://checkout.razorpay.com/v1/checkout.js" />
         </ThemeProvider>
+
+        <Script
+          src="https://www.google.com/recaptcha/enterprise.js?render=6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7"
+          strategy="lazyOnload"
+        />
+        <Script 
+          src="https://checkout.razorpay.com/v1/checkout.js" 
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

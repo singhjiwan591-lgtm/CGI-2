@@ -50,13 +50,13 @@ export function SiteFooter() {
                 </li>
             </ul>
              <div className="mt-6 flex justify-center md:justify-start space-x-4">
-              <Link href="#" aria-label="Facebook">
+              <Link href="https://facebook.com/your-page" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
                 <Facebook className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
               </Link>
-              <Link href="#" aria-label="Instagram">
+              <Link href="https://instagram.com/your-handle" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
                 <Instagram className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
               </Link>
-              <Link href="#" aria-label="LinkedIn">
+              <Link href="https://linkedin.com/company/your-company" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
                 <Linkedin className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
               </Link>
             </div>

@@ -19,7 +19,13 @@ const getStoredNotices = (schoolId: string): Notice[] => {
     return [];
   }
   const data = localStorage.getItem(getNoticesKey(schoolId));
-  return data ? JSON.parse(data) : [];
+  try {
+    const parsedData = data ? JSON.parse(data) : [];
+    return Array.isArray(parsedData) ? parsedData : [];
+  } catch (error) {
+    console.error("Failed to parse notices from localStorage", error);
+    return [];
+  }
 };
 
 // Function to save notices to localStorage
@@ -29,15 +35,8 @@ const storeNotices = (notices: Notice[], schoolId: string) => {
   }
 };
 
-// Initialize with some mock data if empty
-const initializeMockNotices = () => {
-  if (typeof window === 'undefined') return;
-
-  const schoolIds = ['jalalabad', 'golu_ka_mor'];
-  schoolIds.forEach(schoolId => {
-    const notices = getStoredNotices(schoolId);
-    if (notices.length === 0) {
-      storeNotices([
+const initializeMockNotices = (schoolId: string) => {
+    const mockData = [
         {
           id: '1',
           title: `Welcome to the New Semester at ${schoolId === 'jalalabad' ? 'Jalalabad' : 'Golu Ka Mor'}!`,
@@ -50,25 +49,24 @@ const initializeMockNotices = () => {
           content: 'The institute will be closed for the Diwali festival. We wish everyone a happy and safe celebration.',
           createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
         },
-      ], schoolId);
-    }
-  });
+    ];
+    storeNotices(mockData, schoolId);
+    return mockData;
 };
-
-// Call initialize on module load
-if (typeof window !== 'undefined') {
-    initializeMockNotices();
-}
 
 
 export function getNotices(schoolId: string): Notice[] {
-  const notices = getStoredNotices(schoolId);
+  if (typeof window === 'undefined') return [];
+  let notices = getStoredNotices(schoolId);
+  if (notices.length === 0) {
+      notices = initializeMockNotices(schoolId);
+  }
   // Return notices sorted by most recent first
   return notices.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
 export function addNotice(data: { title: string; content: string }, schoolId: string): Notice {
-  const notices = getStoredNotices(schoolId);
+  const notices = getNotices(schoolId);
   const newNotice: Notice = {
     id: new Date().getTime().toString(),
     title: data.title,
@@ -81,7 +79,7 @@ export function addNotice(data: { title: string; content: string }, schoolId: st
 }
 
 export function updateNotice(noticeToUpdate: Notice, schoolId: string): Notice {
-  let notices = getStoredNotices(schoolId);
+  let notices = getNotices(schoolId);
   notices = notices.map(notice =>
     notice.id === noticeToUpdate.id ? noticeToUpdate : notice
   );
@@ -90,7 +88,7 @@ export function updateNotice(noticeToUpdate: Notice, schoolId: string): Notice {
 }
 
 export function deleteNotice(id: string, schoolId: string): void {
-  let notices = getStoredNotices(schoolId);
+  let notices = getNotices(schoolId);
   notices = notices.filter(notice => notice.id !== id);
   storeNotices(notices, schoolId);
 }

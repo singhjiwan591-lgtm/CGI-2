@@ -65,7 +65,7 @@ export default function ParentsPage() {
             email: student.email,
             studentName: student.name,
             studentId: student.id,
-            avatarUrl: `https://placehold.co/100x100.png`, // Placeholder
+            avatarUrl: `https://picsum.photos/seed/parent${student.id}/100/100`, 
             avatarHint: `parent of ${student.name}`,
           }));
           setParents(parentsData);
@@ -96,7 +96,7 @@ export default function ParentsPage() {
         subject: messageSubject,
         message: messageBody
       });
-      toast({ title: 'Success', description: 'Message sent successfully.' });
+      toast({ title: 'Success', description: 'Message sent successfully (simulated).' });
       setIsMessageDialogOpen(false);
       setSelectedParent(null);
     } catch(error) {
@@ -200,7 +200,7 @@ export default function ParentsPage() {
             <DialogHeader>
                 <DialogTitle>Send Message to {selectedParent?.name}</DialogTitle>
                 <DialogDescription>
-                    Compose your message below. The parent will receive this via email to {selectedParent?.email}.
+                    Compose your message below. The parent will receive this via email to {selectedParent?.email}. (This is a simulation).
                 </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">

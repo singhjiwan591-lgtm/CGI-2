@@ -94,13 +94,14 @@ const NavItem = ({ link, pathname, closeSheet }: { link: any, pathname: string, 
     }
   }, [isSubActive]);
 
-  const handleClick = () => {
-    if(link.subLinks) {
-        setIsOpen(!isOpen);
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    if (link.subLinks) {
+      e.preventDefault();
+      setIsOpen(!isOpen);
     } else {
-        if (closeSheet) closeSheet();
+      if (closeSheet) closeSheet();
     }
-  }
+  };
 
   if (link.subLinks) {
     return (
@@ -143,7 +144,7 @@ const NavItem = ({ link, pathname, closeSheet }: { link: any, pathname: string, 
   return (
     <Link
       href={link.href}
-      onClick={closeSheet}
+      onClick={handleClick}
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
         pathname === link.href && "text-primary bg-primary/10"
@@ -173,13 +174,13 @@ export default function DashboardLayout({
       const parsedUser = JSON.parse(storedUser);
       if (parsedUser.isLoggedIn) {
         setUser(parsedUser);
+        setLoading(false);
       } else {
          router.push('/login');
       }
     } else {
       router.push('/login');
     }
-    setLoading(false);
   }, [router]);
   
   const handleLogout = () => {
@@ -287,7 +288,7 @@ export default function DashboardLayout({
               <div className="flex items-center gap-3 cursor-pointer">
                 <Button variant="secondary" size="icon" className="rounded-full">
                   <Avatar>
-                    <AvatarImage src={"https://placehold.co/100x100.png"} data-ai-hint="admin user" />
+                    <AvatarImage src="https://picsum.photos/seed/admin/100/100" data-ai-hint="admin user" />
                     <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <span className="sr-only">Toggle user menu</span>

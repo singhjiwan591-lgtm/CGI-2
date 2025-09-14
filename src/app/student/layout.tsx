@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Loader2, Home, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SiteHeader } from '@/components/site-header';
@@ -25,10 +25,10 @@ export default function StudentDashboardLayout({
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
+      setLoading(false);
     } else {
       router.push('/login');
     }
-    setLoading(false);
   }, [router]);
 
   const handleLogout = () => {

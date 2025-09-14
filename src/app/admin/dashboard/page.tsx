@@ -40,6 +40,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatNumber } from '@/lib/utils';
 import Link from 'next/link';
+import { getAllStudents } from '@/lib/student-data-service';
 
 const InfoCard = ({ icon, title, value, description, iconBgColor }: { icon: React.ReactNode, title: string, value: string, description: string, iconBgColor: string }) => (
     <Card>
@@ -54,21 +55,51 @@ const InfoCard = ({ icon, title, value, description, iconBgColor }: { icon: Reac
     </Card>
 );
 
-const recentStudents = [
-    { name: 'Ravi Kumar', email: 'ravi.k@example.com', course: 'ADCA', avatar: 'https://placehold.co/100x100.png', hint: 'student portrait' },
-    { name: 'Priya Sharma', email: 'priya.s@example.com', course: 'Web Development', avatar: 'https://placehold.co/100x100.png', hint: 'student smiling' },
-    { name: 'Amit Patel', email: 'amit.p@example.com', course: 'DCA', avatar: 'https://placehold.co/100x100.png', hint: 'student happy' },
-    { name: 'Sunita Devi', email: 'sunita.d@example.com', course: 'Graphic Design', avatar: 'https://placehold.co/100x100.png', hint: 'student thinking' },
-];
-
 export default function DashboardPage() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [schoolId, setSchoolId] = useState<string>('');
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    totalStudents: 0,
+    newStudentsThisMonth: 0,
+    overallAttendance: 92.5, // Mocked
+    recentStudents: [] as any[],
+  });
 
-  // Mock data for dashboard
-  const totalRevenue = 1250000;
-  const totalStudents = 350;
-  const newStudentsThisMonth = 22;
-  const overallAttendance = 92.5;
+  useEffect(() => {
+    const userSession = sessionStorage.getItem('user');
+    if (userSession) {
+      const parsedUser = JSON.parse(userSession);
+      if (parsedUser.schoolId) {
+        const currentSchoolId = parsedUser.schoolId;
+        setSchoolId(currentSchoolId);
+        const students = getAllStudents(currentSchoolId);
+
+        const totalRevenue = students.reduce((acc, s) => acc + (s.fees?.feesPaid || 0), 0);
+        const totalStudents = students.length;
+        
+        const thisMonth = new Date().getMonth();
+        const thisYear = new Date().getFullYear();
+        const newStudentsThisMonth = students.filter(s => {
+          const admissionDate = new Date(s.admissionDate);
+          return admissionDate.getMonth() === thisMonth && admissionDate.getFullYear() === thisYear;
+        }).length;
+        
+        const recentStudents = students
+          .sort((a,b) => new Date(b.admissionDate).getTime() - new Date(a.admissionDate).getTime())
+          .slice(0, 4);
+
+        setStats({
+            totalRevenue,
+            totalStudents,
+            newStudentsThisMonth,
+            overallAttendance: 92.5, // This is still mocked
+            recentStudents
+        });
+      }
+    }
+    setLoading(false);
+  }, []);
 
   if (loading) {
       return (
@@ -83,28 +114,28 @@ export default function DashboardPage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <InfoCard 
                 title="Total Revenue"
-                value={`₹${formatNumber(totalRevenue)}`}
-                description="+20.1% from last month"
+                value={`₹${formatNumber(stats.totalRevenue)}`}
+                description="Total fees collected"
                 icon={<Banknote />}
                 iconBgColor="bg-blue-100"
             />
             <InfoCard 
                 title="Total Students"
-                value={`+${totalStudents}`}
+                value={`${stats.totalStudents}`}
                 description="All active students"
                 icon={<Users />}
                 iconBgColor="bg-green-100"
             />
             <InfoCard 
                 title="New Enrollments"
-                value={`+${newStudentsThisMonth}`}
+                value={`+${stats.newStudentsThisMonth}`}
                 description="In this month"
                 icon={<GraduationCap />}
                 iconBgColor="bg-purple-100"
             />
             <InfoCard 
                 title="Attendance"
-                value={`${overallAttendance}%`}
+                value={`${stats.overallAttendance}%`}
                 description="This week's average"
                 icon={<Percent />}
                 iconBgColor="bg-yellow-100"
@@ -128,23 +159,23 @@ export default function DashboardPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {recentStudents.map(student => (
+                            {stats.recentStudents.map(student => (
                             <TableRow key={student.email}>
                                 <TableCell>
                                     <div className="flex items-center gap-3">
                                         <Avatar className="h-9 w-9">
-                                            <AvatarImage src={student.avatar} data-ai-hint={student.hint} />
+                                            <AvatarImage src={student.photoURL} data-ai-hint={student.avatarHint} />
                                             <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div className="font-medium">{student.name}</div>
                                     </div>
                                 </TableCell>
                                 <TableCell className="hidden sm:table-cell">
-                                    <Badge variant="outline">{student.course}</Badge>
+                                    <Badge variant="outline">{student.program}</Badge>
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <Button asChild size="sm" variant="outline">
-                                        <Link href="/admin/students">View</Link>
+                                        <Link href={`/admin/students/${student.id}`}>View</Link>
                                     </Button>
                                 </TableCell>
                             </TableRow>

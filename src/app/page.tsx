@@ -122,6 +122,14 @@ export default function Home() {
       quote:
         'Global Computer Institute provided the perfect launchpad for my career. The hands-on approach and expert faculty are unmatched. Highly recommended!',
     },
+     {
+      name: 'Priya Sharma',
+      title: 'Graphic Designer',
+      avatar: 'https://picsum.photos/seed/priya/100/100',
+      dataAiHint: 'woman designer',
+      quote:
+        'The graphic design course was fantastic. I learned so much and landed a great job right after graduating. The instructors are very supportive.',
+    },
   ];
 
   const handleWhatsAppInquiry = (jobTitle: string) => {
@@ -180,7 +188,7 @@ export default function Home() {
             </div>
             <div className="order-1 md:order-2">
               <Image
-                src="https://i.ibb.co/4wy0PXmb/Compress-JPEG-Online-img-800x600.jpg"
+                src="https://picsum.photos/seed/coding-students/800/600"
                 data-ai-hint="students coding"
                 alt="Students learning to code"
                 width={800}

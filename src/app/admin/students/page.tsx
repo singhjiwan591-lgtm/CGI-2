@@ -50,7 +50,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { getAllStudents, addStudent, updateStudent, Student } from '@/lib/student-data-service';
+import { getAllStudents, addStudent, updateStudent, Student, deleteStudent } from '@/lib/student-data-service';
 
 const studentInitialState = {
     name: '', grade: '', parent: '', motherName: '', gender: '', address: '', dob: '', phone: '', email: '', religion: ''
@@ -168,11 +168,9 @@ export default function StudentsPage() {
   };
 
   const handleDeleteStudent = () => {
-    if (!studentToDelete) return;
-    const updatedStudents = students.filter(s => s.id !== studentToDelete.id);
-    setStudents(updatedStudents);
-    // In a real app, you'd also call a service to delete from the backend.
-    // For this mock, we assume filtering is enough and student-data-service doesn't have delete.
+    if (!studentToDelete || !schoolId) return;
+    deleteStudent(studentToDelete.id, schoolId);
+    setStudents(students.filter(s => s.id !== studentToDelete.id));
     toast({ title: 'Success', description: `${studentToDelete.name} has been deleted.` });
     setIsDeleteDialogOpen(false);
     setStudentToDelete(null);
@@ -295,7 +293,7 @@ export default function StudentsPage() {
                 <TableRow key={student.id}>
                   <TableCell>
                     <Avatar className="h-10 w-10">
-                        <AvatarImage src={student.photoURL || `https://placehold.co/100x100.png`} data-ai-hint={student.avatarHint} />
+                        <AvatarImage src={student.photoURL || `https://picsum.photos/seed/${student.id}/100/100`} data-ai-hint={student.avatarHint} />
                         <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                     </Avatar>
                   </TableCell>
@@ -500,5 +498,3 @@ export default function StudentsPage() {
     </>
   );
 }
-
-    
