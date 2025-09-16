@@ -34,7 +34,7 @@ const storeSubjects = (subjects: Subject[], schoolId: string) => {
 export default function SubjectPage() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isFormOpen, setIsFormOpen] useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentSubject, setCurrentSubject] = useState<Subject | null>(null);
   const [schoolId, setSchoolId] = useState<string>('');
   const { toast } = useToast();
