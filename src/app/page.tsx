@@ -188,9 +188,9 @@ export default function Home() {
             </div>
             <div className="order-1 md:order-2 group [perspective:1000px]">
               <Image
-                src="https://i.ibb.co/6RdhCvS/Compress-JPEG-Online-img-800x600.jpg"
-                data-ai-hint="student coding"
-                alt="Student learning to code"
+                src="https://i.ibb.co/8Dt1M0L4/Whats-App-Image-2025-09-11-at-8-52-29-PM.jpg"
+                data-ai-hint="institute students teachers"
+                alt="Students and teachers at Global Computer Institute"
                 width={800}
                 height={600}
                 style={{ height: 'auto', width: '100%' }}
