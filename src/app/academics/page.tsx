@@ -122,10 +122,10 @@ export default function AcademicsPage() {
         <div className="container mx-auto px-4">
            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {courseCards.map((card) => (
-              <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block group [perspective:1000px]">
+              <Link key={card.title} href={`/register?course=${'${encodeURIComponent(card.title)}'}`} className="block group [perspective:1000px]">
                 <Card 
                   data-animate="stagger-item"
-                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} transition-transform duration-500 group-hover:[transform:rotateX(10deg)_rotateY(-10deg)] hover:shadow-2xl hover:shadow-primary/30 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square transform-style-3d`}
+                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : 'bg-gradient-to-br ${card.color}'} transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(-10deg)_scale(1.05)] group-hover:shadow-2xl hover:shadow-primary/30 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
                 >
                   {card.imageUrl ? (
                     <>
