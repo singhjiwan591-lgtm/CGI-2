@@ -1,0 +1,58 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
+import ReactConfetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
+
+export function CongratulationsConfetti() {
+  const [showConfetti, setShowConfetti] = useState(false);
+  const { width, height } = useWindowSize();
+
+  useEffect(() => {
+    // Check if the welcome effect has already been shown in this session
+    const hasBeenWelcomed = sessionStorage.getItem('hasBeenWelcomed');
+
+    if (!hasBeenWelcomed) {
+      // Show confetti for 10 seconds
+      setShowConfetti(true);
+      sessionStorage.setItem('hasBeenWelcomed', 'true');
+
+      const timer = setTimeout(() => {
+        setShowConfetti(false);
+      }, 10000); // 10 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  if (!showConfetti) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 z-[200] pointer-events-none">
+       <ReactConfetti
+        width={width}
+        height={height}
+        numberOfPieces={200}
+        recycle={false}
+        gravity={0.1}
+        onConfettiComplete={(confetti) => {
+          if (confetti) {
+            confetti.reset();
+          }
+          setShowConfetti(false);
+        }}
+      />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-auto">
+         <p className="text-4xl md:text-6xl font-bold font-headline text-primary [text-shadow:3px_3px_6px_rgba(0,0,0,0.3)]">
+            Congratulations!
+        </p>
+        <p className="text-lg md:text-2xl mt-2 font-semibold text-foreground/80">
+            Welcome to Global Computer Institute
+        </p>
+      </div>
+    </div>
+  );
+}
