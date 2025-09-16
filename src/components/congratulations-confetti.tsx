@@ -14,22 +14,19 @@ export function CongratulationsConfetti() {
     const hasBeenWelcomed = sessionStorage.getItem('hasBeenWelcomed');
 
     if (!hasBeenWelcomed) {
-      // Show confetti for 5 seconds
+      // Show confetti
       setShowConfetti(true);
       sessionStorage.setItem('hasBeenWelcomed', 'true');
 
       const timer = setTimeout(() => {
         setShowConfetti(false);
-      }, 5000); // 5 seconds
+      }, 3000); // 3 seconds for a "fast" animation
 
       return () => clearTimeout(timer);
     }
   }, []);
   
   const onConfettiComplete = (confetti: any) => {
-    if (typeof window !== 'undefined') {
-        window.dispatchEvent(new Event('confettiComplete'));
-    }
     if (confetti) {
       confetti.reset();
     }

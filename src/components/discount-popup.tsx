@@ -96,23 +96,16 @@ export function DiscountPopup() {
       return () => clearInterval(interval);
     };
     
-    // Show popup after confetti is done, or after a delay if confetti doesn't show
-    const hasBeenWelcomed = typeof window !== 'undefined' && sessionStorage.getItem('hasBeenWelcomed');
-
-    if (hasBeenWelcomed) {
-        // If welcome animation already happened, show popup after short delay
-        const timer = setTimeout(checkDiscountStatus, 1500); 
-        return () => clearTimeout(timer);
-    } else {
-        // If this is the first visit, wait for confetti to finish
-        const handleConfettiComplete = () => {
+    // Show popup after a 10-second delay for first-time visitors
+    const hasSeenPopup = sessionStorage.getItem('hasSeenDiscountPopup');
+    if (!hasSeenPopup) {
+        const timer = setTimeout(() => {
             checkDiscountStatus();
-            window.removeEventListener('confettiComplete', handleConfettiComplete);
-        };
-        window.addEventListener('confettiComplete', handleConfettiComplete);
-        return () => window.removeEventListener('confettiComplete', handleConfettiComplete);
-    }
+            sessionStorage.setItem('hasSeenDiscountPopup', 'true');
+        }, 10000); // 10-second delay
 
+        return () => clearTimeout(timer);
+    }
   }, []);
 
   if (!isOpen) {
