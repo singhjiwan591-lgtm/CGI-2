@@ -14,17 +14,27 @@ export function CongratulationsConfetti() {
     const hasBeenWelcomed = sessionStorage.getItem('hasBeenWelcomed');
 
     if (!hasBeenWelcomed) {
-      // Show confetti for 10 seconds
+      // Show confetti for 5 seconds
       setShowConfetti(true);
       sessionStorage.setItem('hasBeenWelcomed', 'true');
 
       const timer = setTimeout(() => {
         setShowConfetti(false);
-      }, 10000); // 10 seconds
+      }, 5000); // 5 seconds
 
       return () => clearTimeout(timer);
     }
   }, []);
+  
+  const onConfettiComplete = (confetti: any) => {
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('confettiComplete'));
+    }
+    if (confetti) {
+      confetti.reset();
+    }
+    setShowConfetti(false);
+  }
 
   if (!showConfetti) {
     return null;
@@ -38,12 +48,7 @@ export function CongratulationsConfetti() {
         numberOfPieces={200}
         recycle={false}
         gravity={0.1}
-        onConfettiComplete={(confetti) => {
-          if (confetti) {
-            confetti.reset();
-          }
-          setShowConfetti(false);
-        }}
+        onConfettiComplete={onConfettiComplete}
       />
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-auto">
          <p className="text-4xl md:text-6xl font-bold font-headline text-primary [text-shadow:3px_3px_6px_rgba(0,0,0,0.3)]">
