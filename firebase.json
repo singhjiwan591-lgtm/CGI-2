@@ -1,11 +1,15 @@
+
 {
   "hosting": {
-    "source": ".",
+    "source": ".open-next/hosting",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
-    "webFrameworks": true
+    "predeploy": [
+      "npm ci",
+      "npm run build"
+    ]
   }
 }
