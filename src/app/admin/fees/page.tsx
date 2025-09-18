@@ -146,8 +146,8 @@ export default function FeesPage() {
   };
 
 
-  const totalCollected = students.reduce((acc, s) => acc + s.feesPaid, 0);
-  const totalFees = students.reduce((acc, s) => acc + s.totalFees, 0);
+  const totalCollected = students.reduce((acc, s) => acc + (s.feesPaid || 0), 0);
+  const totalFees = students.reduce((acc, s) => acc + (s.totalFees || 0), 0);
   const totalRemaining = totalFees - totalCollected;
 
   const filteredStudents = students.filter(s =>
@@ -208,8 +208,8 @@ export default function FeesPage() {
                 </TableRow>
               ) : filteredStudents.map((student) => {
                 if (!student) return null; // Safety check
-                const remaining = student.totalFees - student.feesPaid;
-                const paidPercentage = student.totalFees > 0 ? (student.feesPaid / student.totalFees) * 100 : 0;
+                const remaining = (student.totalFees || 0) - (student.feesPaid || 0);
+                const paidPercentage = student.totalFees > 0 ? ((student.feesPaid || 0) / student.totalFees) * 100 : 0;
                 const isPaid = remaining <= 0;
 
                 return (
@@ -226,8 +226,8 @@ export default function FeesPage() {
                             </div>
                         </div>
                     </TableCell>
-                    <TableCell className="text-right">₹{student.totalFees.toLocaleString()}</TableCell>
-                    <TableCell className="text-right">₹{student.feesPaid.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">₹{(student.totalFees || 0).toLocaleString()}</TableCell>
+                    <TableCell className="text-right">₹{(student.feesPaid || 0).toLocaleString()}</TableCell>
                     <TableCell className={`text-right font-medium ${remaining > 0 ? 'text-destructive' : 'text-green-600'}`}>
                         ₹{remaining.toLocaleString()}
                     </TableCell>
