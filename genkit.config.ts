@@ -6,5 +6,4 @@ export default genkit({
   plugins: [
     googleAI(),
   ],
-  enableTracingAndMetrics: true,
 });
