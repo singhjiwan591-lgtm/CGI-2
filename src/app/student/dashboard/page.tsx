@@ -2,7 +2,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import React from 'react';
 import { notFound } from 'next/navigation';
 import { getStudentByEmail, Student } from '@/lib/student-data-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
