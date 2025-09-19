@@ -266,7 +266,7 @@ export default function Home() {
               <div key={job.id} className="group [perspective:1000px]">
                 <Card data-animate="stagger-item-3" className="overflow-hidden transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(-10deg)_scale(1.05)] group-hover:shadow-2xl bg-card flex flex-col h-full">
                   <div className="relative w-full h-48">
-                      <Image src={job.photoURL} alt={job.title} layout="fill" objectFit="cover" data-ai-hint="government building" />
+                      <Image src={job.photoURL} alt={job.title} fill={true} className="object-cover" data-ai-hint="government building" />
                   </div>
                   <div className="p-4 flex flex-col flex-grow">
                       <CardHeader className="p-0">
