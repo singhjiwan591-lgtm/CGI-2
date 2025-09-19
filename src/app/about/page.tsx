@@ -14,52 +14,52 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { usePageAnimations } from '@/hooks/usePageAnimations';
 
+const timeline = [
+  { year: 2010, event: 'Institute Founded', description: 'Global Computer Institute began with a mission to bridge the tech skills gap.' },
+  { year: 2015, event: 'First 1000 Graduates', description: 'We proudly celebrated our first thousand successful graduates entering the tech industry.' },
+  { year: 2019, event: 'New Advanced AI/ML Course', description: 'Launched our state-of-the-art curriculum in Artificial Intelligence and Machine Learning.' },
+  { year: 2023, event: 'Top Placement Award', description: 'Recognized for achieving the highest placement rate in the region.' },
+];
+
+const teamMembers = [
+  {
+    name: 'Mr. Jaswinder Singh',
+    position: 'Founder & Director',
+    image: 'https://i.ibb.co/MDVW5J4Z/js.jpg',
+    dataAiHint: 'institute owner',
+  },
+  {
+    name: 'Mr. Balvinder Singh',
+    position: 'Co-Founder & Director',
+    image: 'https://i.ibb.co/cK1V41kk/Compress-JPEG-Online-img-250x400.jpg',
+    dataAiHint: 'institute owner',
+  },
+  {
+    name: 'Jeevan Singh',
+    position: 'Web Developer',
+    image: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
+    dataAiHint: 'man developer',
+  },
+  {
+    name: 'Jeevan Singh',
+    position: 'Mobile Application Development',
+    image: 'https://i.ibb.co/Pv1xJFLX/Whats-App-Image-2025-06-29-at-1-03-58-PM.jpg',
+    dataAiHint: 'man developer',
+  },
+];
+
+const benefits = [
+  'Industry-Relevant Curriculum',
+  'Certified & Expert Instructors',
+  '100% Placement Assistance',
+  'Flexible Learning Schedules',
+  'Focus on Practical Skills',
+  'Modern Computer Labs',
+];
+
 export default function AboutPage() {
   const pageRef = useRef<HTMLDivElement>(null);
   usePageAnimations(pageRef);
-
-  const timeline = [
-    { year: 2010, event: 'Institute Founded', description: 'Global Computer Institute began with a mission to bridge the tech skills gap.' },
-    { year: 2015, event: 'First 1000 Graduates', description: 'We proudly celebrated our first thousand successful graduates entering the tech industry.' },
-    { year: 2019, event: 'New Advanced AI/ML Course', description: 'Launched our state-of-the-art curriculum in Artificial Intelligence and Machine Learning.' },
-    { year: 2023, event: 'Top Placement Award', description: 'Recognized for achieving the highest placement rate in the region.' },
-  ];
-
-  const teamMembers = [
-    {
-      name: 'Mr. Jaswinder Singh',
-      position: 'Founder & Director',
-      image: 'https://i.ibb.co/MDVW5J4Z/js.jpg',
-      dataAiHint: 'institute owner',
-    },
-    {
-      name: 'Mr. Balvinder Singh',
-      position: 'Co-Founder & Director',
-      image: 'https://i.ibb.co/cK1V41kk/Compress-JPEG-Online-img-250x400.jpg',
-      dataAiHint: 'institute owner',
-    },
-    {
-      name: 'Jeevan Singh',
-      position: 'Web Developer',
-      image: 'https://i.ibb.co/NnBnqdS/Jiwan.png',
-      dataAiHint: 'man developer',
-    },
-    {
-      name: 'Jeevan Singh',
-      position: 'Mobile Application Development',
-      image: 'https://i.ibb.co/Pv1xJFLX/Whats-App-Image-2025-06-29-at-1-03-58-PM.jpg',
-      dataAiHint: 'man developer',
-    },
-  ];
-
-  const benefits = [
-    'Industry-Relevant Curriculum',
-    'Certified & Expert Instructors',
-    '100% Placement Assistance',
-    'Flexible Learning Schedules',
-    'Focus on Practical Skills',
-    'Modern Computer Labs',
-  ];
 
   return (
     <div ref={pageRef} className="flex flex-col items-center">

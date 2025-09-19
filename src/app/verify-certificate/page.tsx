@@ -45,6 +45,7 @@ export default function VerifyCertificatePage() {
             setVerificationStatus('not_found');
         }
         setLoading(false);
+        setStudentId('');
     }, 500);
   };
 

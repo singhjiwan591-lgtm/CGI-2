@@ -20,92 +20,92 @@ import {
   Codepen,
 } from 'lucide-react';
 
+const courseCards = [
+  {
+    title: 'ADCA',
+    description: 'Advanced Diploma in Computer Applications',
+    icon: <FileText className="h-8 w-8" />,
+    imageUrl: 'https://i.ibb.co/C0W2VfT/1757947113101.png',
+    dataAiHint: 'advanced diploma computer',
+    color: 'from-blue-500 to-blue-700',
+  },
+  {
+    title: 'CCA',
+    description: 'Certificate in Computer Applications',
+    icon: <FileText className="h-8 w-8" />,
+    imageUrl: 'https://i.ibb.co/HfQqCY6P/IMG-20250803-WA0011.jpg',
+    dataAiHint: 'certificate computer',
+    color: 'from-fuchsia-500 to-fuchsia-700',
+  },
+  {
+    title: 'DCA',
+    description: 'Diploma in Computer Applications',
+    icon: <FileText className="h-8 w-8" />,
+    imageUrl: 'https://i.ibb.co/tPXj64KV/IMG-20250803-WA0007.jpg',
+    dataAiHint: 'computer diploma',
+    color: 'from-orange-500 to-orange-700',
+  },
+  {
+    title: 'DIFA',
+    description: 'Diploma in Financial Accounting',
+    icon: <Calculator className="h-8 w-8" />,
+    imageUrl: 'https://i.ibb.co/67kgqFp4/IMG-20250803-WA0009-1.jpg',
+    dataAiHint: 'financial accounting',
+    color: 'from-green-500 to-green-700',
+  },
+   {
+    title: 'Basic',
+    description: 'Fundamentals of computer operations.',
+    icon: <Book className="h-8 w-8" />,
+    imageUrl: 'https://i.ibb.co/6KM1WwR/1757604128659.png',
+    dataAiHint: 'computer basics',
+    color: 'from-sky-500 to-sky-700',
+  },
+  {
+    title: 'Accounts',
+    description: 'Learn financial accounting software.',
+    icon: <Calculator className="h-8 w-8" />,
+    imageUrl: 'https://i.ibb.co/ymSwrtxx/IMG-20250803-WA0005.jpg',
+    dataAiHint: 'accounting calculator',
+    color: 'from-red-500 to-red-700',
+  },
+   {
+    title: 'Typing (Eng/Pbi)',
+    description: 'Master English & Punjabi typing skills.',
+    icon: <Keyboard className="h-8 w-8" />,
+    imageUrl: 'https://i.ibb.co/3Yr8MjcT/touch-typing-keyboard.webp',
+    dataAiHint: 'typing keyboard',
+    color: 'from-yellow-500 to-yellow-700',
+  },
+   {
+    title: 'HTML',
+    description: 'Learn the language of the web.',
+    icon: <Codepen className="h-8 w-8" />,
+    imageUrl: 'https://i.ibb.co/rJp1PDZ/IMG-20250803-WA0004.jpg',
+    dataAiHint: 'html code',
+    color: 'from-indigo-500 to-indigo-700',
+  },
+    {
+    title: 'Internet',
+    description: 'Explore the world of the internet.',
+    icon: <Globe className="h-8 w-8" />,
+    imageUrl: 'https://i.ibb.co/LXfSf8xs/IMG-20250803-WA0006.jpg',
+    dataAiHint: 'internet globe',
+    color: 'from-pink-500 to-pink-700',
+  },
+  {
+    title: 'Hardware & Software',
+    description: 'Understand computer components.',
+    icon: <HardDrive className="h-8 w-8" />,
+    imageUrl: 'https://i.ibb.co/5hdDZj7D/IMG-20250803-WA0008.jpg',
+    dataAiHint: 'computer hardware',
+    color: 'from-teal-500 to-teal-700',
+  },
+];
+
 export default function AcademicsPage() {
   const pageRef = useRef<HTMLDivElement>(null);
   usePageAnimations(pageRef);
-
-  const courseCards = [
-    {
-      title: 'ADCA',
-      description: 'Advanced Diploma in Computer Applications',
-      icon: <FileText className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/C0W2VfT/1757947113101.png',
-      dataAiHint: 'advanced diploma computer',
-      color: 'from-blue-500 to-blue-700',
-    },
-    {
-      title: 'CCA',
-      description: 'Certificate in Computer Applications',
-      icon: <FileText className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/HfQqCY6P/IMG-20250803-WA0011.jpg',
-      dataAiHint: 'certificate computer',
-      color: 'from-fuchsia-500 to-fuchsia-700',
-    },
-    {
-      title: 'DCA',
-      description: 'Diploma in Computer Applications',
-      icon: <FileText className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/tPXj64KV/IMG-20250803-WA0007.jpg',
-      dataAiHint: 'computer diploma',
-      color: 'from-orange-500 to-orange-700',
-    },
-    {
-      title: 'DIFA',
-      description: 'Diploma in Financial Accounting',
-      icon: <Calculator className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/67kgqFp4/IMG-20250803-WA0009-1.jpg',
-      dataAiHint: 'financial accounting',
-      color: 'from-green-500 to-green-700',
-    },
-     {
-      title: 'Basic',
-      description: 'Fundamentals of computer operations.',
-      icon: <Book className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/6KM1WwR/1757604128659.png',
-      dataAiHint: 'computer basics',
-      color: 'from-sky-500 to-sky-700',
-    },
-    {
-      title: 'Accounts',
-      description: 'Learn financial accounting software.',
-      icon: <Calculator className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/ymSwrtxx/IMG-20250803-WA0005.jpg',
-      dataAiHint: 'accounting calculator',
-      color: 'from-red-500 to-red-700',
-    },
-     {
-      title: 'Typing (Eng/Pbi)',
-      description: 'Master English & Punjabi typing skills.',
-      icon: <Keyboard className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/3Yr8MjcT/touch-typing-keyboard.webp',
-      dataAiHint: 'typing keyboard',
-      color: 'from-yellow-500 to-yellow-700',
-    },
-     {
-      title: 'HTML',
-      description: 'Learn the language of the web.',
-      icon: <Codepen className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/rJp1PDZ/IMG-20250803-WA0004.jpg',
-      dataAiHint: 'html code',
-      color: 'from-indigo-500 to-indigo-700',
-    },
-      {
-      title: 'Internet',
-      description: 'Explore the world of the internet.',
-      icon: <Globe className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/LXfSf8xs/IMG-20250803-WA0006.jpg',
-      dataAiHint: 'internet globe',
-      color: 'from-pink-500 to-pink-700',
-    },
-    {
-      title: 'Hardware & Software',
-      description: 'Understand computer components.',
-      icon: <HardDrive className="h-8 w-8" />,
-      imageUrl: 'https://i.ibb.co/5hdDZj7D/IMG-20250803-WA0008.jpg',
-      dataAiHint: 'computer hardware',
-      color: 'from-teal-500 to-teal-700',
-    },
-  ];
 
   return (
     <div ref={pageRef} className="flex flex-col items-center">

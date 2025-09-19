@@ -68,7 +68,7 @@ export default function AdmissionsPage() {
             <div className="absolute left-1/2 top-4 hidden h-[calc(100%-2rem)] w-0.5 -translate-x-1/2 bg-border md:block"></div>
             <div className="space-y-10">
               {admissionSteps.map((item, index) => (
-                <div key={index} data-animate="timeline-item" className="relative flex flex-col items-center gap-6 md:flex-row md:items-stretch md:justify-center">
+                <div key={item.step} data-animate="timeline-item" className="relative flex flex-col items-center gap-6 md:flex-row md:items-stretch md:justify-center">
                   <div className={`z-10 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xl flex-shrink-0`}>
                     {item.step}
                   </div>

@@ -29,7 +29,7 @@ export default function MessagesPage() {
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [loading, setLoading] = useState(false);
 
-  const handleMarkAsRead = async (id: string) => {
+  const handleMarkAsRead = (id: string) => {
     setMessages(messages.map(msg => msg.id === id ? { ...msg, read: true } : msg));
   };
 
