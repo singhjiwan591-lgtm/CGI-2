@@ -1,2 +1,10 @@
-
-{}
+{
+  "hosting": {
+    "public": "https://github.com/iqra838/Public-.git",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
