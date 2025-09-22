@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import React from 'react';
-import { Menu, Sun, Moon } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import Image from 'next/image';
+import { ThemeToggle3D } from './theme-toggle-3d';
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -158,7 +159,8 @@ export function SiteHeader() {
             <nav className="hidden items-center gap-6 text-sm md:flex">
                 <NavLinksContent />
             </nav>
-            <div className="hidden md:flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-4">
+              <ThemeToggle3D />
               <AuthButton />
             </div>
 
@@ -171,11 +173,11 @@ export function SiteHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left">
-                <SheetHeader className="border-b pb-4">
-                  <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
+                <SheetHeader className="border-b pb-4 flex flex-row justify-between items-center">
                   <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
                     <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Global Computer Institute Logo" width={40} height={40} style={{ height: 'auto' }}/>
                   </Link>
+                   <ThemeToggle3D />
                 </SheetHeader>
               <div className="flex flex-col h-full">
                 <nav className="flex flex-col gap-4 py-4 text-lg">
