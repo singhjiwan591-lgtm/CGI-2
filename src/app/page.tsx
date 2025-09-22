@@ -180,7 +180,7 @@ export default function Home() {
                 height={600}
                 data-ai-hint="institute students teachers"
                 style={{ height: 'auto', width: '100%' }}
-                className="rounded-lg shadow-xl"
+                className="rounded-lg shadow-xl transition-transform duration-500 group-hover:[transform:rotateY(10deg)_rotateX(-5deg)_scale(1.05)]"
               />
             </div>
           </div>
@@ -213,7 +213,7 @@ export default function Home() {
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 md:gap-8">
             {courseCategories.map((course) => (
               <div key={course.title} className="group [perspective:1000px]">
-                <Card className="text-center bg-card h-full flex flex-col">
+                <Card className="text-center bg-card h-full flex flex-col transition-transform duration-500 group-hover:[transform:rotateY(10deg)_scale(1.05)]">
                   <CardHeader>
                     <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
                       {course.icon}
@@ -250,7 +250,7 @@ export default function Home() {
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 md:gap-8">
             {latestJobs.length > 0 ? latestJobs.map((job) => (
               <div key={job.id} className="group [perspective:1000px]">
-                <Card className="overflow-hidden bg-card flex flex-col h-full">
+                <Card className="overflow-hidden bg-card flex flex-col h-full transition-transform duration-500 group-hover:[transform:rotateY(10deg)_scale(1.05)]">
                   <div className="relative w-full h-48">
                       <Image src={job.photoURL} alt={job.title} fill={true} className="object-cover" data-ai-hint="government building" />
                   </div>
@@ -291,7 +291,7 @@ export default function Home() {
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {features.map((feature) => (
               <div key={feature.title} className="group [perspective:1000px]">
-                <Card className="text-center bg-card p-4 h-full">
+                <Card className="text-center bg-card p-4 h-full transition-transform duration-500 group-hover:[transform:rotateY(10deg)_scale(1.05)]">
                   <CardHeader>
                     <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
                       {feature.icon}
@@ -328,7 +328,7 @@ export default function Home() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index} className="group [perspective:1000px]">
                   <div className="p-1">
-                    <Card className="bg-background">
+                    <Card className="bg-background transition-transform duration-500 group-hover:[transform:rotateY(10deg)_scale(1.05)]">
                       <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                         <p className="text-base italic text-foreground/90 md:text-lg">
                           "{testimonial.quote}"

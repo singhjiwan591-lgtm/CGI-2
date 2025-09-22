@@ -122,7 +122,7 @@ export default function AcademicsPage() {
             {courseCards.map((card) => (
               <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block group [perspective:1000px]">
                 <Card 
-                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
+                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square transition-transform duration-500 group-hover:[transform:rotateY(10deg)_scale(1.05)]`}
                 >
                   {card.imageUrl ? (
                     <>

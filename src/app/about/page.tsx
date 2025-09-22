@@ -86,7 +86,7 @@ export default function AboutPage() {
                 width={800}
                 height={600}
                 data-ai-hint="modern computer lab"
-                className="rounded-lg shadow-xl"
+                className="rounded-lg shadow-xl transition-transform duration-500 group-hover:[transform:rotateY(10deg)_rotateX(-5deg)_scale(1.05)]"
               />
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function AboutPage() {
                   <CheckCircle2 className="h-5 w-5" />
                 </div>
                 <div className="w-full pl-12 md:w-5/12 md:pl-0">
-                  <Card className="p-4 md:p-6">
+                  <Card className="p-4 md:p-6 transition-transform duration-500 group-hover:[transform:rotateY(10deg)_scale(1.05)]">
                     <p className={`font-bold text-primary text-sm md:text-base`}>{item.year}</p>
                     <h3 className="font-headline text-lg font-bold mt-1 md:text-xl">{item.event}</h3>
                     <p className="mt-2 text-foreground/70 text-sm md:text-base">{item.description}</p>
@@ -123,7 +123,7 @@ export default function AboutPage() {
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 md:gap-8">
             {teamMembers.map((member, index) => (
               <div key={`${member.name}-${index}`} className="group [perspective:1000px]">
-                <Card className="text-center">
+                <Card className="text-center transition-transform duration-500 group-hover:[transform:rotateY(10deg)_scale(1.05)]">
                   <CardContent className="p-4 md:p-6">
                     <Avatar className="w-24 h-24 md:w-32 md:h-32 mx-auto ring-2 ring-primary/20 p-1">
                       <AvatarImage src={member.image} alt={`Photo of ${member.name}`} data-ai-hint={member.dataAiHint} />
