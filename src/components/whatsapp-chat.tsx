@@ -37,11 +37,11 @@ export function WhatsAppChat() {
   const getWhatsAppUrl = (message: string) => `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 left-6 z-50">
         {/* Inquiry Bubbles */}
         <div 
             className={cn(
-                "flex flex-col items-end space-y-2 mb-2 transition-all duration-300 ease-in-out",
+                "flex flex-col items-start space-y-2 mb-2 transition-all duration-300 ease-in-out",
                 isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
             )}
         >
