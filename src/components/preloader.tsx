@@ -15,7 +15,7 @@ export function Preloader() {
         preloaderRef.current.style.opacity = '0';
         preloaderRef.current.addEventListener('transitionend', () => setIsVisible(false));
       }
-    }, 500); // Reduced preloader time
+    }, 0); // Reduced preloader time to 0
 
     return () => clearTimeout(timer);
   }, []);
