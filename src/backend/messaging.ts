@@ -4,7 +4,7 @@
  * @fileoverview A simple messaging flow to send emails.
  */
 
-import {ai} from '@/backend/genkit';
+import {ai} from './genkit';
 import {z} from 'zod';
 
 const MessageInputSchema = z.object({

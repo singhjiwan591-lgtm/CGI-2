@@ -183,7 +183,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
             address: values.village,
         },
         theme: {
-            color: "#3B82F6",
+            color: "#fe2c55",
         },
         modal: {
             ondismiss: function() {
@@ -196,6 +196,16 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
             }
         }
     };
+
+    if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+        toast({
+            variant: "destructive",
+            title: "Configuration Error",
+            description: "Razorpay is not configured. Please contact support.",
+        });
+        setLoading(false);
+        return;
+    }
 
     const rzp1 = new window.Razorpay(options);
     rzp1.open();
@@ -446,5 +456,3 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     </>
   );
 }
-
-    
