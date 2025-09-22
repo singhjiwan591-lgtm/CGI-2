@@ -9,6 +9,8 @@ import Script from 'next/script';
 import { cn } from '@/lib/utils';
 import { Inter, Lora } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
+import { DiscountPopup } from '@/components/discount-popup';
+import { CongratulationsConfetti } from '@/components/congratulations-confetti';
 
 const fontBody = Inter({
   subsets: ['latin'],
@@ -115,12 +117,14 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Preloader />
+            <CongratulationsConfetti />
             <div className="relative flex flex-col items-center flex-1 w-full">
               <SiteHeader />
               <main className="flex-1 w-full">{children}</main>
               <SiteFooter />
             </div>
             <Toaster />
+            <DiscountPopup />
           </ThemeProvider>
 
         <Script
@@ -135,3 +139,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+    

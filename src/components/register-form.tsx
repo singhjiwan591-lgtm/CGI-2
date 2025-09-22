@@ -127,16 +127,28 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
         if (!newStudent) {
             throw new Error('Could not save student data.');
         }
+
+        if (typeof window !== 'undefined') {
+            sessionStorage.removeItem('hasBeenWelcomed'); // Allow confetti on re-login
+            sessionStorage.setItem('studentUser', JSON.stringify({ 
+                email: newStudent.email, 
+                name: newStudent.name, 
+                photoURL: newStudent.photoURL,
+                avatarHint: newStudent.avatarHint,
+                schoolId: formData.schoolId,
+            }));
+            sessionStorage.removeItem('user');
+        }
         
         toast({
             title: 'Registration Successful!',
-            description: `Payment ID: ${paymentId}. You will be redirected to login.`,
+            description: `Payment ID: ${paymentId}. You will be redirected to your new dashboard.`,
         });
 
         form.reset();
         setPhotoDataUrl(null);
 
-        setTimeout(() => router.push('/login'), 2000);
+        setTimeout(() => router.push('/student/dashboard'), 2000);
 
     } catch (error) {
          toast({
@@ -434,3 +446,5 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     </>
   );
 }
+
+    
