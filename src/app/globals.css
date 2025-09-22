@@ -5,19 +5,19 @@
 @layer base {
   :root {
     --background: 0 0% 100%; /* #FFFFFF - White */
-    --foreground: 215 28% 17%; /* #293241 - Dark Slate Gray */
+    --foreground: 222.2 84% 4.9%; /* #020817 - Very Dark Slate */
     
-    --card: 210 40% 98%; /* #F8FAFC - Almost White */
-    --card-foreground: 215 28% 17%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 215 28% 17%;
+    --popover-foreground: 222.2 84% 4.9%;
 
     --primary: 160 84% 39%;      /* #10B981 (Emerald Green) */
     --primary-foreground: 0 0% 100%; /* White text on primary */
 
     --secondary: 210 40% 96.1%; /* #F1F5F9 - Light Gray */
-    --secondary-foreground: 215 28% 17%;
+    --secondary-foreground: 222.2 84% 4.9%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215 20% 65.1%; /* #94A3B8 - Lighter Slate Gray */
@@ -46,7 +46,7 @@
     --background: 222.2 84% 4.9%; /* #020817 - Very Dark Slate */
     --foreground: 210 40% 98%; /* #F8FAFC - Almost White */
 
-    --card: 215 28% 17%; /* #0F172A - Dark Slate Gray */
+    --card: 215 28% 11%; /* #111827 - Darker Slate Gray */
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
