@@ -12,7 +12,7 @@ export default function ContactPage() {
   const contactDetails = [
     { icon: <MapPin className="h-6 w-6 text-primary" />, text: 'Main Road, Near Bus Stand, Jalalabad (West), Punjab' },
     { icon: <Mail className="h-6 w-6 text-primary" />, text: 'admissions@webandapp.edu' },
-    { icon: <Phone className="h-6 w-6 text-primary" />, text: '(123) 555-2024' },
+    { icon: <Phone className="h-6 w-6 text-primary" />, text: '+91 85669 50470' },
   ];
 
   return (
@@ -78,3 +78,5 @@ export default function ContactPage() {
     </div>
   );
 }
+
+    

@@ -119,7 +119,7 @@ export default function Home() {
   ];
 
   const handleWhatsAppInquiry = (jobTitle: string) => {
-    const adminPhoneNumber = '918566950470'; // Replaced with the new number
+    const adminPhoneNumber = '918566950470';
     const message = encodeURIComponent(`Hello, I am interested in the job: ${jobTitle}`);
     const whatsappUrl = `https://wa.me/${adminPhoneNumber}?text=${message}`;
     window.open(whatsappUrl, '_blank');
@@ -365,3 +365,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
