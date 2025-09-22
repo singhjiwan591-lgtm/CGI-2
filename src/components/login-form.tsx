@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { getStudentByEmail } from '@/lib/student-data-service';
+import React from 'react';
 
 import { Button } from '@/components/ui/button';
 import {

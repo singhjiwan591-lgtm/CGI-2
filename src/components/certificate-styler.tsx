@@ -1,6 +1,8 @@
 
 'use client';
 
+import React from 'react';
+
 // This component uses styled-jsx, which is a client-only feature.
 // It is imported into the server component `certificate/[studentId]/page.tsx`
 // to handle client-side styling without making the whole page a client component.

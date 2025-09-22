@@ -9,6 +9,7 @@ import { CertificateStyler } from '@/components/certificate-styler';
 import { getStudentByRoll, Student } from '@/lib/student-data-service';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
+import React from 'react';
 
 export default function CertificatePage() {
   const params = useParams();

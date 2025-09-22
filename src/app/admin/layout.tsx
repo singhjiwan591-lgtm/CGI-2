@@ -27,13 +27,11 @@ import {
   Bed,
   Megaphone,
   Mail,
-  Component,
-  Map,
+  Building2,
   Settings,
   ChevronDown,
   LogOut,
   Replace,
-  Building2
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import React from 'react';

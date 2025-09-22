@@ -3,7 +3,6 @@
 
 import { useState, useEffect } from 'react';
 import Confetti from 'react-dom-confetti';
-import { useWindowSize } from '@/hooks/useWindowSize';
 import React from 'react';
 
 const confettiConfig = {
@@ -20,27 +19,39 @@ const confettiConfig = {
   colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"]
 };
 
-function ConfettiWrapper() {
+// This component ensures it's only rendered on the client
+export function CongratulationsConfetti() {
+  const [isClient, setIsClient] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  
+
   useEffect(() => {
-    const hasBeenWelcomed = sessionStorage.getItem('hasBeenWelcomed');
-
-    if (!hasBeenWelcomed) {
-      const welcomeTimer = setTimeout(() => {
-        setShowConfetti(true);
-        sessionStorage.setItem('hasBeenWelcomed', 'true');
-
-        const confettiTimer = setTimeout(() => {
-          setShowConfetti(false);
-        }, 3000); 
-
-        return () => clearTimeout(confettiTimer);
-      }, 500);
-
-      return () => clearTimeout(welcomeTimer);
-    }
+    setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    if (isClient) {
+        const hasBeenWelcomed = sessionStorage.getItem('hasBeenWelcomed');
+
+        if (!hasBeenWelcomed) {
+            const welcomeTimer = setTimeout(() => {
+            setShowConfetti(true);
+            sessionStorage.setItem('hasBeenWelcomed', 'true');
+
+            const confettiTimer = setTimeout(() => {
+                setShowConfetti(false);
+            }, 3000); 
+
+            return () => clearTimeout(confettiTimer);
+            }, 500);
+
+            return () => clearTimeout(welcomeTimer);
+        }
+    }
+  }, [isClient]);
+
+  if (!isClient) {
+      return null;
+  }
 
   return (
     <div className="fixed inset-0 z-[200] pointer-events-none flex items-center justify-center">
@@ -57,15 +68,4 @@ function ConfettiWrapper() {
        )}
     </div>
   );
-}
-
-// A new component that ensures it's only rendered on the client
-export function CongratulationsConfetti() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  return isClient ? <ConfettiWrapper /> : null;
 }

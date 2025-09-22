@@ -21,6 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { processContactRequest } from '@/backend/contact';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -45,9 +46,7 @@ export function ContactForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      // Simulate backend processing
-      console.log('New contact form submission:', values);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await processContactRequest(values);
 
       toast({
         title: 'Message Sent!',

@@ -44,6 +44,7 @@ const messageFlow = ai.defineFlow(
     name: 'messageFlow',
     inputSchema: MessageInputSchema,
     outputSchema: z.void(),
+    tools: [sendEmailTool]
   },
   async (input) => {
     await sendEmailTool({

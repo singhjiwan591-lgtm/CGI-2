@@ -43,14 +43,18 @@ export function SiteHeader() {
     setIsMounted(true);
     checkUserStatus();
 
-    // Listen for storage changes to update header in real-time
     const handleStorageChange = () => {
       checkUserStatus();
     };
+    
     window.addEventListener('storage', handleStorageChange);
+    // This custom event is needed because the 'storage' event only fires for other tabs.
+    window.addEventListener('session-storage-change', handleStorageChange);
+
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('session-storage-change', handleStorageChange);
     };
 
   }, []);
@@ -64,7 +68,7 @@ export function SiteHeader() {
     if (typeof window !== 'undefined') {
       sessionStorage.removeItem('user');
       // Dispatch a custom event to notify other components (like this header) immediately
-      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new Event('session-storage-change'));
     }
     router.push('/login');
   };
@@ -135,7 +139,6 @@ export function SiteHeader() {
         <div className="container flex h-16 items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Global Computer Institute Logo" width={40} height={40} style={{ height: 'auto' }} />
-            
           </Link>
           <div className="flex flex-1 items-center justify-end">
              {/* Render a placeholder or nothing on the server for the dynamic parts */}
@@ -150,7 +153,6 @@ export function SiteHeader() {
       <div className="container flex h-16 items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Global Computer Institute Logo" width={40} height={40} style={{ height: 'auto' }} />
-          
         </Link>
         <div className="flex flex-1 items-center justify-end gap-2">
             {/* Desktop Navigation */}
@@ -175,7 +177,6 @@ export function SiteHeader() {
                   <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                   <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
                     <Image src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png" alt="Global Computer Institute Logo" width={40} height={40} style={{ height: 'auto' }}/>
-                    
                   </Link>
                 </SheetHeader>
               <div className="flex flex-col h-full">
