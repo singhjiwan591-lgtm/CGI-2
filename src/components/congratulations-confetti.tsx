@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Confetti from 'react-dom-confetti';
+import { useWindowSize } from '@/hooks/useWindowSize';
 
 const confettiConfig = {
   angle: 90,
@@ -18,22 +19,27 @@ const confettiConfig = {
   colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"]
 };
 
-
-export function CongratulationsConfetti() {
+function ConfettiWrapper() {
   const [showConfetti, setShowConfetti] = useState(false);
+  const { width, height } = useWindowSize();
 
   useEffect(() => {
     const hasBeenWelcomed = sessionStorage.getItem('hasBeenWelcomed');
 
     if (!hasBeenWelcomed) {
-      setShowConfetti(true);
-      sessionStorage.setItem('hasBeenWelcomed', 'true');
+      // Use a timeout to ensure the component has mounted and can read session storage
+      const welcomeTimer = setTimeout(() => {
+        setShowConfetti(true);
+        sessionStorage.setItem('hasBeenWelcomed', 'true');
 
-      const timer = setTimeout(() => {
-        setShowConfetti(false);
-      }, 3000); 
+        const confettiTimer = setTimeout(() => {
+          setShowConfetti(false);
+        }, 3000); 
 
-      return () => clearTimeout(timer);
+        return () => clearTimeout(confettiTimer);
+      }, 500);
+
+      return () => clearTimeout(welcomeTimer);
     }
   }, []);
 
@@ -52,4 +58,15 @@ export function CongratulationsConfetti() {
        )}
     </div>
   );
+}
+
+// A new component that ensures it's only rendered on the client
+export function CongratulationsConfetti() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  return isClient ? <ConfettiWrapper /> : null;
 }

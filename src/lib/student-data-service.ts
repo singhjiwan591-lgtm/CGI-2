@@ -146,7 +146,7 @@ export function updateStudentData(studentId: string, schoolId: string, dataToUpd
 
         if (dataToUpdate.fees) {
              students[studentIndex].fees = { 
-                 ...(existingFees || {}), 
+                 ...(existingFees || {} as StudentFee), 
                  ...dataToUpdate.fees, 
                  id: studentId, 
                  name: students[studentIndex].name, 
@@ -259,5 +259,5 @@ export function getAllStudentsWithFees(schoolId: string): StudentFee[] {
         updateStudentData(s.id, schoolId, { fees: newFees });
         return newFees;
 
-    }).filter(Boolean) as StudentFee[];
+    }).filter((fee): fee is StudentFee => !!fee);
 }

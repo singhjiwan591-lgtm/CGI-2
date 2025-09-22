@@ -11,7 +11,6 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
 import { Tag, Clock } from 'lucide-react';
 import Link from 'next/link';
 
