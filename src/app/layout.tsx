@@ -11,6 +11,7 @@ import { Inter, Lora } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { DiscountPopup } from '@/components/discount-popup';
 import { CongratulationsConfetti } from '@/components/congratulations-confetti';
+import { WhatsAppChat } from '@/components/whatsapp-chat';
 
 const fontBody = Inter({
   subsets: ['latin'],
@@ -125,6 +126,7 @@ export default function RootLayout({
             </div>
             <Toaster />
             <DiscountPopup />
+            <WhatsAppChat />
           </ThemeProvider>
 
         <Script
