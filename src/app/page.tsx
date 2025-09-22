@@ -326,7 +326,7 @@ export default function Home() {
           >
             <CarouselContent>
               {testimonials.map((testimonial, index) => (
-                <CarouselItem key={index} className="group">
+                <CarouselItem key={`${testimonial.name}-${index}`} className="group">
                   <div className="p-1">
                     <Card className="bg-background transition-transform duration-300 group-hover:scale-105 group-hover:shadow-lg">
                       <CardContent className="flex flex-col items-center justify-center p-6 text-center">

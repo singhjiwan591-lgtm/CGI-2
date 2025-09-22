@@ -98,8 +98,8 @@ export default function AboutPage() {
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Our Journey</h2>
           <div className="relative mt-10">
             <div className="absolute left-1/2 top-0 hidden h-full w-0.5 -translate-x-1/2 bg-border md:block"></div>
-            {timeline.map((item, index) => (
-              <div key={index} className="relative mb-8 flex w-full items-center md:justify-between md:odd:flex-row-reverse group">
+            {timeline.map((item) => (
+              <div key={item.year} className="relative mb-8 flex w-full items-center md:justify-between md:odd:flex-row-reverse group">
                 <div className="hidden md:block md:w-5/12"></div>
                 <div className="absolute left-0 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground md:left-1/2 md:-translate-x-1/2">
                   <CheckCircle2 className="h-5 w-5" />
