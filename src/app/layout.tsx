@@ -128,7 +128,7 @@ export default function RootLayout({
           </ThemeProvider>
 
         <Script
-          src="https://www.google.com/recaptcha/enterprise.js?render=6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7"
+          src={`https://www.google.com/recaptcha/enterprise.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
           strategy="lazyOnload"
         />
         <Script 
@@ -139,5 +139,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-    
