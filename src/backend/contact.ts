@@ -49,7 +49,7 @@ const contactFlow = ai.defineFlow(
     inputSchema: ContactFormInputSchema,
     outputSchema: z.void(),
   },
-  async (input) => {
+  async (input: ContactFormInput) => {
     // 1. Log the message to the console (since Firestore is removed)
     console.log('--- NEW CONTACT MESSAGE ---');
     console.log(`From: ${input.name} (${input.email})`);
