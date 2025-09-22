@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import React from 'react';
-import { Menu } from 'lucide-react';
+import { Menu, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -19,7 +19,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import Image from 'next/image';
-import { ThemeToggle } from './theme-toggle';
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -161,7 +160,6 @@ export function SiteHeader() {
             </nav>
             <div className="hidden md:flex items-center gap-2">
               <AuthButton />
-              <ThemeToggle />
             </div>
 
             {/* Mobile Navigation */}

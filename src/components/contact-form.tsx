@@ -65,7 +65,7 @@ export function ContactForm() {
   }
 
   return (
-    <Card className="transform transition-transform duration-300 hover:scale-[1.03] hover:shadow-2xl">
+    <Card>
       <CardHeader>
         <CardTitle className="font-headline text-2xl">Send us a message</CardTitle>
         <CardDescription>Fill out the form below and we'll be in touch.</CardDescription>

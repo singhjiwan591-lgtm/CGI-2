@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -31,8 +31,6 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { usePageAnimations } from '@/hooks/usePageAnimations';
-import { gsap } from 'gsap';
 import { ScrollingText } from '@/components/scrolling-text';
 import { getJobs, Job } from '@/lib/job-data-service';
 
@@ -40,19 +38,10 @@ export default function Home() {
   const pageRef = useRef<HTMLDivElement>(null);
   const bgLogoRef = useRef<HTMLImageElement>(null);
   const [latestJobs, setLatestJobs] = useState<Job[]>([]);
-  usePageAnimations(pageRef);
 
   useEffect(() => {
-    if (bgLogoRef.current) {
-      gsap.fromTo(bgLogoRef.current, 
-        { scale: 0, opacity: 0 }, 
-        { scale: 1, opacity: 0.05, duration: 1.5, ease: 'power3.out' }
-      );
-    }
-
     const jobs = getJobs();
     setLatestJobs(jobs.slice(0, 4)); // Get latest 4 jobs
-
   }, []);
 
   const features = [
@@ -138,19 +127,19 @@ export default function Home() {
   
   return (
     <div ref={pageRef} className="flex flex-col items-center">
-       <section data-animate="fade-in" className="relative w-full py-20 md:py-32 overflow-hidden bg-secondary">
+       <section className="relative w-full py-20 md:py-32 overflow-hidden bg-secondary">
          <div className="container mx-auto px-4 text-center relative z-10">
             <ScrollingText />
             <p className="mx-auto mt-6 max-w-3xl text-lg text-foreground/80 md:text-xl">
               Your gateway to a successful career in technology. We provide expert-led training in the most in-demand skills to shape your future.
             </p>
              <div className="mt-8 flex justify-center gap-4">
-               <Button asChild size="lg" className="transform transition-transform hover:scale-105">
+               <Button asChild size="lg">
                   <Link href="/academics">
                     Explore Courses <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                 <Button asChild size="lg" variant="outline" className="transform transition-transform hover:scale-105">
+                 <Button asChild size="lg" variant="outline">
                   <Link href="/contact">
                     Contact Us
                   </Link>
@@ -172,7 +161,7 @@ export default function Home() {
           </div>
       </section>
 
-      <section id="introduction" data-animate="fade-in-up" className="w-full py-12 md:py-24">
+      <section id="introduction" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
             <div className="order-2 md:order-1">
@@ -191,18 +180,18 @@ export default function Home() {
                 height={600}
                 data-ai-hint="institute students teachers"
                 style={{ height: 'auto', width: '100%' }}
-                className="rounded-lg shadow-xl transition-transform duration-500 group-hover:[transform:rotateY(-10deg)_scale(1.05)]"
+                className="rounded-lg shadow-xl"
               />
             </div>
           </div>
         </div>
       </section>
 
-      <section id="stats" data-animate="fade-in-up" className="w-full py-12 md:py-20 bg-secondary">
+      <section id="stats" className="w-full py-12 md:py-20 bg-secondary">
           <div className="container mx-auto px-4">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                   {stats.map((stat, index) => (
-                      <div key={index} data-animate="stagger-item">
+                      <div key={index}>
                           <p className="text-4xl md:text-5xl font-bold text-primary [text-shadow:2px_2px_4px_hsl(var(--primary)/0.3)]">{stat.value}</p>
                           <p className="mt-2 text-base md:text-lg text-muted-foreground">{stat.label}</p>
                       </div>
@@ -211,7 +200,7 @@ export default function Home() {
           </div>
       </section>
 
-       <section id="courses-overview" data-animate="fade-in-up" className="w-full py-12 md:py-24">
+       <section id="courses-overview" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -224,7 +213,7 @@ export default function Home() {
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 md:gap-8">
             {courseCategories.map((course) => (
               <div key={course.title} className="group [perspective:1000px]">
-                <Card data-animate="stagger-item" className="text-center transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(15deg)_scale(1.05)] group-hover:shadow-2xl bg-card h-full flex flex-col">
+                <Card className="text-center bg-card h-full flex flex-col">
                   <CardHeader>
                     <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
                       {course.icon}
@@ -248,7 +237,7 @@ export default function Home() {
         </div>
       </section>
 
-       <section id="govt-jobs" data-animate="fade-in-up" className="w-full py-12 md:py-24 bg-secondary">
+       <section id="govt-jobs" className="w-full py-12 md:py-24 bg-secondary">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -261,7 +250,7 @@ export default function Home() {
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 md:gap-8">
             {latestJobs.length > 0 ? latestJobs.map((job) => (
               <div key={job.id} className="group [perspective:1000px]">
-                <Card data-animate="stagger-item-3" className="overflow-hidden transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(-10deg)_scale(1.05)] group-hover:shadow-2xl bg-card flex flex-col h-full">
+                <Card className="overflow-hidden bg-card flex flex-col h-full">
                   <div className="relative w-full h-48">
                       <Image src={job.photoURL} alt={job.title} fill={true} className="object-cover" data-ai-hint="government building" />
                   </div>
@@ -289,7 +278,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" data-animate="fade-in-up" className="w-full py-12 md:py-24">
+      <section id="features" className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -302,7 +291,7 @@ export default function Home() {
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {features.map((feature) => (
               <div key={feature.title} className="group [perspective:1000px]">
-                <Card data-animate="stagger-item-2" className="text-center transition-transform duration-500 transform-style-3d group-hover:[transform:translateZ(20px)_rotateX(10deg)] group-hover:shadow-2xl bg-card p-4 h-full">
+                <Card className="text-center bg-card p-4 h-full">
                   <CardHeader>
                     <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10`}>
                       {feature.icon}
@@ -321,7 +310,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="testimonials" data-animate="fade-in-up" className="w-full py-12 md:py-24 bg-secondary">
+      <section id="testimonials" className="w-full py-12 md:py-24 bg-secondary">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="font-headline text-2xl font-bold md:text-4xl">
@@ -339,7 +328,7 @@ export default function Home() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index} className="group [perspective:1000px]">
                   <div className="p-1">
-                    <Card className="transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(10deg)_scale(1.03)] bg-background">
+                    <Card className="bg-background">
                       <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                         <p className="text-base italic text-foreground/90 md:text-lg">
                           "{testimonial.quote}"

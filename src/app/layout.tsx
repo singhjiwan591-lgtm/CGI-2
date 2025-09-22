@@ -7,8 +7,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { Preloader } from '@/components/preloader';
 import Script from 'next/script';
 import { cn } from '@/lib/utils';
-import { ThemeProvider } from '@/components/theme-provider';
-import { CongratulationsConfetti } from '@/components/congratulations-confetti';
 import { Inter, Lora } from 'next/font/google';
 
 const fontBody = Inter({
@@ -109,21 +107,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning={true} className={cn("font-body bg-background text-foreground antialiased min-h-screen flex flex-col", fontBody.variable, fontHeadline.variable)}>
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-        >
           <Preloader />
-          <CongratulationsConfetti />
           <div className="relative flex flex-col items-center flex-1 w-full">
             <SiteHeader />
             <main className="flex-1 w-full">{children}</main>
             <SiteFooter />
           </div>
           <Toaster />
-        </ThemeProvider>
 
         <Script
           src="https://www.google.com/recaptcha/enterprise.js?render=6LdH2ZorAAAAADhFlqcZdaxkjJiMB6TAkFmS0Su7"

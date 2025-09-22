@@ -1,9 +1,8 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Confetti from 'react-dom-confetti';
-import React from 'react';
 
 const confettiConfig = {
   angle: 90,
@@ -57,7 +56,7 @@ export function CongratulationsConfetti() {
     <div className="fixed inset-0 z-[200] pointer-events-none flex items-center justify-center">
        <Confetti active={showConfetti} config={confettiConfig} />
        {showConfetti && (
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-auto animate-in fade-in-0 duration-500">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-auto">
              <p className="text-4xl md:text-6xl font-bold font-headline text-primary [text-shadow:3px_3px_6px_rgba(0,0,0,0.3)]">
                 Congratulations!
             </p>

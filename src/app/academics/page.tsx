@@ -1,10 +1,9 @@
 
 'use client';
 
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePageAnimations } from '@/hooks/usePageAnimations';
 import {
   Card,
   CardDescription,
@@ -105,11 +104,10 @@ const courseCards = [
 
 export default function AcademicsPage() {
   const pageRef = useRef<HTMLDivElement>(null);
-  usePageAnimations(pageRef);
 
   return (
     <div ref={pageRef} className="flex flex-col items-center">
-      <section data-animate="fade-in" className="w-full bg-secondary py-16 md:py-24">
+      <section className="w-full bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">Our Courses</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base md:text-lg text-foreground/80">
@@ -118,22 +116,21 @@ export default function AcademicsPage() {
         </div>
       </section>
 
-      <section id="courses" data-animate="fade-in-up" className="w-full py-12 md:py-20">
+      <section id="courses" className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4">
            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {courseCards.map((card) => (
               <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block group [perspective:1000px]">
                 <Card 
-                  data-animate="stagger-item"
-                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(-10deg)_scale(1.05)] group-hover:shadow-2xl hover:shadow-primary/30 flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
+                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square`}
                 >
                   {card.imageUrl ? (
                     <>
-                      <Image src={card.imageUrl} alt={card.title} fill sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw" className="z-0 transition-transform duration-300 group-hover:scale-110 object-cover" data-ai-hint={card.dataAiHint} />
+                      <Image src={card.imageUrl} alt={card.title} fill sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw" className="z-0 object-cover" data-ai-hint={card.dataAiHint} />
                       <div className="absolute inset-0 bg-black/50 z-10"></div>
                     </>
                   ) : null}
-                  <div className="z-20 flex flex-col items-center justify-center transform-style-3d group-hover:[transform:translateZ(40px)] transition-transform duration-500">
+                  <div className="z-20 flex flex-col items-center justify-center">
                     <div className="mb-3">{card.icon}</div>
                     <CardTitle className="text-base md:text-lg font-bold">{card.title}</CardTitle>
                     <CardDescription className="text-white/80 text-xs hidden sm:block mt-1">{card.description}</CardDescription>

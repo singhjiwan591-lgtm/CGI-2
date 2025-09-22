@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CheckCircle2, Facebook, Linkedin, Twitter } from 'lucide-react';
@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { usePageAnimations } from '@/hooks/usePageAnimations';
 
 const timeline = [
   { year: 2010, event: 'Institute Founded', description: 'Global Computer Institute began with a mission to bridge the tech skills gap.' },
@@ -59,11 +58,10 @@ const benefits = [
 
 export default function AboutPage() {
   const pageRef = useRef<HTMLDivElement>(null);
-  usePageAnimations(pageRef);
 
   return (
     <div ref={pageRef} className="flex flex-col items-center">
-      <section data-animate="fade-in" className="w-full bg-secondary py-16 md:py-24">
+      <section className="w-full bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl [text-shadow:2px_2px_4px_rgba(0,0,0,0.1)] dark:[text-shadow:2px_2px_6px_rgba(0,0,0,0.4)]">About Global Computer Institute</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base text-foreground/80 md:text-lg">
@@ -72,7 +70,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section data-animate="fade-in-up" className="w-full py-12 md:py-20">
+      <section className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
             <div className="order-2 md:order-1">
@@ -88,26 +86,26 @@ export default function AboutPage() {
                 width={800}
                 height={600}
                 data-ai-hint="modern computer lab"
-                className="rounded-lg shadow-xl transition-transform duration-500 group-hover:[transform:rotateY(-10deg)_rotateX(5deg)_scale(1.05)]"
+                className="rounded-lg shadow-xl"
               />
             </div>
           </div>
         </div>
       </section>
 
-      <section data-animate="fade-in-up" className="w-full bg-secondary py-12 md:py-20">
+      <section className="w-full bg-secondary py-12 md:py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Our Journey</h2>
           <div className="relative mt-10">
             <div className="absolute left-1/2 top-0 hidden h-full w-0.5 -translate-x-1/2 bg-border md:block"></div>
             {timeline.map((item, index) => (
-              <div key={index} data-animate="timeline-item" className="relative mb-8 flex w-full items-center md:justify-between md:odd:flex-row-reverse group [perspective:1000px]">
+              <div key={index} className="relative mb-8 flex w-full items-center md:justify-between md:odd:flex-row-reverse group [perspective:1000px]">
                 <div className="hidden md:block md:w-5/12"></div>
                 <div className={`absolute left-0 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground md:left-1/2 md:-translate-x-1/2`}>
                   <CheckCircle2 className="h-5 w-5" />
                 </div>
                 <div className="w-full pl-12 md:w-5/12 md:pl-0">
-                  <Card className="p-4 md:p-6 transition-transform duration-500 transform-style-3d group-hover:[transform:rotateX(5deg)_rotateY(10deg)_scale(1.05)] group-hover:shadow-2xl">
+                  <Card className="p-4 md:p-6">
                     <p className={`font-bold text-primary text-sm md:text-base`}>{item.year}</p>
                     <h3 className="font-headline text-lg font-bold mt-1 md:text-xl">{item.event}</h3>
                     <p className="mt-2 text-foreground/70 text-sm md:text-base">{item.description}</p>
@@ -119,13 +117,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section data-animate="fade-in-up" className="w-full py-12 md:py-20">
+      <section className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Meet Our Leadership</h2>
           <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 md:gap-8">
-            {teamMembers.map((member) => (
-              <div key={member.position} className="group [perspective:1000px]">
-                <Card data-animate="stagger-item" className="text-center transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(15deg)_scale(1.05)] group-hover:shadow-2xl">
+            {teamMembers.map((member, index) => (
+              <div key={`${member.name}-${index}`} className="group [perspective:1000px]">
+                <Card className="text-center">
                   <CardContent className="p-4 md:p-6">
                     <Avatar className="w-24 h-24 md:w-32 md:h-32 mx-auto ring-2 ring-primary/20 p-1">
                       <AvatarImage src={member.image} alt={`Photo of ${member.name}`} data-ai-hint={member.dataAiHint} />
@@ -146,13 +144,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section data-animate="fade-in-up" className="w-full bg-secondary py-12 md:py-20">
+      <section className="w-full bg-secondary py-12 md:py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Why Join Us?</h2>
           <div className="mx-auto mt-10 max-w-4xl">
             <div className="grid grid-cols-1 gap-x-6 gap-y-3 md:grid-cols-2 md:gap-x-8 md:gap-y-4">
               {benefits.map((benefit) => (
-                <div key={benefit} data-animate="stagger-item-2" className="flex items-start">
+                <div key={benefit} className="flex items-start">
                   <CheckCircle2 className={`h-5 w-5 md:h-6 md:w-6 text-primary mr-3 mt-1 flex-shrink-0`} />
                   <p className="text-base md:text-lg">{benefit}</p>
                 </div>

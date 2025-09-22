@@ -1,16 +1,14 @@
 
 'use client';
 
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
-import { usePageAnimations } from '@/hooks/usePageAnimations';
 
 export default function AdmissionsPage() {
   const pageRef = useRef<HTMLDivElement>(null);
-  usePageAnimations(pageRef);
 
   const admissionSteps = [
     {
@@ -49,7 +47,7 @@ export default function AdmissionsPage() {
 
   return (
     <div ref={pageRef} className="flex flex-col items-center">
-      <section data-animate="fade-in" className="w-full bg-secondary py-16 md:py-24">
+      <section className="w-full bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-headline text-3xl font-bold md:text-5xl">Admissions</h1>
           <p className="mx-auto mt-4 max-w-3xl text-base md:text-lg text-foreground/80">
@@ -58,7 +56,7 @@ export default function AdmissionsPage() {
         </div>
       </section>
 
-      <section data-animate="fade-in-up" className="w-full py-12 md:py-20">
+      <section className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">How to Enroll</h2>
           <p className="text-center mx-auto mt-4 max-w-2xl text-foreground/80">
@@ -68,12 +66,12 @@ export default function AdmissionsPage() {
             <div className="absolute left-1/2 top-4 hidden h-[calc(100%-2rem)] w-0.5 -translate-x-1/2 bg-border md:block"></div>
             <div className="space-y-10">
               {admissionSteps.map((item, index) => (
-                <div key={item.step} data-animate="timeline-item" className="relative flex flex-col items-center gap-6 md:flex-row md:items-stretch md:justify-center">
+                <div key={item.step} className="relative flex flex-col items-center gap-6 md:flex-row md:items-stretch md:justify-center">
                   <div className={`z-10 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xl flex-shrink-0`}>
                     {item.step}
                   </div>
                   <div className={`w-full md:w-5/12 ${index % 2 === 0 ? 'md:pl-8' : 'md:pr-8 md:text-right'} `}>
-                     <Card className="h-full transform transition-transform duration-300 hover:scale-[1.03] hover:shadow-xl">
+                     <Card className="h-full">
                       <CardHeader>
                         <CardTitle className="font-headline text-xl">{item.title}</CardTitle>
                       </CardHeader>
@@ -89,13 +87,13 @@ export default function AdmissionsPage() {
         </div>
       </section>
 
-      <section data-animate="fade-in-up" className="w-full bg-secondary py-12 md:py-20">
+      <section className="w-full bg-secondary py-12 md:py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-center font-headline text-2xl font-bold md:text-4xl">Key Dates & Deadlines</h2>
           <div className="mx-auto mt-10 max-w-2xl">
             <ul className="space-y-4">
               {keyDates.map((item) => (
-                <li key={item.event} data-animate="stagger-item" className="flex items-center rounded-lg bg-background p-4 shadow-md transform transition-transform duration-300 hover:scale-[1.03] hover:shadow-lg">
+                <li key={item.event} className="flex items-center rounded-lg bg-background p-4 shadow-md">
                   <CheckCircle2 className={`h-6 w-6 text-primary mr-4`} />
                   <div>
                     <p className="font-semibold">{item.date}</p>
@@ -108,13 +106,13 @@ export default function AdmissionsPage() {
         </div>
       </section>
 
-      <section data-animate="fade-in-up" className="w-full py-12 md:py-20">
+      <section className="w-full py-12 md:py-20">
         <div className="container mx-auto px-4 text-center">
             <h2 className="font-headline text-2xl font-bold md:text-3xl">Begin Your Application</h2>
             <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg text-foreground/80">
                 Ready to take the first step? Our online portal makes it easy to get started.
             </p>
-            <Button asChild size="lg" className="mt-6 transform transition-transform hover:scale-105">
+            <Button asChild size="lg" className="mt-6">
               <Link href="/register">
                 Enroll Online Now <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
