@@ -119,9 +119,9 @@ export default function StudentDashboardPage() {
                 <CardDescription>A summary of your fee payments.</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <InfoCard icon={<Banknote />} title="Total Fees" value={`₹${formatNumber(totalFees)}`} bgColor="bg-blue-100 dark:bg-blue-900/30" iconColor="text-blue-500" />
-                <InfoCard icon={<TrendingUp />} title="Total Collected" value={`₹${formatNumber(feesPaid)}`} bgColor="bg-green-100 dark:bg-green-900/30" iconColor="text-green-500" />
-                <InfoCard icon={<TrendingDown />} title="Remaining Due" value={`₹${formatNumber(remainingFees)}`} bgColor="bg-red-100 dark:bg-red-900/30" iconColor="text-red-500" />
+                <InfoCard icon={<Banknote />} title="Total Fees" value={`₹${formatNumber(totalFees)}`} bgColor="bg-primary/10" iconColor="text-primary" />
+                <InfoCard icon={<TrendingUp />} title="Total Collected" value={`₹${formatNumber(feesPaid)}`} bgColor="bg-green-500/10" iconColor="text-green-500" />
+                <InfoCard icon={<TrendingDown />} title="Remaining Due" value={`₹${formatNumber(remainingFees)}`} bgColor="bg-red-500/10" iconColor="text-red-500" />
             </CardContent>
         </Card>
     
@@ -148,5 +148,3 @@ export default function StudentDashboardPage() {
     </div>
   );
 }
-
-    
