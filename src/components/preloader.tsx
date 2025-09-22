@@ -28,7 +28,7 @@ export function Preloader() {
     <div
       ref={preloaderRef}
       className={cn(
-        'fixed inset-0 z-[100] flex items-center justify-center bg-background transition-opacity duration-500'
+        'fixed inset-0 z-[100] flex items-center justify-center bg-background transition-opacity duration-500 pointer-events-none'
       )}
     >
       <div>
