@@ -55,32 +55,6 @@ export type InstallmentStatus = 'Paid' | 'Due' | 'Overdue' | 'Link Sent';
 
 const getSchoolDataKey = (schoolId: string) => `mockStudentsData_${schoolId}`;
 
-const initialMockStudents: Student[] = [
-  { id: '1', name: 'Ravi Kumar', roll: '1001', grade: '12', parent: 'Manoj Kumar', gender: 'Male', address: 'Mumbai, India', dob: '2006-05-15', phone: '+91 9876543210', email: 'ravi@example.com', password: 'password123', photoURL: 'https://picsum.photos/seed/1/100/100', avatarHint: 'male student', status: 'Enrolled', program: 'Science', admissionDate: '2022-04-01', motherName: 'Anjali Kumar', religion: 'Hinduism', fatherOccupation: 'Engineer' },
-  { id: '2', name: 'Priya Sharma', roll: '1002', grade: '11', parent: 'Sunil Sharma', gender: 'Female', address: 'Delhi, India', dob: '2007-02-20', phone: '+91 9876543211', email: 'priya@example.com', password: 'password123', photoURL: 'https://picsum.photos/seed/2/100/100', avatarHint: 'female student', status: 'Graduated', program: 'Arts', admissionDate: '2021-04-10', motherName: 'Reena Sharma', religion: 'Hinduism', fatherOccupation: 'Doctor' },
-  { id: '3', name: 'Amit Patel', roll: '1003', grade: '12', parent: 'Rajesh Patel', gender: 'Male', address: 'Ahmedabad, India', dob: '2006-08-10', phone: '+91 9876543212', email: 'amit@example.com', password: 'password123', photoURL: 'https://picsum.photos/seed/3/100/100', avatarHint: 'boy student', status: 'Graduated', program: 'Technology', admissionDate: '2022-04-05', motherName: 'Jayshree Patel', religion: 'Hinduism', fatherOccupation: 'Businessman' },
-  { id: '4', name: 'Sunita Devi', roll: '1004', grade: '10', parent: 'Anil Singh', gender: 'Female', address: 'Patna, India', dob: '2008-11-25', phone: '+91 9876543213', email: 'sunita@example.com', password: 'password123', photoURL: 'https://picsum.photos/seed/4/100/100', avatarHint: 'girl smiling', status: 'Enrolled', program: 'Commerce', admissionDate: '2023-04-15', motherName: 'Babita Devi', religion: 'Hinduism', fatherOccupation: 'Farmer' },
-  { id: '5', name: 'Vijay Singh', roll: '1005', grade: '11', parent: 'Kiran Singh', gender: 'Male', address: 'Jaipur, India', dob: '2007-07-07', phone: '+91 9876543214', email: 'vijay@example.com', password: 'password123', photoURL: 'https://picsum.photos/seed/5/100/100', avatarHint: 'student glasses', status: 'Withdrawn', program: 'Science', admissionDate: '2021-05-20', motherName: 'Meena Singh', religion: 'Sikhism', fatherOccupation: 'Army Officer' },
-];
-
-function initializeSchoolData(schoolId: string): Student[] {
-    const key = getSchoolDataKey(schoolId);
-    
-    const schoolSpecificData = schoolId === 'golu_ka_mor'
-      ? initialMockStudents.map(s => ({...s, name: `GKM-${s.name}`}))
-      : initialMockStudents;
-      
-    const studentsWithFees = schoolSpecificData.map(student => ({
-        ...student,
-        fees: generateFeeForStudent(student)
-    }));
-
-    if (typeof window !== 'undefined') {
-        localStorage.setItem(key, JSON.stringify(studentsWithFees));
-    }
-    return studentsWithFees;
-}
-
 export function getAllStudents(schoolId: string): Student[] {
   if (typeof window === 'undefined') return [];
   const data = localStorage.getItem(getSchoolDataKey(schoolId));
@@ -90,10 +64,10 @@ export function getAllStudents(schoolId: string): Student[] {
           return Array.isArray(parsedData) ? parsedData : [];
       } catch (e) {
           console.error("Failed to parse students data:", e);
-          return initializeSchoolData(schoolId);
+          return [];
       }
   }
-  return initializeSchoolData(schoolId);
+  return [];
 }
 
 export function addStudent(studentData: Omit<Student, 'id' | 'roll' | 'avatarHint' | 'status' | 'program' | 'admissionDate'> & { registrationFeePaid?: boolean }, schoolId: string): Student {
@@ -254,7 +228,6 @@ export function getAllStudentsWithFees(schoolId: string): StudentFee[] {
             return s.fees;
         }
         
-        // This case might not be hit if data is always initialized correctly, but it's a safe fallback.
         const newFees = generateFeeForStudent(s);
         updateStudentData(s.id, schoolId, { fees: newFees });
         return newFees;

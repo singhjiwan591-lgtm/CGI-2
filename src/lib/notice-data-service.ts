@@ -35,32 +35,9 @@ const storeNotices = (notices: Notice[], schoolId: string) => {
   }
 };
 
-const initializeMockNotices = (schoolId: string) => {
-    const mockData = [
-        {
-          id: '1',
-          title: `Welcome to the New Semester at ${schoolId === 'jalalabad' ? 'Jalalabad' : 'Golu Ka Mor'}!`,
-          content: 'We are excited to welcome all new and returning students to the new semester. Please check your class schedules and be prepared for an amazing learning journey.',
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: '2',
-          title: 'Holiday for Diwali Festival',
-          content: 'The institute will be closed for the Diwali festival. We wish everyone a happy and safe celebration.',
-          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-    ];
-    storeNotices(mockData, schoolId);
-    return mockData;
-};
-
-
 export function getNotices(schoolId: string): Notice[] {
   if (typeof window === 'undefined') return [];
-  let notices = getStoredNotices(schoolId);
-  if (notices.length === 0) {
-      notices = initializeMockNotices(schoolId);
-  }
+  const notices = getStoredNotices(schoolId);
   // Return notices sorted by most recent first
   return notices.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }

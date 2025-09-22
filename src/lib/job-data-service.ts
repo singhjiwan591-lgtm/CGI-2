@@ -33,33 +33,9 @@ const storeJobs = (jobs: Job[]) => {
   }
 };
 
-const initializeMockJobs = () => {
-  const mockData = [
-    {
-      id: '1',
-      title: 'Punjab Police Constable Recruitment',
-      description: 'Punjab Police has announced recruitment for 1800 constable posts. 12th pass candidates can apply. Last date: 30-08-2024.',
-      photoURL: 'https://picsum.photos/seed/police-job/600/400',
-      createdAt: new Date().toISOString(),
-    },
-     {
-      id: '2',
-      title: 'PSPCL Clerk Vacancy',
-      description: 'Punjab State Power Corporation Ltd. invites applications for 500 clerk positions. Graduate candidates are eligible. Apply online before 15-09-2024.',
-      photoURL: 'https://picsum.photos/seed/clerk-job/600/400',
-      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    },
-  ];
-  storeJobs(mockData);
-  return mockData;
-};
-
 export function getJobs(): Job[] {
   if (typeof window === 'undefined') return [];
-  let jobs = getStoredJobs();
-  if (jobs.length === 0) {
-      jobs = initializeMockJobs();
-  }
+  const jobs = getStoredJobs();
   return jobs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
