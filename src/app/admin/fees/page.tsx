@@ -106,7 +106,7 @@ export default function FeesPage() {
 
     const updatedInstallments = studentToUpdate.installments.map(inst => {
       if (inst.id === installmentId && inst.status !== 'Paid') {
-        return { ...inst, status: 'Paid' as const, paymentDate: new Date() };
+        return { ...inst, status: 'Paid' as const, paymentDate: new Date().toISOString() };
       }
       return inst;
     });
