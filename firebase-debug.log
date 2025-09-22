@@ -567,3 +567,198 @@ Type error: Parameter 'input' implicitly has an 'any' type.
 [debug] [2025-09-22T07:10:56.350Z] Error: ENOENT: no such file or directory, open '/home/user/studio/.next/export-marker.json'
 [error] 
 [error] Error: An unexpected error has occurred.
+[debug] [2025-09-22T07:12:04.160Z] ----------------------------------------------------------------------
+[debug] [2025-09-22T07:12:04.163Z] Command:       /nix/store/ws50yvm6vzlzf7jzz6n7xh4szddrack1-nodejs-20.19.1/bin/node /home/user/.global_modules/bin/firebase deploy --only hosting
+[debug] [2025-09-22T07:12:04.164Z] CLI Version:   14.17.0
+[debug] [2025-09-22T07:12:04.164Z] Platform:      linux
+[debug] [2025-09-22T07:12:04.164Z] Node Version:  v20.19.1
+[debug] [2025-09-22T07:12:04.164Z] Time:          Mon Sep 22 2025 07:12:04 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-09-22T07:12:04.164Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-09-22T07:12:04.565Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:04.566Z] No OAuth tokens found
+[error] Failed to fetch Firebase Project from current Studio Workspace: Unable to refresh auth: not yet authenticated.
+[debug] [2025-09-22T07:12:04.572Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:12:04.573Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:12:04.573Z] [iam] checking project the-outcome-466907-n2 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-09-22T07:12:04.574Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:04.575Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:04.575Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:12:04.575Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:12:04.576Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-outcome-466907-n2:testIamPermissions [none]
+[debug] [2025-09-22T07:12:04.576Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-outcome-466907-n2:testIamPermissions x-goog-quota-user=projects/the-outcome-466907-n2
+[debug] [2025-09-22T07:12:04.577Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-outcome-466907-n2:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-09-22T07:12:05.396Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-outcome-466907-n2:testIamPermissions 200
+[debug] [2025-09-22T07:12:05.396Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-outcome-466907-n2:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-09-22T07:12:05.398Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:05.398Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:05.398Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:12:05.398Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:12:05.399Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2 [none]
+[debug] [2025-09-22T07:12:05.635Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2 200
+[debug] [2025-09-22T07:12:05.635Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2 {"projectId":"the-outcome-466907-n2","projectNumber":"621495501559","displayName":"My First Project","name":"projects/the-outcome-466907-n2","resources":{"hostingSite":"the-outcome-466907-n2"},"state":"ACTIVE","etag":"1_baad6919-d43c-4d84-bcae-715266c0e8b0"}
+[debug] [2025-09-22T07:12:07.639Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:07.639Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:07.639Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:12:07.639Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:12:07.640Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites pageToken=&pageSize=10
+[debug] [2025-09-22T07:12:08.064Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites 200
+[debug] [2025-09-22T07:12:08.064Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites {"sites":[{"name":"projects/the-outcome-466907-n2/sites/the-outcome-466907-n2","defaultUrl":"https://the-outcome-466907-n2.web.app","type":"DEFAULT_SITE"},{"name":"projects/the-outcome-466907-n2/sites/the-outcome-466907-n2-992d2","defaultUrl":"https://the-outcome-466907-n2-992d2.web.app","appId":"1:621495501559:web:3e1df2e783b51d821709f2","type":"USER_SITE"}]}
+[debug] [2025-09-22T07:12:08.066Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:08.066Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:08.066Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:12:08.066Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:12:08.066Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites 
+[debug] [2025-09-22T07:12:08.503Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites 200
+[debug] [2025-09-22T07:12:08.504Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites {"sites":[{"name":"projects/the-outcome-466907-n2/sites/the-outcome-466907-n2","defaultUrl":"https://the-outcome-466907-n2.web.app","type":"DEFAULT_SITE"},{"name":"projects/the-outcome-466907-n2/sites/the-outcome-466907-n2-992d2","defaultUrl":"https://the-outcome-466907-n2-992d2.web.app","appId":"1:621495501559:web:3e1df2e783b51d821709f2","type":"USER_SITE"}]}
+[debug] [2025-09-22T07:12:08.505Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:08.505Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:08.505Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:12:08.507Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:12:08.508Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2/webApps/-/config [none]
+[debug] [2025-09-22T07:12:09.201Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2/webApps/-/config 200
+[debug] [2025-09-22T07:12:09.202Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2/webApps/-/config {"projectId":"the-outcome-466907-n2","appId":"1:621495501559:web:3e1df2e783b51d821709f2","storageBucket":"the-outcome-466907-n2.firebasestorage.app","apiKey":"AIzaSyDwbs3nf3crkFWHr_sSnsl0sUJ6Z_UKtUU","authDomain":"the-outcome-466907-n2.firebaseapp.com","messagingSenderId":"621495501559","measurementId":"G-PTFCZ62VXW"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2025-09-22T07:12:14.672Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:14.675Z] No OAuth tokens found
+[debug] [2025-09-22T07:12:14.675Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:12:14.675Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:12:14.675Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites/the-outcome-466907-n2 [none]
+[debug] [2025-09-22T07:12:14.991Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites/the-outcome-466907-n2 200
+[debug] [2025-09-22T07:12:14.995Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites/the-outcome-466907-n2 {"name":"projects/the-outcome-466907-n2/sites/the-outcome-466907-n2","defaultUrl":"https://the-outcome-466907-n2.web.app","type":"DEFAULT_SITE"}
+[info]   ▲ Next.js 14.2.32
+
+[info]   - Environments: .env
+
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully
+
+[info]    Linting and checking validity of types ...
+
+[info] Failed to compile.
+
+./src/backend/genkit.ts:4:24
+Type error: Cannot find module '@genkit-ai/googleai' or its corresponding type declarations.
+
+  2 | 'use server';
+  3 |
+> 4 | import {googleAI} from '@genkit-ai/googleai';
+    |                        ^
+  5 | import {genkit} from 'genkit';
+  6 |
+  7 | export const ai = genkit({
+
+[info] Next.js build worker exited with code: 1 and signal: null
+
+[debug] [2025-09-22T07:12:53.503Z] Error: ENOENT: no such file or directory, open '/home/user/studio/.next/export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-09-22T07:18:35.945Z] ----------------------------------------------------------------------
+[debug] [2025-09-22T07:18:35.948Z] Command:       /nix/store/ws50yvm6vzlzf7jzz6n7xh4szddrack1-nodejs-20.19.1/bin/node /home/user/.global_modules/bin/firebase deploy --only hosting
+[debug] [2025-09-22T07:18:35.949Z] CLI Version:   14.17.0
+[debug] [2025-09-22T07:18:35.949Z] Platform:      linux
+[debug] [2025-09-22T07:18:35.949Z] Node Version:  v20.19.1
+[debug] [2025-09-22T07:18:35.950Z] Time:          Mon Sep 22 2025 07:18:35 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-09-22T07:18:35.950Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-09-22T07:18:36.652Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:36.652Z] No OAuth tokens found
+[error] Failed to fetch Firebase Project from current Studio Workspace: Unable to refresh auth: not yet authenticated.
+[debug] [2025-09-22T07:18:36.659Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:18:36.660Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:18:36.660Z] [iam] checking project the-outcome-466907-n2 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-09-22T07:18:36.661Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:36.661Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:36.661Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:18:36.662Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:18:36.663Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-outcome-466907-n2:testIamPermissions [none]
+[debug] [2025-09-22T07:18:36.663Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-outcome-466907-n2:testIamPermissions x-goog-quota-user=projects/the-outcome-466907-n2
+[debug] [2025-09-22T07:18:36.664Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-outcome-466907-n2:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-09-22T07:18:36.931Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-outcome-466907-n2:testIamPermissions 200
+[debug] [2025-09-22T07:18:36.931Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/the-outcome-466907-n2:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-09-22T07:18:36.933Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:36.934Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:36.934Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:18:36.934Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:18:36.935Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2 [none]
+[debug] [2025-09-22T07:18:37.192Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2 200
+[debug] [2025-09-22T07:18:37.193Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2 {"projectId":"the-outcome-466907-n2","projectNumber":"621495501559","displayName":"My First Project","name":"projects/the-outcome-466907-n2","resources":{"hostingSite":"the-outcome-466907-n2"},"state":"ACTIVE","etag":"1_baad6919-d43c-4d84-bcae-715266c0e8b0"}
+[debug] [2025-09-22T07:18:39.587Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:39.587Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:39.587Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:18:39.588Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:18:39.588Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites pageToken=&pageSize=10
+[debug] [2025-09-22T07:18:40.037Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites 200
+[debug] [2025-09-22T07:18:40.037Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites {"sites":[{"name":"projects/the-outcome-466907-n2/sites/the-outcome-466907-n2","defaultUrl":"https://the-outcome-466907-n2.web.app","type":"DEFAULT_SITE"},{"name":"projects/the-outcome-466907-n2/sites/the-outcome-466907-n2-992d2","defaultUrl":"https://the-outcome-466907-n2-992d2.web.app","appId":"1:621495501559:web:3e1df2e783b51d821709f2","type":"USER_SITE"}]}
+[debug] [2025-09-22T07:18:40.039Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:40.039Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:40.039Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:18:40.039Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:18:40.039Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites 
+[debug] [2025-09-22T07:18:40.448Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites 200
+[debug] [2025-09-22T07:18:40.448Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites {"sites":[{"name":"projects/the-outcome-466907-n2/sites/the-outcome-466907-n2","defaultUrl":"https://the-outcome-466907-n2.web.app","type":"DEFAULT_SITE"},{"name":"projects/the-outcome-466907-n2/sites/the-outcome-466907-n2-992d2","defaultUrl":"https://the-outcome-466907-n2-992d2.web.app","appId":"1:621495501559:web:3e1df2e783b51d821709f2","type":"USER_SITE"}]}
+[debug] [2025-09-22T07:18:40.449Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:40.449Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:40.449Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:18:40.450Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:18:40.450Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2/webApps/-/config [none]
+[debug] [2025-09-22T07:18:41.006Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2/webApps/-/config 200
+[debug] [2025-09-22T07:18:41.007Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/the-outcome-466907-n2/webApps/-/config {"projectId":"the-outcome-466907-n2","appId":"1:621495501559:web:3e1df2e783b51d821709f2","storageBucket":"the-outcome-466907-n2.firebasestorage.app","apiKey":"AIzaSyDwbs3nf3crkFWHr_sSnsl0sUJ6Z_UKtUU","authDomain":"the-outcome-466907-n2.firebaseapp.com","messagingSenderId":"621495501559","measurementId":"G-PTFCZ62VXW"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2025-09-22T07:18:46.731Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:46.739Z] No OAuth tokens found
+[debug] [2025-09-22T07:18:46.740Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T07:18:46.745Z] > authorizing via signed-in user (iqrapakistan838@gmail.com)
+[debug] [2025-09-22T07:18:46.745Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites/the-outcome-466907-n2 [none]
+[debug] [2025-09-22T07:18:47.098Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites/the-outcome-466907-n2 200
+[debug] [2025-09-22T07:18:47.102Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/the-outcome-466907-n2/sites/the-outcome-466907-n2 {"name":"projects/the-outcome-466907-n2/sites/the-outcome-466907-n2","defaultUrl":"https://the-outcome-466907-n2.web.app","type":"DEFAULT_SITE"}
+[info]   ▲ Next.js 14.2.32
+
+[info]   - Environments: .env
+
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully
+
+[info]    Linting and checking validity of types ...
+
+[info] Failed to compile.
+
+
+[info] ./src/backend/genkit.ts:4:24
+Type error: Cannot find module '@genkit-ai/googleai' or its corresponding type declarations.
+
+  2 | 'use server';
+  3 |
+> 4 | import {googleAI} from '@genkit-ai/googleai';
+    |                        ^
+  5 | import {genkit} from 'genkit';
+  6 |
+  7 | export const ai = genkit({
+
+[info] Next.js build worker exited with code: 1 and signal: null
+
+[debug] [2025-09-22T07:19:21.530Z] Error: ENOENT: no such file or directory, open '/home/user/studio/.next/export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
