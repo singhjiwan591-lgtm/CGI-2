@@ -15,18 +15,20 @@ const MessageInputSchema = z.object({
 export type MessageInput = z.infer<typeof MessageInputSchema>;
 
 
+const SendParentEmailInput = z.object({
+  to: z.string().email().describe("The parent's email address."),
+  subject: z.string().describe('The subject of the email.'),
+  body: z.string().describe('The body of the email.'),
+});
+
 const sendEmailTool = ai.defineTool(
   {
     name: 'sendParentEmail',
     description: 'Send an email to a parent.',
-    inputSchema: z.object({
-      to: z.string().email().describe("The parent's email address."),
-      subject: z.string().describe('The subject of the email.'),
-      body: z.string().describe('The body of the email.'),
-    }),
+    inputSchema: SendParentEmailInput,
     outputSchema: z.void(),
   },
-  async (input) => {
+  async (input: z.infer<typeof SendParentEmailInput>) => {
     // In a real application, you would use an email sending service like SendGrid, Resend, etc.
     // For this example, we will just log the email to the console.
     console.log('--- SENDING PARENT EMAIL ---');

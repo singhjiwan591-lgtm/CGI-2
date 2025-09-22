@@ -19,18 +19,20 @@ export async function processContactRequest(input: ContactFormInput) {
   return await contactFlow(input);
 }
 
+const SendEmailToolInput = z.object({
+  to: z.string().describe('The email address to send the email to.'),
+  subject: z.string().describe('The subject of the email.'),
+  body: z.string().describe('The body of the email.'),
+});
+
 const sendEmailTool = ai.defineTool(
   {
     name: 'sendEmail',
     description: 'Send an email.',
-    inputSchema: z.object({
-      to: z.string().describe('The email address to send the email to.'),
-      subject: z.string().describe('The subject of the email.'),
-      body: z.string().describe('The body of the email.'),
-    }),
+    inputSchema: SendEmailToolInput,
     outputSchema: z.void(),
   },
-  async (input) => {
+  async (input: z.infer<typeof SendEmailToolInput>) => {
     // In a real application, you would use an email sending service like SendGrid, Resend, etc.
     // For this example, we will just log the email to the console.
     console.log('--- SENDING EMAIL ---');
