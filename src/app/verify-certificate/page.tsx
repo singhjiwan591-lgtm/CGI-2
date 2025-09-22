@@ -74,7 +74,7 @@ export default function VerifyCertificatePage() {
                 <CardContent className="p-6">
                     <div className="text-center">
                         <Avatar className="mx-auto h-24 w-24 border-4 border-green-200">
-                            <AvatarImage src={verifiedStudent.photoURL || `https://placehold.co/100x100.png`} data-ai-hint={verifiedStudent.avatarHint} />
+                            <AvatarImage src={verifiedStudent.photoURL || `https://placehold.co/100x100.png`} alt={`Photo of ${verifiedStudent.name}`} data-ai-hint={verifiedStudent.avatarHint} />
                             <AvatarFallback>{verifiedStudent.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                         </Avatar>
                         <h3 className="mt-4 text-2xl font-bold">{verifiedStudent.name}</h3>

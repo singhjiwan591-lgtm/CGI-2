@@ -164,7 +164,7 @@ export default function DashboardPage() {
                                 <TableCell>
                                     <div className="flex items-center gap-3">
                                         <Avatar className="h-9 w-9">
-                                            <AvatarImage src={student.photoURL} data-ai-hint={student.avatarHint} />
+                                            <AvatarImage src={student.photoURL} alt={`Photo of ${student.name}`} data-ai-hint={student.avatarHint} />
                                             <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div className="font-medium">{student.name}</div>

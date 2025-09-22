@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import React from 'react';
 import { Loader2, PlusCircle, MoreHorizontal, Pencil, Trash2, Search, Phone, Mail, GraduationCap, Banknote, User } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -160,7 +161,7 @@ export default function TeachersPage() {
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src={teacher.photoURL} data-ai-hint={teacher.avatarHint} />
+                        <AvatarImage src={teacher.photoURL} alt={`Photo of ${teacher.name}`} data-ai-hint={teacher.avatarHint} />
                         <AvatarFallback>{teacher.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div>

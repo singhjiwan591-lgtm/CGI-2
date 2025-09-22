@@ -8,14 +8,11 @@ import {
   ArrowRight,
   Code,
   Briefcase,
-  Users,
   GraduationCap,
   Award,
-  BarChart,
   Palette,
   Laptop,
   Film,
-  Building2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -189,10 +186,10 @@ export default function Home() {
             <div className="order-1 md:order-2 group [perspective:1000px]">
               <Image
                 src="https://i.ibb.co/8Dt1M0L4/Whats-App-Image-2025-09-11-at-8-52-29-PM.jpg"
-                data-ai-hint="institute students teachers"
-                alt="Students and teachers at Global Computer Institute"
+                alt="Students and teachers collaborating in a classroom at Global Computer Institute"
                 width={800}
                 height={600}
+                data-ai-hint="institute students teachers"
                 style={{ height: 'auto', width: '100%' }}
                 className="rounded-lg shadow-xl transition-transform duration-500 group-hover:[transform:rotateY(-10deg)_scale(1.05)]"
               />
@@ -351,6 +348,7 @@ export default function Home() {
                           <Avatar>
                             <AvatarImage
                               src={testimonial.avatar}
+                              alt={`Photo of ${testimonial.name}`}
                               data-ai-hint={testimonial.dataAiHint}
                             />
                             <AvatarFallback>

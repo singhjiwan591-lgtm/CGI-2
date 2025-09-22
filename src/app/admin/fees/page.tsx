@@ -217,7 +217,7 @@ export default function FeesPage() {
                     <TableCell className="font-medium">
                         <div className="flex items-center gap-3">
                             <Avatar className="h-10 w-10">
-                                <AvatarImage src={student.photoURL} data-ai-hint={student.avatarHint} />
+                                <AvatarImage src={student.photoURL} alt={`Photo of ${student.name}`} data-ai-hint={student.avatarHint} />
                                 <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                             </Avatar>
                             <div>

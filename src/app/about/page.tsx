@@ -84,10 +84,10 @@ export default function AboutPage() {
             <div className="order-1 md:order-2 group [perspective:1000px]">
               <Image
                 src="https://i.ibb.co/jv8gNqNH/Compress-JPEG-Online-img-800x600.jpg"
-                data-ai-hint="modern computer lab"
-                alt="Modern computer lab"
+                alt="Modern computer lab with students learning"
                 width={800}
                 height={600}
+                data-ai-hint="modern computer lab"
                 className="rounded-lg shadow-xl transition-transform duration-500 group-hover:[transform:rotateY(-10deg)_rotateX(5deg)_scale(1.05)]"
               />
             </div>
@@ -128,7 +128,7 @@ export default function AboutPage() {
                 <Card data-animate="stagger-item" className="text-center transition-transform duration-500 transform-style-3d group-hover:[transform:rotateY(15deg)_scale(1.05)] group-hover:shadow-2xl">
                   <CardContent className="p-4 md:p-6">
                     <Avatar className="w-24 h-24 md:w-32 md:h-32 mx-auto ring-2 ring-primary/20 p-1">
-                      <AvatarImage src={member.image} data-ai-hint={member.dataAiHint} />
+                      <AvatarImage src={member.image} alt={`Photo of ${member.name}`} data-ai-hint={member.dataAiHint} />
                       <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <h3 className="mt-4 font-headline text-xl font-bold md:text-2xl">{member.name}</h3>

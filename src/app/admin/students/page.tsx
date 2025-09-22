@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import React from 'react';
 import {
   MoreHorizontal,
   Pencil,
@@ -293,7 +294,7 @@ export default function StudentsPage() {
                 <TableRow key={student.id}>
                   <TableCell>
                     <Avatar className="h-10 w-10">
-                        <AvatarImage src={student.photoURL || `https://picsum.photos/seed/${student.id}/100/100`} data-ai-hint={student.avatarHint} />
+                        <AvatarImage src={student.photoURL || `https://picsum.photos/seed/${student.id}/100/100`} alt={`Photo of ${student.name}`} data-ai-hint={student.avatarHint} />
                         <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                     </Avatar>
                   </TableCell>

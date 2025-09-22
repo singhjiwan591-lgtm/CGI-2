@@ -21,6 +21,7 @@ import {
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import React from 'react';
 
 type Parent = {
   id: string;
@@ -161,7 +162,7 @@ export default function ParentsPage() {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src={parent.avatarUrl} data-ai-hint={parent.avatarHint} />
+                      <AvatarImage src={parent.avatarUrl} alt={`Photo of ${parent.name}`} data-ai-hint={parent.avatarHint} />
                       <AvatarFallback>{parent.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div>

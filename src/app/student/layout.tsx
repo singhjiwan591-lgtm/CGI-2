@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Home, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -56,7 +57,7 @@ export default function StudentDashboardLayout({
               <Card>
                 <CardHeader className="items-center text-center">
                   <Avatar className="h-24 w-24 mb-4 border-2 border-primary">
-                    <AvatarImage src={user.photoURL} data-ai-hint={user.avatarHint} />
+                    <AvatarImage src={user.photoURL} alt={`Photo of ${user.name}`} data-ai-hint={user.avatarHint} />
                     <AvatarFallback>{user.name?.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
                   <CardTitle>{user.name}</CardTitle>

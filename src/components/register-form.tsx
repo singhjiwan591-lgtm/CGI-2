@@ -8,7 +8,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
-import { Loader2, ShieldCheck } from 'lucide-react';
+import React from 'react';
+import { Loader2 } from 'lucide-react';
 import { addStudent } from '@/lib/student-data-service';
 
 import { Button } from '@/components/ui/button';
@@ -433,5 +434,3 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
     </>
   );
 }
-
-    

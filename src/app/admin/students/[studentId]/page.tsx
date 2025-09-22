@@ -39,7 +39,7 @@ const StudentDetailsCard = ({ student }: { student: Student }) => (
     <CardContent className="space-y-4">
       <div className="flex items-center gap-4">
         <Avatar className="h-20 w-20">
-          <AvatarImage src={student.photoURL} data-ai-hint={student.avatarHint} />
+          <AvatarImage src={student.photoURL} alt={`Photo of ${student.name}`} data-ai-hint={student.avatarHint} />
           <AvatarFallback>{student.name.split(' ').map((n:string) => n[0]).join('')}</AvatarFallback>
         </Avatar>
         <div>

@@ -9,6 +9,17 @@ import Script from 'next/script';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/components/theme-provider';
 import { CongratulationsConfetti } from '@/components/congratulations-confetti';
+import { Inter, Lora } from 'next/font/google';
+
+const fontBody = Inter({
+  subsets: ['latin'],
+  variable: '--font-body',
+});
+
+const fontHeadline = Lora({
+  subsets: ['latin'],
+  variable: '--font-headline',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -97,19 +108,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body suppressHydrationWarning={true} className={cn("font-body bg-background text-foreground antialiased min-h-screen flex flex-col")}>
+      <body suppressHydrationWarning={true} className={cn("font-body bg-background text-foreground antialiased min-h-screen flex flex-col", fontBody.variable, fontHeadline.variable)}>
         <ThemeProvider
             attribute="class"
             defaultTheme="dark"

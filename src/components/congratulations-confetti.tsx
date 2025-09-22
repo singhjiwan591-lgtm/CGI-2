@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import Confetti from 'react-dom-confetti';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import React from 'react';
 
 const confettiConfig = {
   angle: 90,
@@ -21,13 +22,11 @@ const confettiConfig = {
 
 function ConfettiWrapper() {
   const [showConfetti, setShowConfetti] = useState(false);
-  const { width, height } = useWindowSize();
-
+  
   useEffect(() => {
     const hasBeenWelcomed = sessionStorage.getItem('hasBeenWelcomed');
 
     if (!hasBeenWelcomed) {
-      // Use a timeout to ensure the component has mounted and can read session storage
       const welcomeTimer = setTimeout(() => {
         setShowConfetti(true);
         sessionStorage.setItem('hasBeenWelcomed', 'true');
