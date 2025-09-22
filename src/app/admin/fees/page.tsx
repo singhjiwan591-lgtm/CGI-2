@@ -284,7 +284,7 @@ export default function FeesPage() {
                             <TableCell>₹{inst.amount.toLocaleString()}</TableCell>
                             <TableCell>
                                 <Badge variant={inst.status === 'Paid' ? 'default' : 'secondary'} className={cn(
-                                    inst.status === 'Paid' && 'bg-green-600 hover:bg-green-700',
+                                    inst.status === 'Paid' && 'bg-green-500 hover:bg-green-600',
                                     inst.status === 'Overdue' && 'bg-red-500 hover:bg-red-600',
                                     inst.status === 'Due' && 'bg-yellow-500 hover:bg-yellow-600',
                                     inst.status === 'Link Sent' && 'bg-blue-500 hover:bg-blue-600',

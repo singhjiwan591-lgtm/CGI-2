@@ -8,6 +8,8 @@ import {
   Card,
   CardDescription,
   CardTitle,
+  CardContent,
+  CardHeader
 } from '@/components/ui/card';
 import {
   FileText,
@@ -26,7 +28,6 @@ const courseCards = [
     icon: <FileText className="h-8 w-8" />,
     imageUrl: 'https://i.ibb.co/C0W2VfT/1757947113101.png',
     dataAiHint: 'advanced diploma computer',
-    color: 'from-blue-500 to-blue-700',
   },
   {
     title: 'CCA',
@@ -34,7 +35,6 @@ const courseCards = [
     icon: <FileText className="h-8 w-8" />,
     imageUrl: 'https://i.ibb.co/HfQqCY6P/IMG-20250803-WA0011.jpg',
     dataAiHint: 'certificate computer',
-    color: 'from-fuchsia-500 to-fuchsia-700',
   },
   {
     title: 'DCA',
@@ -42,7 +42,6 @@ const courseCards = [
     icon: <FileText className="h-8 w-8" />,
     imageUrl: 'https://i.ibb.co/tPXj64KV/IMG-20250803-WA0007.jpg',
     dataAiHint: 'computer diploma',
-    color: 'from-orange-500 to-orange-700',
   },
   {
     title: 'DIFA',
@@ -50,7 +49,6 @@ const courseCards = [
     icon: <Calculator className="h-8 w-8" />,
     imageUrl: 'https://i.ibb.co/67kgqFp4/IMG-20250803-WA0009-1.jpg',
     dataAiHint: 'financial accounting',
-    color: 'from-green-500 to-green-700',
   },
    {
     title: 'Basic',
@@ -58,7 +56,6 @@ const courseCards = [
     icon: <Book className="h-8 w-8" />,
     imageUrl: 'https://i.ibb.co/6KM1WwR/1757604128659.png',
     dataAiHint: 'computer basics',
-    color: 'from-sky-500 to-sky-700',
   },
   {
     title: 'Accounts',
@@ -66,7 +63,6 @@ const courseCards = [
     icon: <Calculator className="h-8 w-8" />,
     imageUrl: 'https://i.ibb.co/ymSwrtxx/IMG-20250803-WA0005.jpg',
     dataAiHint: 'accounting calculator',
-    color: 'from-red-500 to-red-700',
   },
    {
     title: 'Typing (Eng/Pbi)',
@@ -74,7 +70,6 @@ const courseCards = [
     icon: <Keyboard className="h-8 w-8" />,
     imageUrl: 'https://i.ibb.co/3Yr8MjcT/touch-typing-keyboard.webp',
     dataAiHint: 'typing keyboard',
-    color: 'from-yellow-500 to-yellow-700',
   },
    {
     title: 'HTML',
@@ -82,7 +77,6 @@ const courseCards = [
     icon: <Codepen className="h-8 w-8" />,
     imageUrl: 'https://i.ibb.co/rJp1PDZ/IMG-20250803-WA0004.jpg',
     dataAiHint: 'html code',
-    color: 'from-indigo-500 to-indigo-700',
   },
     {
     title: 'Internet',
@@ -90,7 +84,6 @@ const courseCards = [
     icon: <Globe className="h-8 w-8" />,
     imageUrl: 'https://i.ibb.co/LXfSf8xs/IMG-20250803-WA0006.jpg',
     dataAiHint: 'internet globe',
-    color: 'from-pink-500 to-pink-700',
   },
   {
     title: 'Hardware & Software',
@@ -98,7 +91,6 @@ const courseCards = [
     icon: <HardDrive className="h-8 w-8" />,
     imageUrl: 'https://i.ibb.co/5hdDZj7D/IMG-20250803-WA0008.jpg',
     dataAiHint: 'computer hardware',
-    color: 'from-teal-500 to-teal-700',
   },
 ];
 
@@ -120,21 +112,17 @@ export default function AcademicsPage() {
         <div className="container mx-auto px-4">
            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {courseCards.map((card) => (
-              <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block group [perspective:1000px]">
+              <Link key={card.title} href={`/register?course=${encodeURIComponent(card.title)}`} className="block group">
                 <Card 
-                  className={`text-white relative overflow-hidden ${card.imageUrl ? '' : `bg-gradient-to-br ${card.color}`} flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square transition-transform duration-500 group-hover:[transform:rotateY(10deg)_scale(1.05)]`}
+                  className="relative overflow-hidden flex flex-col items-center justify-center p-4 md:p-6 text-center aspect-square transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl"
                 >
-                  {card.imageUrl ? (
-                    <>
-                      <Image src={card.imageUrl} alt={card.title} fill sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw" className="z-0 object-cover" data-ai-hint={card.dataAiHint} />
-                      <div className="absolute inset-0 bg-black/50 z-10"></div>
-                    </>
-                  ) : null}
-                  <div className="z-20 flex flex-col items-center justify-center">
-                    <div className="mb-3">{card.icon}</div>
-                    <CardTitle className="text-base md:text-lg font-bold">{card.title}</CardTitle>
-                    <CardDescription className="text-white/80 text-xs hidden sm:block mt-1">{card.description}</CardDescription>
-                  </div>
+                  <CardHeader className="p-0 items-center">
+                    <div className="text-primary">{card.icon}</div>
+                    <CardTitle className="text-base md:text-lg font-bold mt-3">{card.title}</CardTitle>
+                  </CardHeader>
+                   <CardContent className="p-0 mt-1">
+                    <CardDescription className="text-xs sm:text-sm">{card.description}</CardDescription>
+                  </CardContent>
                 </Card>
               </Link>
             ))}
