@@ -12,6 +12,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import React from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -28,7 +29,6 @@ import { getStudentById, Student } from '@/lib/student-data-service';
 import { format } from 'date-fns';
 import { Progress } from '@/components/ui/progress';
 import { formatNumber } from '@/lib/utils';
-import React from 'react';
 import { Label } from '@/components/ui/label';
 
 const StudentDetailsCard = ({ student }: { student: Student }) => (
