@@ -6,7 +6,6 @@ import { SiteFooter } from '@/components/site-footer';
 import { Toaster } from '@/components/ui/toaster';
 import { Preloader } from '@/components/preloader';
 import Script from 'next/script';
-import { DynamicDiscountPopup } from '@/components/dynamic-components';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/components/theme-provider';
 import { CongratulationsConfetti } from '@/components/congratulations-confetti';
@@ -125,7 +124,6 @@ export default function RootLayout({
             <SiteFooter />
           </div>
           <Toaster />
-          <DynamicDiscountPopup />
         </ThemeProvider>
 
         <Script

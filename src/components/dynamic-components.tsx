@@ -3,7 +3,6 @@
 
 import dynamic from 'next/dynamic';
 
-export const DynamicDiscountPopup = dynamic(() => 
-  import('@/components/discount-popup').then(mod => mod.DiscountPopup), 
-  { ssr: false }
-);
+// This file is kept for potential future use of dynamic components.
+// The discount popup has been removed to fix a build error.
+
