@@ -21,7 +21,6 @@ import {
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { sendMessage } from '@/backend/messaging';
 
 type Parent = {
   id: string;
@@ -91,11 +90,13 @@ export default function ParentsPage() {
 
     setIsMessaging(true);
     try {
-      await sendMessage({
+      console.log('Sending message (simulation):', {
         toEmail: selectedParent.email,
         subject: messageSubject,
         message: messageBody
       });
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       toast({ title: 'Success', description: 'Message sent successfully (simulated).' });
       setIsMessageDialogOpen(false);
       setSelectedParent(null);
