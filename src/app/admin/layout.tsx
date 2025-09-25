@@ -211,7 +211,7 @@ export default function DashboardLayout({
     return null; // or a redirect component
   }
   
-  const pageTitle = navLinks.flatMap(l => l.subLinks || l).find(l => pathname.startsWith(l.href))?.label || 'Admin';
+  const pageTitle = navLinks.flatMap(l => l.subLinks ? l.subLinks : l).find(l => pathname.startsWith(l.href))?.label || 'Admin';
   
   const closeSheet = () => setIsSheetOpen(false);
 
