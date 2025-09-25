@@ -15,7 +15,7 @@ export function Preloader() {
         preloaderRef.current.style.opacity = '0';
         preloaderRef.current.addEventListener('transitionend', () => setIsVisible(false));
       }
-    }, 0); // Reduced preloader time to 0
+    }, 0); 
 
     return () => clearTimeout(timer);
   }, []);
@@ -28,7 +28,8 @@ export function Preloader() {
     <div
       ref={preloaderRef}
       className={cn(
-        'fixed inset-0 z-[100] flex items-center justify-center bg-background transition-opacity duration-500 pointer-events-none'
+        'fixed inset-0 z-[100] flex items-center justify-center bg-background transition-opacity duration-500',
+        !isVisible && 'pointer-events-none'
       )}
     >
       <div>
