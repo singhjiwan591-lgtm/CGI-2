@@ -66,12 +66,12 @@ export default function AdmissionsPage() {
             <div className="absolute left-1/2 top-4 hidden h-[calc(100%-2rem)] w-0.5 -translate-x-1/2 bg-border md:block"></div>
             <div className="space-y-10">
               {admissionSteps.map((item, index) => (
-                <div key={item.step} className="relative flex flex-col items-center gap-6 md:flex-row md:items-stretch md:justify-center">
+                <div key={item.step} className="relative flex flex-col items-center gap-6 md:flex-row md:items-stretch md:justify-center group">
                   <div className={`z-10 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xl flex-shrink-0`}>
                     {item.step}
                   </div>
                   <div className={`w-full md:w-5/12 ${index % 2 === 0 ? 'md:pl-8' : 'md:pr-8 md:text-right'} `}>
-                     <Card className="h-full">
+                     <Card className="h-full transition-transform duration-300 group-hover:scale-105 group-hover:shadow-lg">
                       <CardHeader>
                         <CardTitle className="font-headline text-xl">{item.title}</CardTitle>
                       </CardHeader>
@@ -93,7 +93,7 @@ export default function AdmissionsPage() {
           <div className="mx-auto mt-10 max-w-2xl">
             <ul className="space-y-4">
               {keyDates.map((item) => (
-                <li key={item.event} className="flex items-center rounded-lg bg-background p-4 shadow-md">
+                <li key={item.event} className="flex items-center rounded-lg bg-background p-4 shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-xl">
                   <CheckCircle2 className={`h-6 w-6 text-primary mr-4`} />
                   <div>
                     <p className="font-semibold">{item.date}</p>
@@ -122,3 +122,5 @@ export default function AdmissionsPage() {
     </div>
   );
 }
+
+    
