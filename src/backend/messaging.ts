@@ -39,18 +39,29 @@ const sendEmailTool = ai.defineTool(
   }
 );
 
+const messagePrompt = ai.definePrompt({
+    name: 'messagePrompt',
+    input: { schema: MessageInputSchema },
+    tools: [sendEmailTool],
+    system: `Send an email to the parent.
+    
+    To: {{toEmail}}
+    Subject: {{subject}}
+    Message: {{message}}
+    `
+});
+
 const messageFlow = ai.defineFlow(
   {
     name: 'messageFlow',
     inputSchema: MessageInputSchema,
     outputSchema: z.void(),
-    tools: [sendEmailTool]
   },
   async (input) => {
-    await sendEmailTool({
-      to: input.toEmail,
-      subject: input.subject,
-      body: input.message,
+    await messagePrompt({
+        toEmail: input.toEmail,
+        subject: input.subject,
+        message: input.message,
     });
   }
 );

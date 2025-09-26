@@ -43,12 +43,26 @@ const sendEmailTool = ai.defineTool(
   }
 );
 
+const contactPrompt = ai.definePrompt(
+    {
+        name: 'contactPrompt',
+        input: { schema: ContactFormInputSchema },
+        tools: [sendEmailTool],
+        system: `You have received a new contact form submission. Log it to the console and then send a notification email to the site admin at admin@webandapp.edu.
+        
+        From: {{name}} ({{email}})
+        Subject: {{subject}}
+        Message: {{message}}
+        `
+    }
+);
+
+
 const contactFlow = ai.defineFlow(
   {
     name: 'contactFlow',
     inputSchema: ContactFormInputSchema,
     outputSchema: z.void(),
-    tools: [sendEmailTool]
   },
   async (input: ContactFormInput) => {
     // 1. Log the message to the console
@@ -58,19 +72,7 @@ const contactFlow = ai.defineFlow(
     console.log(`Message: ${input.message}`);
     console.log('---------------------------');
 
-    // 2. Send a notification email to the admin
-    await sendEmailTool({
-      to: 'admin@webandapp.edu',
-      subject: `New Contact Form Submission: ${input.subject}`,
-      body: `
-        You have received a new message from your website contact form.
-        
-        From: ${input.name} (${input.email})
-        Subject: ${input.subject}
-        
-        Message:
-        ${input.message}
-      `,
-    });
+    // 2. Use AI to process and send the email
+    await contactPrompt(input);
   }
 );
