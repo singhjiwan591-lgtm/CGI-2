@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -33,13 +33,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollingText } from '@/components/scrolling-text';
 import { getJobs, Job } from '@/lib/job-data-service';
+import { Counter } from '@/components/counter';
 
 export default function Home() {
-  const pageRef = useRef<HTMLDivElement>(null);
-  const bgLogoRef = useRef<HTMLImageElement>(null);
-  const [latestJobs, setLatestJobs] = useState<Job[]>([]);
+  const [latestJobs, setLatestJobs] = React.useState<Job[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const jobs = getJobs();
     setLatestJobs(jobs.slice(0, 4)); // Get latest 4 jobs
   }, []);
@@ -93,10 +92,10 @@ export default function Home() {
   ];
 
   const stats = [
-    { value: '5,000+', label: 'Successful Students' },
-    { value: '20+', label: 'Expert Instructors' },
-    { value: '50+', label: 'Industry-Ready Courses' },
-    { value: '95%', label: 'Placement Rate' },
+    { value: 5000, suffix: '+', label: 'Successful Students' },
+    { value: 20, suffix: '+', label: 'Expert Instructors' },
+    { value: 50, suffix: '+', label: 'Industry-Ready Courses' },
+    { value: 95, suffix: '%', label: 'Placement Rate' },
   ];
 
   const testimonials = [
@@ -126,7 +125,7 @@ export default function Home() {
   };
   
   return (
-    <div ref={pageRef} className="flex flex-col items-center">
+    <div className="flex flex-col items-center">
        <section className="relative w-full py-20 md:py-32 overflow-hidden bg-secondary">
          <div className="container mx-auto px-4 text-center relative z-10">
             <ScrollingText />
@@ -150,7 +149,6 @@ export default function Home() {
             className="absolute inset-0 z-0 flex items-center justify-center"
           >
             <Image
-              ref={bgLogoRef}
               src="https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png"
               alt="Background Logo"
               width={400}
@@ -192,7 +190,11 @@ export default function Home() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                   {stats.map((stat, index) => (
                       <div key={index}>
-                          <p className="text-4xl md:text-5xl font-bold text-primary">{stat.value}</p>
+                          <Counter 
+                            end={stat.value} 
+                            suffix={stat.suffix}
+                            className="text-4xl md:text-5xl font-bold text-primary"
+                          />
                           <p className="mt-2 text-base md:text-lg text-muted-foreground">{stat.label}</p>
                       </div>
                   ))}
@@ -365,7 +367,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
-
-    
