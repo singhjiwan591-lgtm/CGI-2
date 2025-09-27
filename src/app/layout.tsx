@@ -49,6 +49,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'Global Computer Institute', url: 'https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png' }],
   creator: 'Global Computer Institute',
   applicationName: 'Global Computer Institute',
+  manifest: "/manifest.json",
   referrer: 'origin-when-cross-origin',
   formatDetection: {
     email: false,
@@ -101,6 +102,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  themeColor: "#fe2c55",
 };
 
 export default function RootLayout({

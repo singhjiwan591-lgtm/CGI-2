@@ -1,22 +1,35 @@
-
 {
   "name": "Global Computer Institute",
-  "short_name": "Global Institute",
+  "short_name": "GCI",
   "description": "Join Global Computer Institute in Jalalabad (West), Punjab for expert-led courses in Web Development, Data Science, Accounting, ADCA, CCA, and more. Start your tech career with us!",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0c22",
-  "theme_color": "#f9c74f",
+  "background_color": "#ffffff",
+  "theme_color": "#fe2c55",
   "icons": [
     {
-      "src": "https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png",
+      "src": "https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "https://i.ibb.co/dwFFgmGS/1000058336-removebg-preview.png",
+      "src": "https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "https://i.ibb.co/5X00XdH9/0cbf6ee1-8add-4c4e-afdf-1d7eb2a4d1e7.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
