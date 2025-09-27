@@ -19,6 +19,9 @@ import {
   HardDrive,
   Calculator,
   Codepen,
+  Bug,
+  Shield,
+  Rocket
 } from 'lucide-react';
 
 const courseCards = [
@@ -91,6 +94,27 @@ const courseCards = [
     icon: <HardDrive className="h-8 w-8" />,
     imageUrl: 'https://i.ibb.co/5hdDZj7D/IMG-20250803-WA0008.jpg',
     dataAiHint: 'computer hardware',
+  },
+  {
+    title: 'Debugging & Testing',
+    description: 'Master the art of finding and fixing bugs.',
+    icon: <Bug className="h-8 w-8" />,
+    imageUrl: 'https://picsum.photos/seed/debugging/400/400',
+    dataAiHint: 'debugging code',
+  },
+  {
+    title: 'Cyber Security',
+    description: 'Learn to protect systems from cyber threats.',
+    icon: <Shield className="h-8 w-8" />,
+    imageUrl: 'https://picsum.photos/seed/cybersecurity/400/400',
+    dataAiHint: 'cyber security',
+  },
+  {
+    title: 'Deployment Ready',
+    description: 'Prepare your projects for production.',
+    icon: <Rocket className="h-8 w-8" />,
+    imageUrl: 'https://picsum.photos/seed/deployment/400/400',
+    dataAiHint: 'server deployment',
   },
 ];
 
