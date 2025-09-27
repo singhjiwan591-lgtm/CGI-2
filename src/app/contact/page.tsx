@@ -67,10 +67,11 @@ export default function ContactPage() {
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
-                allowFullScreen={false}
+                allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="rounded-lg shadow-md"
+                permissionsPolicy="camera=none; geolocation=none"
             ></iframe>
           </div>
         </div>
@@ -78,5 +79,3 @@ export default function ContactPage() {
     </div>
   );
 }
-
-    
