@@ -10,14 +10,21 @@ export function Preloader() {
   const preloaderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const handleLoad = () => {
       if (preloaderRef.current) {
         preloaderRef.current.style.opacity = '0';
         preloaderRef.current.addEventListener('transitionend', () => setIsVisible(false));
       }
-    }, 0); 
+    };
 
-    return () => clearTimeout(timer);
+    // Check if the document is already loaded
+    if (document.readyState === 'complete') {
+      handleLoad();
+    } else {
+      window.addEventListener('load', handleLoad);
+    }
+
+    return () => window.removeEventListener('load', handleLoad);
   }, []);
 
   if (!isVisible) {
