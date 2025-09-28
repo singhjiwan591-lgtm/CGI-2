@@ -12,6 +12,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { DiscountPopup } from '@/components/discount-popup';
 import { CongratulationsConfetti } from '@/components/congratulations-confetti';
 import { WhatsAppChat } from '@/components/whatsapp-chat';
+import { Analytics } from '@vercel/analytics/react';
 
 const fontBody = Inter({
   subsets: ['latin'],
@@ -139,6 +140,7 @@ export default function RootLayout({
           src="https://checkout.razorpay.com/v1/checkout.js" 
           strategy="lazyOnload"
         />
+        <Analytics />
       </body>
     </html>
   );
