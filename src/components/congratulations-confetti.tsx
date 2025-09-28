@@ -53,7 +53,7 @@ export function CongratulationsConfetti() {
   }
 
   return (
-    <div className="fixed inset-0 z-[200] pointer-events-none flex items-center justify-center">
+    <div className="fixed inset-0 z-40 pointer-events-none flex items-center justify-center">
        <Confetti active={showConfetti} config={confettiConfig} />
        {showConfetti && (
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-auto">
