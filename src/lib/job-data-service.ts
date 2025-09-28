@@ -1,6 +1,8 @@
 
 'use client';
 
+import { uploadImage } from './storage-service';
+
 // In-memory data store for jobs that persists in localStorage
 
 export type Job = {
@@ -44,11 +46,18 @@ export function getJobs(): Job[] {
   return jobs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
-export function addJob(data: Omit<Job, 'id' | 'createdAt'>): Job {
+export async function addJob(data: Omit<Job, 'id' | 'createdAt'>): Promise<Job> {
   const jobs = getJobs();
+  
+  let uploadedPhotoURL = data.photoURL;
+  if (data.photoURL && data.photoURL.startsWith('data:image')) {
+    uploadedPhotoURL = await uploadImage(data.photoURL, 'jobs');
+  }
+
   const newJob: Job = {
     id: new Date().getTime().toString(),
     ...data,
+    photoURL: uploadedPhotoURL,
     createdAt: new Date().toISOString(),
   };
   const updatedJobs = [newJob, ...jobs];
@@ -56,8 +65,13 @@ export function addJob(data: Omit<Job, 'id' | 'createdAt'>): Job {
   return newJob;
 }
 
-export function updateJob(jobToUpdate: Job): Job {
+export async function updateJob(jobToUpdate: Job): Promise<Job> {
   let jobs = getJobs();
+  
+  if (jobToUpdate.photoURL && jobToUpdate.photoURL.startsWith('data:image')) {
+    jobToUpdate.photoURL = await uploadImage(jobToUpdate.photoURL, 'jobs');
+  }
+  
   jobs = jobs.map(job =>
     job.id === jobToUpdate.id ? jobToUpdate : job
   );

@@ -4,6 +4,7 @@
 // In-memory data store for students that persists in localStorage
 // In a real application, this would be a database.
 import { addMonths, isPast } from 'date-fns';
+import { uploadImage } from './storage-service';
 
 export type Student = {
   id: string;
@@ -81,17 +82,22 @@ export function getAllStudents(schoolId: string): Student[] {
   return [];
 }
 
-export function addStudent(studentData: Omit<Student, 'id' | 'roll' | 'avatarHint' | 'status' | 'program' | 'admissionDate'> & { registrationFeePaid?: boolean }, schoolId: string): Student {
+export async function addStudent(studentData: Omit<Student, 'id' | 'roll' | 'avatarHint' | 'status' | 'program' | 'admissionDate'> & { registrationFeePaid?: boolean }, schoolId: string): Promise<Student> {
   const students = getAllStudents(schoolId);
   const newId = (Math.max(0, ...students.map(s => parseInt(s.id))) + 1).toString();
   const newRoll = (Math.max(1000, ...students.map(s => parseInt(s.roll))) + 1).toString();
+
+  let uploadedPhotoURL = studentData.photoURL;
+  if (studentData.photoURL && studentData.photoURL.startsWith('data:image')) {
+    uploadedPhotoURL = await uploadImage(studentData.photoURL, `students/${schoolId}`);
+  }
 
   const newStudent: Student = {
     ...studentData,
     id: newId,
     roll: newRoll,
     avatarHint: studentData.gender?.toLowerCase() === 'female' ? 'female student' : 'male student',
-    photoURL: studentData.photoURL || `https://picsum.photos/seed/${newId}/100/100`,
+    photoURL: uploadedPhotoURL || `https://picsum.photos/seed/${newId}/100/100`,
     status: 'Enrolled',
     program: studentData.course || 'Not Assigned',
     admissionDate: new Date().toISOString(),
@@ -104,10 +110,14 @@ export function addStudent(studentData: Omit<Student, 'id' | 'roll' | 'avatarHin
   return newStudent;
 }
 
-export function updateStudent(studentId: string, updatedData: Partial<Student>, schoolId: string): Student {
+export async function updateStudent(studentId: string, updatedData: Partial<Student>, schoolId: string): Promise<Student> {
   const students = getAllStudents(schoolId);
   const index = students.findIndex(s => s.id === studentId);
   if (index === -1) throw new Error("Student not found");
+
+  if (updatedData.photoURL && updatedData.photoURL.startsWith('data:image')) {
+      updatedData.photoURL = await uploadImage(updatedData.photoURL, `students/${schoolId}`);
+  }
 
   students[index] = { ...students[index], ...updatedData };
   storeStudents(students, schoolId);

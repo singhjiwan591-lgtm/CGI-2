@@ -31,6 +31,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import Image from 'next/image';
 
 declare global {
     interface Window {
@@ -52,6 +53,7 @@ const formSchema = z.object({
   password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
   confirmPassword: z.string(),
   course: z.string().optional(),
+  religion: z.string().min(2, { message: 'Religion is required.'}),
   terms: z.boolean().default(false).refine(val => val === true, {
     message: 'You must accept the terms and conditions.',
   }),
@@ -84,6 +86,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
       password: '',
       confirmPassword: '',
       course: selectedCourse || '',
+      religion: '',
       terms: false,
     },
   });
@@ -117,12 +120,13 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
             gender: formData.gender,
             address: formData.village,
             dob: formData.dob,
+            religion: formData.religion,
             photoURL: photoDataUrl || undefined,
             password: formData.password,
             course: formData.course,
             registrationFeePaid: true,
         };
-        const newStudent = addStudent(studentData, formData.schoolId);
+        const newStudent = await addStudent(studentData, formData.schoolId);
 
         if (!newStudent) {
             throw new Error('Could not save student data.');
@@ -162,6 +166,14 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
   };
 
   async function onSubmit(values: FormValues) {
+    if (!photoDataUrl) {
+      toast({
+        variant: 'destructive',
+        title: 'Photo Required',
+        description: 'Please upload a passport-size photo to continue.',
+      });
+      return;
+    }
     setLoading(true);
 
     const options = {
@@ -217,19 +229,19 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
-            <CardTitle className="font-headline text-2xl">Enroll Now</CardTitle>
+            <CardTitle className="font-headline text-2xl">Student Enrollment Form</CardTitle>
             <CardDescription>
-              Create an account to begin your application.
+              Create an account to begin your application. Registration fee: ₹100.
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
             <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-4">
-              <div className="space-y-4 animate-in fade-in-50">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in-50">
                  <FormField
                   control={form.control}
                   name="schoolId"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="md:col-span-2">
                       <FormLabel>Select Branch</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
                         <FormControl>
@@ -260,10 +272,11 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                   )}
                 />
                  <FormItem>
-                  <FormLabel>Your Passport-size Photo</FormLabel>
+                  <FormLabel>Passport-size Photo</FormLabel>
                   <FormControl>
-                    <Input type="file" accept="image/*" disabled={loading} onChange={handlePhotoUpload} />
+                    <Input type="file" accept="image/*" disabled={loading} onChange={handlePhotoUpload} required />
                   </FormControl>
+                   {photoDataUrl && <Image src={photoDataUrl} alt="Preview" width={80} height={80} className="mt-2 rounded-md object-cover" />}
                   <FormMessage />
                 </FormItem>
                  <FormField
@@ -336,9 +349,9 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                   name="grade"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Class / Grade</FormLabel>
+                      <FormLabel>Class / Qualification</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., 12" {...field} disabled={loading} />
+                        <Input placeholder="e.g., 12th Pass, BA" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -350,8 +363,30 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Gender</FormLabel>
+                       <Select onValueChange={field.onChange} defaultValue={field.value} disabled={loading}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Gender" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Male">Male</SelectItem>
+                          <SelectItem value="Female">Female</SelectItem>
+                          <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="religion"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Religion</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Male, Female" {...field} disabled={loading} />
+                        <Input placeholder="e.g., Sikhism, Hinduism" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -415,7 +450,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                   control={form.control}
                   name="terms"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md py-2">
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md py-2 md:col-span-2">
                       <FormControl>
                         <Checkbox
                           checked={field.value}

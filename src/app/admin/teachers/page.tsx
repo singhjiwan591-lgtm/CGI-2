@@ -18,13 +18,14 @@ import { getTeachers, addTeacher, updateTeacher, deleteTeacher, Teacher } from '
 import { formatNumber } from '@/lib/utils';
 import { format } from 'date-fns';
 
-const initialTeacherState: Omit<Teacher, 'id' | 'joiningDate'> = {
-    name: '', qualification: '', phone: '', email: '', address: '', salary: 0, photoURL: '', avatarHint: 'teacher portrait'
+const initialTeacherState: Omit<Teacher, 'id' | 'joiningDate' | 'avatarHint'> & { avatarHint?: string } = {
+    name: '', qualification: '', phone: '', email: '', address: '', salary: 0, photoURL: ''
 };
 
 export default function TeachersPage() {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -58,19 +59,19 @@ export default function TeachersPage() {
       setCurrentTeacher(null);
   }
 
-  const handleSaveTeacher = (formData: Omit<Teacher, 'id' | 'joiningDate'>) => {
+  const handleSaveTeacher = async (formData: Omit<Teacher, 'id' | 'joiningDate'>) => {
     if (!schoolId) {
       toast({ variant: 'destructive', title: 'Error', description: 'School not identified.' });
       return;
     }
-    setLoading(true);
+    setIsProcessing(true);
     try {
       if (currentTeacher?.id) {
-        const updated = updateTeacher({ ...currentTeacher, ...formData }, schoolId);
+        const updated = await updateTeacher({ ...currentTeacher, ...formData }, schoolId);
         setTeachers(teachers.map(t => t.id === updated.id ? updated : t));
         toast({ title: 'Success', description: 'Teacher details updated successfully.' });
       } else {
-        const newTeacherData = addTeacher(formData, schoolId);
+        const newTeacherData = await addTeacher(formData, schoolId);
         setTeachers([newTeacherData, ...teachers]);
         toast({ title: 'Success', description: 'Teacher added successfully.' });
       }
@@ -78,7 +79,7 @@ export default function TeachersPage() {
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to save teacher details.' });
     } finally {
-      setLoading(false);
+      setIsProcessing(false);
     }
   };
 
@@ -89,7 +90,7 @@ export default function TeachersPage() {
 
   const handleDelete = () => {
     if (!currentTeacher || !schoolId) return;
-    setLoading(true);
+    setIsProcessing(true);
     try {
         deleteTeacher(currentTeacher.id, schoolId);
         setTeachers(teachers.filter(t => t.id !== currentTeacher.id));
@@ -97,7 +98,7 @@ export default function TeachersPage() {
     } catch (error) {
         toast({ variant: 'destructive', title: 'Error', description: 'Failed to delete teacher record.' });
     } finally {
-        setLoading(false);
+        setIsProcessing(false);
         setIsDeleteDialogOpen(false);
         setCurrentTeacher(null);
     }
@@ -212,8 +213,8 @@ export default function TeachersPage() {
         </CardFooter>
       </Card>
       
-      {isFormOpen && <TeacherFormDialog open={isFormOpen} onClose={handleCloseForm} onSave={handleSaveTeacher} teacher={currentTeacher} loading={loading} />}
-      {isDeleteDialogOpen && <DeleteConfirmationDialog open={isDeleteDialogOpen} onClose={() => setIsDeleteDialogOpen(false)} onConfirm={handleDelete} teacher={currentTeacher} loading={loading} />}
+      {isFormOpen && <TeacherFormDialog open={isFormOpen} onClose={handleCloseForm} onSave={handleSaveTeacher} teacher={currentTeacher} loading={isProcessing} />}
+      {isDeleteDialogOpen && <DeleteConfirmationDialog open={isDeleteDialogOpen} onClose={() => setIsDeleteDialogOpen(false)} onConfirm={handleDelete} teacher={currentTeacher} loading={isProcessing} />}
     </>
   );
 }
@@ -225,6 +226,17 @@ const TeacherFormDialog = ({ open, onClose, onSave, teacher, loading }: { open: 
     useEffect(() => {
         setFormData(teacher || initialTeacherState);
     }, [teacher]);
+
+    const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({...prev, photoURL: reader.result as string}));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -251,6 +263,10 @@ const TeacherFormDialog = ({ open, onClose, onSave, teacher, loading }: { open: 
                             <Label htmlFor="name">Full Name</Label>
                             <Input id="name" name="name" value={formData.name} onChange={handleChange} />
                         </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="photo">Photo</Label>
+                            <Input id="photo" type="file" accept="image/*" onChange={handlePhotoUpload} />
+                        </div>
                          <div className="space-y-2">
                             <Label htmlFor="qualification">Qualification</Label>
                             <Input id="qualification" name="qualification" value={formData.qualification} onChange={handleChange} />
@@ -273,7 +289,7 @@ const TeacherFormDialog = ({ open, onClose, onSave, teacher, loading }: { open: 
                         </div>
                     </div>
                     <DialogFooter>
-                        <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+                        <DialogClose asChild><Button type="button" variant="secondary" disabled={loading}>Cancel</Button></DialogClose>
                         <Button type="submit" disabled={loading}>
                             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Save Changes

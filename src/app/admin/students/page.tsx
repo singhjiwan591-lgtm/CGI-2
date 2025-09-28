@@ -60,6 +60,7 @@ const studentInitialState = {
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -124,17 +125,21 @@ export default function StudentsPage() {
     if (!validateStudentForm(newStudent) || !schoolId) {
         return;
     }
+    setIsProcessing(true);
 
     const studentWithPhoto = { ...newStudent, photoURL: photoDataUrl || undefined };
-    const addedStudent = addStudent(studentWithPhoto, schoolId);
-    if(addedStudent) {
+    try {
+        const addedStudent = await addStudent(studentWithPhoto, schoolId);
         setStudents(prev => [addedStudent, ...prev].sort((a,b) => parseInt(b.roll) - parseInt(a.roll)));
+        toast({ title: 'Success', description: 'Student added successfully.' });
+        setIsAddDialogOpen(false);
+        setNewStudent(studentInitialState);
+        setPhotoDataUrl(null);
+    } catch (error) {
+        toast({ variant: 'destructive', title: 'Error', description: 'Failed to upload image or save student data.' });
+    } finally {
+        setIsProcessing(false);
     }
-    
-    toast({ title: 'Success', description: 'Student added successfully.' });
-    setIsAddDialogOpen(false);
-    setNewStudent(studentInitialState);
-    setPhotoDataUrl(null);
   };
   
   const openEditDialog = (student: Student) => {
@@ -143,24 +148,27 @@ export default function StudentsPage() {
     setIsEditDialogOpen(true);
   };
 
-  const handleUpdateStudent = (e: React.FormEvent) => {
+  const handleUpdateStudent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!studentToEdit || !schoolId) return;
 
     if (!validateStudentForm(studentToEdit)) {
         return;
     }
-
-    const updated = updateStudent(studentToEdit.id, studentToEdit, schoolId);
-    if (updated) {
-        setStudents(students.map(s => s.id === studentToEdit.id ? studentToEdit : s));
+    setIsProcessing(true);
+    
+    try {
+        const updated = await updateStudent(studentToEdit.id, studentToEdit, schoolId);
+        setStudents(students.map(s => s.id === studentToEdit.id ? updated : s));
         toast({ title: "Success", description: "Student details updated." });
-    } else {
+        setIsEditDialogOpen(false);
+        setStudentToEdit(null);
+        setPhotoDataUrl(null);
+    } catch (error) {
         toast({ variant: 'destructive', title: "Error", description: "Failed to update student." });
+    } finally {
+        setIsProcessing(false);
     }
-    setIsEditDialogOpen(false);
-    setStudentToEdit(null);
-    setPhotoDataUrl(null);
   };
 
   const openDeleteDialog = (student: Student) => {
@@ -402,10 +410,11 @@ export default function StudentsPage() {
               </div>
             </div>
             <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="secondary">Cancel</Button>
-              </DialogClose>
-              <Button type="submit">Add Student</Button>
+              <DialogClose asChild><Button type="button" variant="secondary" disabled={isProcessing}>Cancel</Button></DialogClose>
+              <Button type="submit" disabled={isProcessing}>
+                {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Add Student
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -468,10 +477,11 @@ export default function StudentsPage() {
               </div>
             </div>
             <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="secondary">Cancel</Button>
-              </DialogClose>
-              <Button type="submit">Save Changes</Button>
+              <DialogClose asChild><Button type="button" variant="secondary" disabled={isProcessing}>Cancel</Button></DialogClose>
+              <Button type="submit" disabled={isProcessing}>
+                {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Save Changes
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>

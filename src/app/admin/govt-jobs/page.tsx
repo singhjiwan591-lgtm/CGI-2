@@ -31,6 +31,7 @@ import Image from 'next/image';
 export default function GovtJobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentJob, setCurrentJob] = useState<Job | null>(null);
@@ -53,15 +54,15 @@ export default function GovtJobsPage() {
     setCurrentJob(null);
   };
 
-  const handleSaveJob = (formData: { title: string; description: string; photoURL: string }) => {
-    setLoading(true);
+  const handleSaveJob = async (formData: { title: string; description: string; photoURL: string }) => {
+    setIsProcessing(true);
     try {
       if (currentJob?.id) {
-        const updated = updateJob({ ...currentJob, ...formData });
+        const updated = await updateJob({ ...currentJob, ...formData });
         setJobs(jobs.map(j => j.id === updated.id ? updated : j));
         toast({ title: 'Success', description: 'Job posting updated successfully.' });
       } else {
-        const newJob = addJob(formData);
+        const newJob = await addJob(formData);
         setJobs([newJob, ...jobs]);
         toast({ title: 'Success', description: 'Job posted successfully.' });
       }
@@ -69,7 +70,7 @@ export default function GovtJobsPage() {
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to save job posting.' });
     } finally {
-      setLoading(false);
+      setIsProcessing(false);
     }
   };
 
@@ -80,7 +81,7 @@ export default function GovtJobsPage() {
 
   const handleDelete = () => {
     if (!currentJob) return;
-    setLoading(true);
+    setIsProcessing(true);
     try {
       deleteJob(currentJob.id);
       setJobs(jobs.filter(j => j.id !== currentJob.id));
@@ -88,7 +89,7 @@ export default function GovtJobsPage() {
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to delete job posting.' });
     } finally {
-      setLoading(false);
+      setIsProcessing(false);
       setIsDeleteDialogOpen(false);
       setCurrentJob(null);
     }
@@ -151,10 +152,10 @@ export default function GovtJobsPage() {
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button type="button" variant="secondary">Cancel</Button>
+                <Button type="button" variant="secondary" disabled={isProcessing}>Cancel</Button>
               </DialogClose>
-              <Button type="submit" disabled={loading}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Button type="submit" disabled={isProcessing}>
+                {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {currentJob ? 'Save Changes' : 'Publish Job'}
               </Button>
             </DialogFooter>
@@ -175,8 +176,8 @@ export default function GovtJobsPage() {
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild><Button variant="secondary">Cancel</Button></DialogClose>
-          <Button variant="destructive" onClick={handleDelete} disabled={loading}>
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button variant="destructive" onClick={handleDelete} disabled={isProcessing}>
+            {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Yes, delete job
           </Button>
         </DialogFooter>

@@ -1,6 +1,8 @@
 
 'use client';
 
+import { uploadImage } from './storage-service';
+
 // In-memory data store for teachers, persisting in localStorage
 
 export type Teacher = {
@@ -47,21 +49,32 @@ export function getTeachers(schoolId: string): Teacher[] {
   return [];
 }
 
-export function addTeacher(data: Omit<Teacher, 'id' | 'joiningDate'>, schoolId: string): Teacher {
+export async function addTeacher(data: Omit<Teacher, 'id' | 'joiningDate'>, schoolId: string): Promise<Teacher> {
   const teachers = getTeachers(schoolId);
+  
+  let uploadedPhotoURL = data.photoURL;
+  if (data.photoURL && data.photoURL.startsWith('data:image')) {
+    uploadedPhotoURL = await uploadImage(data.photoURL, `teachers/${schoolId}`);
+  }
+
   const newTeacher: Teacher = {
     id: new Date().getTime().toString(),
     ...data,
     joiningDate: new Date().toISOString(),
-    photoURL: data.photoURL || 'https://picsum.photos/seed/newteacher/100/100',
+    photoURL: uploadedPhotoURL || 'https://picsum.photos/seed/newteacher/100/100',
   };
   const updatedTeachers = [newTeacher, ...teachers];
   storeTeachers(updatedTeachers, schoolId);
   return newTeacher;
 }
 
-export function updateTeacher(teacherToUpdate: Teacher, schoolId: string): Teacher {
+export async function updateTeacher(teacherToUpdate: Teacher, schoolId: string): Promise<Teacher> {
   let teachers = getTeachers(schoolId);
+  
+  if (teacherToUpdate.photoURL && teacherToUpdate.photoURL.startsWith('data:image')) {
+    teacherToUpdate.photoURL = await uploadImage(teacherToUpdate.photoURL, `teachers/${schoolId}`);
+  }
+
   teachers = teachers.map(teacher =>
     teacher.id === teacherToUpdate.id ? teacherToUpdate : teacher
   );
