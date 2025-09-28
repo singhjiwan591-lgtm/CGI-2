@@ -18,8 +18,8 @@ const getStoredNotices = (schoolId: string): Notice[] => {
   if (typeof window === 'undefined') {
     return [];
   }
-  const data = localStorage.getItem(getNoticesKey(schoolId));
   try {
+    const data = localStorage.getItem(getNoticesKey(schoolId));
     const parsedData = data ? JSON.parse(data) : [];
     return Array.isArray(parsedData) ? parsedData : [];
   } catch (error) {
@@ -31,7 +31,12 @@ const getStoredNotices = (schoolId: string): Notice[] => {
 // Function to save notices to localStorage
 const storeNotices = (notices: Notice[], schoolId: string) => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem(getNoticesKey(schoolId), JSON.stringify(notices));
+    try {
+      localStorage.setItem(getNoticesKey(schoolId), JSON.stringify(notices));
+    } catch (error) {
+      console.error("Failed to save notices to localStorage. Storage might be full.", error);
+      alert("Could not save notice data. The browser storage may be full.");
+    }
   }
 };
 

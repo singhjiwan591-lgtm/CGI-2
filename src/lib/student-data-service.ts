@@ -55,6 +55,17 @@ export type InstallmentStatus = 'Paid' | 'Due' | 'Overdue' | 'Link Sent';
 
 const getSchoolDataKey = (schoolId: string) => `mockStudentsData_${schoolId}`;
 
+const storeStudents = (students: Student[], schoolId: string) => {
+    if (typeof window !== 'undefined') {
+        try {
+            localStorage.setItem(getSchoolDataKey(schoolId), JSON.stringify(students));
+        } catch (e) {
+            console.error("Failed to save student data to localStorage. Storage might be full.", e);
+            alert("Could not save student data. The browser storage may be full. Please try clearing some space or contact support.");
+        }
+    }
+}
+
 export function getAllStudents(schoolId: string): Student[] {
   if (typeof window === 'undefined') return [];
   const data = localStorage.getItem(getSchoolDataKey(schoolId));
@@ -89,7 +100,7 @@ export function addStudent(studentData: Omit<Student, 'id' | 'roll' | 'avatarHin
   newStudent.fees = generateFeeForStudent(newStudent, studentData.registrationFeePaid);
 
   const updatedStudents = [newStudent, ...students];
-  localStorage.setItem(getSchoolDataKey(schoolId), JSON.stringify(updatedStudents));
+  storeStudents(updatedStudents, schoolId);
   return newStudent;
 }
 
@@ -99,14 +110,14 @@ export function updateStudent(studentId: string, updatedData: Partial<Student>, 
   if (index === -1) throw new Error("Student not found");
 
   students[index] = { ...students[index], ...updatedData };
-  localStorage.setItem(getSchoolDataKey(schoolId), JSON.stringify(students));
+  storeStudents(students, schoolId);
   return students[index];
 }
 
 export function deleteStudent(studentId: string, schoolId: string): void {
   const students = getAllStudents(schoolId);
   const updatedStudents = students.filter(s => s.id !== studentId);
-  localStorage.setItem(getSchoolDataKey(schoolId), JSON.stringify(updatedStudents));
+  storeStudents(updatedStudents, schoolId);
 }
 
 export function updateStudentData(studentId: string, schoolId: string, dataToUpdate: Partial<Student>) {
@@ -131,7 +142,7 @@ export function updateStudentData(studentId: string, schoolId: string, dataToUpd
         } else {
             students[studentIndex].fees = existingFees;
         }
-        localStorage.setItem(getSchoolDataKey(schoolId), JSON.stringify(students));
+        storeStudents(students, schoolId);
     }
 }
 

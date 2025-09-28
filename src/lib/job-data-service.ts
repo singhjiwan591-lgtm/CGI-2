@@ -17,19 +17,24 @@ const getStoredJobs = (): Job[] => {
   if (typeof window === 'undefined') {
     return [];
   }
-  const data = localStorage.getItem(getJobsKey());
   try {
-      const parsedData = data ? JSON.parse(data) : [];
-      return Array.isArray(parsedData) ? parsedData : [];
+    const data = localStorage.getItem(getJobsKey());
+    const parsedData = data ? JSON.parse(data) : [];
+    return Array.isArray(parsedData) ? parsedData : [];
   } catch (error) {
-      console.error("Failed to parse jobs from localStorage", error);
-      return [];
+    console.error("Failed to parse jobs from localStorage", error);
+    return [];
   }
 };
 
 const storeJobs = (jobs: Job[]) => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem(getJobsKey(), JSON.stringify(jobs));
+    try {
+      localStorage.setItem(getJobsKey(), JSON.stringify(jobs));
+    } catch (error) {
+      console.error("Failed to save jobs to localStorage. Storage might be full.", error);
+      alert("Could not save job data. The browser storage may be full. Please try clearing some space or contact support.");
+    }
   }
 };
 
