@@ -132,13 +132,13 @@ export default function Home() {
             <p className="mx-auto mt-6 max-w-3xl text-lg text-foreground/80 md:text-xl">
               Your gateway to a successful career in technology. We provide expert-led training in the most in-demand skills to shape your future.
             </p>
-             <div className="mt-8 flex justify-center gap-4">
-               <Button asChild size="lg">
+             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+               <Button asChild>
                   <Link href="/academics">
                     Explore Courses <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                 <Button asChild size="lg" variant="outline">
+                 <Button asChild variant="outline">
                   <Link href="/contact">
                     Contact Us
                   </Link>
