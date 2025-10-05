@@ -287,7 +287,7 @@ export default function DashboardLayout({
               <div className="flex items-center gap-3 cursor-pointer">
                 <Button variant="secondary" size="icon" className="rounded-full">
                   <Avatar>
-                    <AvatarImage src="https://picsum.photos/seed/admin/100/100" alt="Admin user avatar" data-ai-hint="admin user" />
+                    <AvatarImage src={`https://picsum.photos/seed/${user.email}/100/100`} alt="Admin user avatar" data-ai-hint="admin user" />
                     <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <span className="sr-only">Toggle user menu</span>
