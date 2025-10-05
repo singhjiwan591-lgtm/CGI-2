@@ -10,7 +10,7 @@ const confettiConfig = {
   startVelocity: 40,
   elementCount: 70,
   dragFriction: 0.12,
-  duration: 3000,
+  duration: 5000, // Increased duration for better effect
   stagger: 3,
   width: "10px",
   height: "10px",
@@ -26,27 +26,23 @@ export function CongratulationsConfetti() {
   useEffect(() => {
     setIsClient(true);
   }, []);
-
+  
   useEffect(() => {
-    if (isClient) {
-        const hasBeenWelcomed = sessionStorage.getItem('hasBeenWelcomed');
+    const handleShowConfetti = () => {
+      setShowConfetti(true);
+      const confettiTimer = setTimeout(() => {
+        setShowConfetti(false);
+      }, 5000); // Match duration
+      return () => clearTimeout(confettiTimer);
+    };
 
-        if (!hasBeenWelcomed) {
-            const welcomeTimer = setTimeout(() => {
-            setShowConfetti(true);
-            sessionStorage.setItem('hasBeenWelcomed', 'true');
+    window.addEventListener('show-confetti', handleShowConfetti);
 
-            const confettiTimer = setTimeout(() => {
-                setShowConfetti(false);
-            }, 3000); 
+    return () => {
+      window.removeEventListener('show-confetti', handleShowConfetti);
+    };
+  }, []);
 
-            return () => clearTimeout(confettiTimer);
-            }, 500);
-
-            return () => clearTimeout(welcomeTimer);
-        }
-    }
-  }, [isClient]);
 
   if (!isClient) {
       return null;
@@ -61,7 +57,7 @@ export function CongratulationsConfetti() {
                 Congratulations!
             </p>
             <p className="text-lg md:text-2xl mt-2 font-semibold text-foreground/80">
-                Welcome to Global Computer Institute
+                You have been registered successfully!
             </p>
           </div>
        )}

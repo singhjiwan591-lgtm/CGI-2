@@ -133,7 +133,6 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
         }
 
         if (typeof window !== 'undefined') {
-            sessionStorage.removeItem('hasBeenWelcomed'); // Allow confetti on re-login
             sessionStorage.setItem('studentUser', JSON.stringify({ 
                 email: newStudent.email, 
                 name: newStudent.name, 
@@ -142,6 +141,7 @@ export function RegisterForm({ selectedCourse }: { selectedCourse?: string }) {
                 schoolId: formData.schoolId,
             }));
             sessionStorage.removeItem('user');
+            window.dispatchEvent(new Event('show-confetti'));
         }
         
         toast({
