@@ -215,7 +215,7 @@ export default function Home() {
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 md:gap-8">
             {courseCategories.map((course) => (
               <div key={course.title} className="group">
-                <Card className="text-center bg-card h-full flex flex-col transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl">
+                <Card className="text-center bg-card h-full flex flex-col transition-transform duration-300 group-hover:scale-105 group-hover:shadow-xl will-change-transform">
                   <CardHeader>
                     <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                       {course.icon}

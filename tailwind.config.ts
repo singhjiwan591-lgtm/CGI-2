@@ -30,6 +30,9 @@ export default {
         '5xl': '3rem',
         '6xl': '4rem',
       },
+      willChange: {
+        'transform': 'transform',
+      },
       fontFamily: {
         body: ['var(--font-body)', 'sans-serif'],
         headline: ['var(--font-headline)', 'serif'],
@@ -128,5 +131,3 @@ export default {
     })
   ],
 } satisfies Config;
-
-    
