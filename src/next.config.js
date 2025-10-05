@@ -30,6 +30,12 @@ const securityHeaders = [
   },
 ];
 
+const withPWA = require('@ducanh2912/next-pwa').default({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+});
+
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -60,16 +66,16 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'placehold.co',
         port: '',
-pathname: '/**',
+        pathname: '/**',
       },
-       {
+      {
         protocol: 'https',
         hostname: 'firebasestorage.googleapis.com',
         port: '',
         pathname: '/**',
-      },
+      }
     ],
   },
 };
 
-module.exports = nextConfig;
+module.exports = withPWA(nextConfig);
