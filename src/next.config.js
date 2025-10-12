@@ -48,6 +48,9 @@ const nextConfig = {
       },
     ];
   },
+  experimental: {
+    allowedDevOrigins: ["6000-firebase-jbd-1-1758703402269.cluster-fkltigo73ncaixtmokrzxhwsfc.cloudworkstations.dev"],
+  },
   images: {
     remotePatterns: [
       {

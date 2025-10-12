@@ -7,19 +7,17 @@ import { cn } from '@/lib/utils';
 
 export function Preloader() {
   const [isVisible, setIsVisible] = useState(true);
-  const preloaderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleLoad = () => {
-      if (preloaderRef.current) {
-        preloaderRef.current.style.opacity = '0';
-        preloaderRef.current.addEventListener('transitionend', () => setIsVisible(false));
-      }
+      // Directly hide the component once loading is complete.
+      setIsVisible(false);
     };
 
     // Check if the document is already loaded
     if (document.readyState === 'complete') {
-      handleLoad();
+      // Use a small timeout to prevent flash of content
+      setTimeout(handleLoad, 100);
     } else {
       window.addEventListener('load', handleLoad);
     }
@@ -33,10 +31,8 @@ export function Preloader() {
 
   return (
     <div
-      ref={preloaderRef}
       className={cn(
         'fixed inset-0 z-[100] flex items-center justify-center bg-background transition-opacity duration-500',
-        !isVisible && 'pointer-events-none'
       )}
     >
       <div>
