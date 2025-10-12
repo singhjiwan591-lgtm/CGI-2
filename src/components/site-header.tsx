@@ -108,7 +108,7 @@ export function SiteHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="secondary" size="icon" className="rounded-full">
               <Avatar>
-                <AvatarImage src={"https://placehold.co/100x100.png"} alt="Admin user avatar" data-ai-hint="admin user" />
+                <AvatarImage src={`https://picsum.photos/seed/${user.email}/100/100`} alt="Admin user avatar" data-ai-hint="admin user" />
                 <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
               <span className="sr-only">Toggle user menu</span>
@@ -186,8 +186,8 @@ export function SiteHeader() {
                  <div className="mt-auto flex flex-col gap-2 border-t pt-4">
                     {user ? (
                       <>
-                        <Button variant="ghost" asChild onClick={() => { router.push('/admin/dashboard'); setIsMobileMenuOpen(false); }}>
-                          <span>Dashboard</span>
+                        <Button variant="ghost" asChild onClick={() => setIsMobileMenuOpen(false)}>
+                          <Link href="/admin/dashboard">Dashboard</Link>
                         </Button>
                         <Button variant="outline" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}>Logout</Button>
                       </>
